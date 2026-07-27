@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Truck, ShieldCheck, Sparkles, RefreshCw, Star } from 'lucide-react';
 import Header from '@/SK/components/Header';
 import Hero from '@/SK/components/Hero';
 import CategoryList from '@/SK/components/CategoryList';
@@ -222,6 +222,43 @@ export default function Home() {
       <div className="home-wrapper">
         <Header />
         <Hero />
+
+        {/* Trust & Value Proposition Bar */}
+        <section className="trust-bar-section">
+          <div className="section-container">
+            <div className="trust-bar-grid">
+              <div className="trust-item">
+                <div className="trust-icon-box"><Truck size={20} color="#C5A059" /></div>
+                <div className="trust-text-block">
+                  <span className="trust-title">Free Express Shipping</span>
+                  <span className="trust-desc">On all orders over ₹499</span>
+                </div>
+              </div>
+              <div className="trust-item">
+                <div className="trust-icon-box"><Sparkles size={20} color="#C5A059" /></div>
+                <div className="trust-text-block">
+                  <span className="trust-title">100% Organic Formulations</span>
+                  <span className="trust-desc">Dermatologically tested & certified</span>
+                </div>
+              </div>
+              <div className="trust-item">
+                <div className="trust-icon-box"><ShieldCheck size={20} color="#C5A059" /></div>
+                <div className="trust-text-block">
+                  <span className="trust-title">Authenticity Guaranteed</span>
+                  <span className="trust-desc">Direct from official SK laboratory</span>
+                </div>
+              </div>
+              <div className="trust-item">
+                <div className="trust-icon-box"><RefreshCw size={20} color="#C5A059" /></div>
+                <div className="trust-text-block">
+                  <span className="trust-title">7-Day Easy Returns</span>
+                  <span className="trust-desc">100% satisfaction promise</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <CategoryList />
 
         {/* 1. Bestsellers | New Arrivals Section */}
@@ -302,6 +339,54 @@ export default function Home() {
             </div>
           </section>
         )}
+
+        {/* 5. Loved by Customers - Testimonials */}
+        <section className="reviews-section">
+          <div className="section-container">
+            <div className="reviews-header-block">
+              <span className="reviews-subtag">REAL RESULTS</span>
+              <h2 className="reviews-main-title">LOVED BY THOUSANDS</h2>
+            </div>
+
+            <div className="reviews-3-grid">
+              <div className="review-card">
+                <div className="reviewer-header">
+                  <div className="avatar-circle">AK</div>
+                  <div className="reviewer-info">
+                    <span className="reviewer-name">Ananya K.</span>
+                    <span className="verified-tag">✔ Verified Buyer</span>
+                  </div>
+                </div>
+                <div className="stars-gold">★★★★★</div>
+                <p className="review-quote">"The SK Noir Eau De Parfum smells divine and lasts literally all day. Everyone asks me what fragrance I am wearing!"</p>
+              </div>
+
+              <div className="review-card">
+                <div className="reviewer-header">
+                  <div className="avatar-circle">RM</div>
+                  <div className="reviewer-info">
+                    <span className="reviewer-name">Rahul M.</span>
+                    <span className="verified-tag">✔ Verified Buyer</span>
+                  </div>
+                </div>
+                <div className="stars-gold">★★★★★</div>
+                <p className="review-quote">"SK Organic Hair Oil changed my hair routine completely. Noticeable thickness and shine within two weeks."</p>
+              </div>
+
+              <div className="review-card">
+                <div className="reviewer-header">
+                  <div className="avatar-circle">PS</div>
+                  <div className="reviewer-info">
+                    <span className="reviewer-name">Priya S.</span>
+                    <span className="verified-tag">✔ Verified Buyer</span>
+                  </div>
+                </div>
+                <div className="stars-gold">★★★★★</div>
+                <p className="review-quote">"The Vitamin C Face Wash is super gentle yet powerful. Skin feels refreshed, bright, and deeply hydrated."</p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Footer */}
         <Footer />
@@ -523,11 +608,85 @@ export default function Home() {
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
         }
 
+        /* Trust Bar Section */
+        .trust-bar-section {
+          width: 100%;
+          background-color: #FAF8F5;
+          padding: 1.8rem 0;
+          border-top: 1px solid #F0EDE8;
+          border-bottom: 1px solid #F0EDE8;
+        }
+
+        .trust-bar-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1.5rem;
+        }
+
+        .trust-item {
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+        }
+
+        .trust-icon-box {
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
+          background-color: #ffffff;
+          border: 1px solid #EAE6DF;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .trust-text-block {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .trust-title {
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: #121316;
+          line-height: 1.2;
+        }
+
+        .trust-desc {
+          font-size: 0.72rem;
+          color: #6B7280;
+          margin-top: 2px;
+        }
+
         /* Reviews Section */
         .reviews-section {
           width: 100%;
-          padding: 4rem 0 5rem 0;
-          background-color: #ffffff;
+          padding: 4.5rem 0 5rem 0;
+          background-color: #FAF8F5;
+          border-top: 1px solid #F0EDE8;
+        }
+
+        .reviews-header-block {
+          text-align: center;
+          margin-bottom: 2.5rem;
+        }
+
+        .reviews-subtag {
+          font-size: 0.72rem;
+          font-weight: 800;
+          letter-spacing: 0.14em;
+          color: #C5A059;
+          display: block;
+          margin-bottom: 0.3rem;
+        }
+
+        .reviews-main-title {
+          font-size: 1.5rem;
+          font-weight: 800;
+          color: #121316;
+          letter-spacing: 0.04em;
         }
 
         .reviews-3-grid {
@@ -538,40 +697,78 @@ export default function Home() {
 
         .review-card {
           background-color: #ffffff;
-          border: 1px solid #E5E7EB;
-          border-radius: 8px;
-          padding: 1.5rem;
+          border: 1px solid #EAE6DF;
+          border-radius: 12px;
+          padding: 1.8rem;
           display: flex;
           flex-direction: column;
-          gap: 0.6rem;
+          gap: 0.8rem;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .review-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+          border-color: #C5A059;
         }
 
         .reviewer-header {
           display: flex;
           align-items: center;
-          gap: 0.6rem;
+          gap: 0.8rem;
+        }
+
+        .avatar-circle {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #121316 0%, #27272A 100%);
+          color: #C5A059;
+          font-size: 0.82rem;
+          font-weight: 800;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .reviewer-info {
+          display: flex;
+          flex-direction: column;
         }
 
         .reviewer-name {
-          font-size: 0.95rem;
+          font-size: 0.9rem;
           font-weight: 700;
           color: #121316;
         }
 
         .verified-tag {
-          font-size: 0.7rem;
-          color: #9CA3AF;
+          font-size: 0.68rem;
+          font-weight: 600;
+          color: #15803D;
         }
 
         .stars-gold {
           color: #F59E0B;
-          font-size: 0.85rem;
+          font-size: 0.9rem;
+          letter-spacing: 0.1em;
         }
 
         .review-quote {
-          font-size: 0.85rem;
+          font-size: 0.86rem;
           color: #4B5563;
-          line-height: 1.5;
+          line-height: 1.55;
+          font-style: italic;
+        }
+
+        @media (max-width: 1024px) {
+          .trust-bar-grid { grid-template-columns: repeat(2, 1fr); }
+          .reviews-3-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 640px) {
+          .trust-bar-grid { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 1100px) {
