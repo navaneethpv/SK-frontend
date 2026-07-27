@@ -285,6 +285,29 @@ export default function ComboOffers() {
         }
 
         @media (max-width: 1024px) {
+          .bundle-section { padding: 2.2rem 0; }
+          .bundle-header { margin-bottom: 1.4rem; }
+          .bundle-title { font-size: 1.25rem; }
+          .bundle-subtitle { font-size: 0.8rem; }
+          .main-bundles-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+          }
+          .bundle-card-img-wrapper {
+            aspect-ratio: 1.15;
+            max-height: 180px;
+          }
+          .mini-offers-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+          }
+          .offer-name { font-size: 0.88rem; }
+          .offer-price { font-size: 0.88rem; }
+          .build-box-btn { padding: 0.45rem 0.8rem; font-size: 0.7rem; }
+        }
+
+        @media (max-width: 640px) {
           .main-bundles-grid, .mini-offers-grid {
             grid-template-columns: 1fr;
           }
