@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { productAPI } from '../Api/Services/productAPI';
@@ -50,6 +50,22 @@ export default function Hero() {
       });
   }, []);
 
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Auto-slide effect (4.5s) with hover pause
+  useEffect(() => {
+    if (slides.length <= 1 || isHovered) return;
+
+    timerRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 4500);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [slides.length, isHovered]);
+
   const handlePrev = () => {
     setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
   };
@@ -81,7 +97,11 @@ export default function Hero() {
   const slide = slides[currentSlide] || slides[0];
 
   return (
-    <section className="hero-section">
+    <section
+      className="hero-section"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div className="hero-banner-container">
         <Link href={slide.link} className="hero-banner-link">
           <img
@@ -105,7 +125,9 @@ export default function Hero() {
 
       <style jsx>{`
         .hero-section {
-          width: 100%;
+          width: 100vw;
+          margin-left: calc(-50vw + 50%);
+          margin-right: calc(-50vw + 50%);
           position: relative;
           background-color: #111111;
           padding-top: 96px;

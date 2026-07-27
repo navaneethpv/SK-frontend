@@ -227,16 +227,19 @@ export default function Header() {
 
       <style jsx>{`
         .site-header {
-          width: 100%;
+          width: 100vw;
+          margin-left: calc(-50vw + 50%);
+          margin-right: calc(-50vw + 50%);
           position: fixed;
           top: 0;
           left: 0;
           z-index: 1000;
+          background-color: #121316;
           transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
         }
 
         .site-header.scrolled {
-          background-color: rgba(17, 17, 17, 0.92);
+          background-color: rgba(18, 19, 22, 0.95);
           backdrop-filter: blur(14px);
           box-shadow: 0 4px 25px rgba(0, 0, 0, 0.25);
         }
@@ -263,19 +266,19 @@ export default function Header() {
         }
 
         .main-header-row {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 0.8rem 2.5rem;
+          width: 100%;
+          max-width: 100%;
+          padding: 0.8rem 3.5rem;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%);
+          background: #121316;
           transition: padding 0.3s ease, background 0.3s ease;
         }
 
         .site-header.scrolled .main-header-row {
           background: transparent;
-          padding: 0.6rem 2.5rem;
+          padding: 0.6rem 3.5rem;
         }
 
         .mobile-toggle-btn {

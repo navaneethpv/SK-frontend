@@ -127,9 +127,11 @@ export default function BestSellersPage() {
           </div>
 
           {loading ? (
-            <div className="loading-state">
-              <div className="spinner"></div>
-              <p>Loading bestsellers...</p>
+            <div className="bestseller-skeleton-grid">
+              <div className="skeleton-card" />
+              <div className="skeleton-card" />
+              <div className="skeleton-card" />
+              <div className="skeleton-card" />
             </div>
           ) : (
             <div className="products-grid">
@@ -154,8 +156,7 @@ export default function BestSellersPage() {
                       <div className="rating-row">
                         <span className="star-gold">★ {item.rating}</span>
                         <span className="sep-pipe">|</span>
-                        <span className="blue-check-icon">✔</span>
-                        <span className="reviews">({item.reviewsCount} Reviews)</span>
+                        <span className="reviews">{item.reviewsCount} Reviews</span>
                       </div>
 
                       <h3 className="product-title">{item.title}</h3>
@@ -298,7 +299,12 @@ export default function BestSellersPage() {
 
         .product-card:hover {
           transform: translateY(-4px);
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
+          border-color: #C5A059;
+        }
+
+        .product-card:hover .product-img {
+          transform: scale(1.06);
         }
 
         .card-link {
@@ -316,6 +322,7 @@ export default function BestSellersPage() {
           align-items: center;
           justify-content: center;
           background-color: #ffffff;
+          overflow: hidden;
         }
 
         .badge-pill {
@@ -327,6 +334,7 @@ export default function BestSellersPage() {
           font-weight: 700;
           border-radius: 3px;
           text-transform: uppercase;
+          z-index: 1;
         }
 
         .badge-pill.gold {
@@ -338,6 +346,7 @@ export default function BestSellersPage() {
           width: 100%;
           height: 100%;
           object-fit: contain;
+          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .info-frame {
@@ -357,18 +366,6 @@ export default function BestSellersPage() {
 
         .star-gold { color: #F59E0B; font-weight: 700; }
         .sep-pipe { color: #D1D5DB; }
-        .blue-check-icon {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 14px;
-          height: 14px;
-          border-radius: 50%;
-          background-color: #0284C7;
-          color: #ffffff;
-          font-size: 0.55rem;
-          font-weight: 900;
-        }
 
         .reviews {
           color: #6B7280;
@@ -408,17 +405,42 @@ export default function BestSellersPage() {
           width: 100%;
           background-color: #121316;
           color: #ffffff;
-          border: none;
+          border: 1px solid transparent;
           padding: 0.75rem 0;
           border-radius: 6px;
           font-size: 0.85rem;
           font-weight: 700;
           cursor: pointer;
-          transition: background-color 0.2s ease;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .add-to-cart-btn:hover {
           background-color: #2D3036;
+          border-color: #C5A059;
+        }
+
+        .add-to-cart-btn:active {
+          transform: scale(0.97);
+        }
+
+        .bestseller-skeleton-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1.5rem;
+        }
+
+        .skeleton-card {
+          width: 100%;
+          height: 320px;
+          border-radius: 8px;
+          background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
+          background-size: 200% 100%;
+          animation: pulse-shimmer 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse-shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
         }
 
         .loading-state {
