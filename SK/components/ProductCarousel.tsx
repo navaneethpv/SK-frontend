@@ -268,6 +268,15 @@ export function RenderProductCard({ item }: { item: ItemCard }) {
         .action-btn:active {
           transform: scale(0.98);
         }
+
+        @media (max-width: 640px) {
+          .info-frame { padding: 0.6rem; }
+          .title-text { font-size: 0.78rem; min-height: 2.1rem; line-height: 1.28; }
+          .curr-price { font-size: 0.88rem; }
+          .orig-price { font-size: 0.7rem; }
+          .badge-pill { font-size: 0.58rem; padding: 0.15rem 0.4rem; }
+          .action-btn { font-size: 0.68rem; padding: 0.5rem 0.4rem; }
+        }
       `}</style>
     </div>
   );

@@ -589,6 +589,29 @@ export default function Header() {
           .desktop-nav { display: none; }
           .mobile-toggle-btn { display: flex; }
         }
+
+        @media (max-width: 640px) {
+          .main-header-row {
+            padding: 0.4rem 1rem;
+          }
+          .site-header.scrolled .main-header-row {
+            padding: 0.35rem 1rem;
+          }
+          .logo-wrapper { height: 34px; }
+          .logo-img { height: 32px; }
+          .top-bar-notice {
+            font-size: 0.58rem;
+            padding: 0.2rem 0.4rem;
+            letter-spacing: 0.04em;
+          }
+          .mobile-nav {
+            padding: 0.8rem 1.2rem;
+          }
+          .mobile-nav :global(a) {
+            padding: 0.55rem 0;
+            font-size: 0.8rem;
+          }
+        }
       `}</style>
     </header>
   );

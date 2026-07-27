@@ -308,9 +308,28 @@ export default function ComboOffers() {
         }
 
         @media (max-width: 640px) {
-          .main-bundles-grid, .mini-offers-grid {
-            grid-template-columns: 1fr;
+          .bundle-section { padding: 1.8rem 0; }
+          .bundle-title { font-size: 1.15rem; }
+          .bundle-subtitle { font-size: 0.75rem; }
+          .main-bundles-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
           }
+          .bundle-card-img-wrapper {
+            max-height: 130px;
+            aspect-ratio: 1.1;
+          }
+          .mini-offers-grid {
+            grid-template-columns: 1fr;
+            gap: 0.6rem;
+          }
+          .mini-offer-card {
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #F0EDE8;
+          }
+          .offer-name { font-size: 0.82rem; }
+          .offer-price { font-size: 0.82rem; }
+          .build-box-btn { padding: 0.4rem 0.7rem; font-size: 0.68rem; }
         }
       `}</style>
     </section>

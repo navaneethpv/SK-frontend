@@ -417,7 +417,16 @@ export default function DealOfTheDay() {
         }
 
         @media (max-width: 640px) {
-          .dotd-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+          .dotd-section { padding: 1.8rem 0; }
+          .dotd-title { font-size: 1.15rem; }
+          .dotd-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+          .card-img-box { max-height: 110px; padding: 0.5rem; }
+          .card-details { padding: 0.6rem; gap: 0.2rem; }
+          .card-product-title { font-size: 0.75rem; line-height: 1.25; }
+          .current-price { font-size: 0.85rem; }
+          .original-price { font-size: 0.7rem; }
+          .btn-wrapper { padding: 0.3rem 0.6rem 0.6rem 0.6rem; }
+          .add-to-cart-btn { height: 32px; font-size: 0.65rem; padding: 0 0.3rem; }
         }
       `}</style>
     </section>

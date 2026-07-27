@@ -382,6 +382,18 @@ export default function Home() {
           .section-container { padding: 0 1.5rem; }
         }
 
+        @media (max-width: 640px) {
+          .product-row-section { padding: 1.6rem 0; }
+          .section-header-row { margin-bottom: 0.9rem; }
+          .tab-btn-title { font-size: 1.05rem; }
+          .tab-divider { font-size: 1.05rem; }
+          .simple-section-title { font-size: 1.05rem; }
+          .view-all-link { font-size: 0.72rem; }
+          .section-container { padding: 0 1rem; }
+          .occasion-pills-row { gap: 0.4rem; margin-bottom: 1.2rem; overflow-x: auto; flex-wrap: nowrap; }
+          .pill-btn { padding: 0.35rem 0.8rem; font-size: 0.68rem; flex-shrink: 0; }
+        }
+
         .view-all-link {
           font-family: var(--font-sans);
           font-size: 0.88rem;

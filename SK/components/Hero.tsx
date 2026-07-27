@@ -216,19 +216,25 @@ export default function Hero() {
 
         @media (max-width: 768px) {
           .hero-section {
-            padding-top: 68px;
+            padding-top: 60px;
           }
           .hero-banner-container {
-            height: 240px;
+            height: 220px;
           }
+          .left-arrow, .right-arrow {
+            width: 32px;
+            height: 32px;
+          }
+          .left-arrow { left: 0.5rem; }
+          .right-arrow { right: 0.5rem; }
         }
 
         @media (max-width: 480px) {
           .hero-section {
-            padding-top: 64px;
+            padding-top: 54px;
           }
           .hero-banner-container {
-            height: 180px;
+            height: 160px;
           }
         }
       `}</style>
