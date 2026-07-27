@@ -777,19 +777,57 @@ export default function ProductDetail() {
         }
 
         @media (max-width: 1024px) {
+          .product-main-content { padding: 5.2rem 0 2.5rem 0; }
+          .product-top-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+            margin-bottom: 3rem;
+          }
+          .main-display-box {
+            padding: 1rem;
+            max-height: 300px;
+            aspect-ratio: 1;
+          }
+          .main-display-img { max-height: 250px; }
+          .thumb-box { width: 56px; height: 56px; padding: 0.25rem; }
+          .category-subtag { font-size: 0.68rem; }
+          .product-main-title { font-size: 1.45rem; line-height: 1.25; }
+          .product-tagline { font-size: 0.82rem; }
+          .rating-row { font-size: 0.78rem; gap: 0.4rem; }
+          .selling-price { font-size: 1.65rem; }
+          .original-price { font-size: 1rem; }
+          .taxes-subtext { font-size: 0.72rem; }
+          .qty-label { font-size: 0.8rem; }
+          .qty-step-btn { width: 32px; height: 32px; font-size: 0.95rem; }
+          .qty-display-val { width: 36px; font-size: 0.85rem; }
+          .add-to-cart-main-btn, .buy-now-main-btn {
+            padding: 0.7rem 0.6rem;
+            font-size: 0.74rem;
+          }
+          .gallery-left-col { position: relative; top: 0; }
+          .product-trust-strip {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.4rem;
+            padding: 0.75rem 0.5rem;
+          }
+          .trust-mini-card { font-size: 0.66rem; gap: 0.3rem; }
+          .accordion-header { padding: 0.9rem 0; font-size: 0.8rem; }
+          .accordion-body { font-size: 0.82rem; }
+        }
+
+        @media (max-width: 768px) {
           .product-top-grid {
             grid-template-columns: 1fr;
             gap: 2.5rem;
           }
-          .gallery-left-col { position: relative; top: 0; }
           .product-trust-strip { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 640px) {
-          .product-main-content { padding: 6.5rem 0 3rem 0; }
+          .product-main-content { padding: 6rem 0 3rem 0; }
           .action-buttons-group { grid-template-columns: 1fr; }
-          .selling-price { font-size: 1.9rem; }
-          .product-main-title { font-size: 1.6rem; }
+          .selling-price { font-size: 1.8rem; }
+          .product-main-title { font-size: 1.5rem; }
         }
       `}</style>
     </>

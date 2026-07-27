@@ -107,9 +107,14 @@ export default function TrustBar() {
         }
 
         @media (max-width: 1024px) {
+          .trust-bar-section { padding: 1.2rem 0; }
           .trust-bar-grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
           }
+          .trust-icon-box { width: 36px; height: 36px; }
+          .trust-title { font-size: 0.76rem; }
+          .trust-desc { font-size: 0.66rem; }
         }
 
         @media (max-width: 640px) {

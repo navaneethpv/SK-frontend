@@ -200,7 +200,12 @@ export default function CategoryList() {
         }
 
         @media (max-width: 1024px) {
-          .category-grid { grid-template-columns: repeat(3, 1fr); }
+          .category-tiles-section { padding: 3rem 0; }
+          .category-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+          .section-title { font-size: 1.25rem; }
+          .section-subtag { font-size: 0.65rem; }
+          .view-all-link { font-size: 0.76rem; }
+          .tile-name { font-size: 0.8rem; }
         }
 
         @media (max-width: 640px) {

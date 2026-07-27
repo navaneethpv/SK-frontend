@@ -372,6 +372,16 @@ export default function Home() {
           margin-bottom: 1.8rem;
         }
 
+        @media (max-width: 1024px) {
+          .product-row-section { padding: 2.2rem 0; }
+          .section-header-row { margin-bottom: 1.2rem; }
+          .tab-btn-title { font-size: 1.2rem; }
+          .tab-divider { font-size: 1.2rem; }
+          .simple-section-title { font-size: 1.2rem; }
+          .view-all-link { font-size: 0.78rem; }
+          .section-container { padding: 0 1.5rem; }
+        }
+
         .view-all-link {
           font-family: var(--font-sans);
           font-size: 0.88rem;

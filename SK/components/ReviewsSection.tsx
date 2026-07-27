@@ -157,6 +157,16 @@ export default function ReviewsSection() {
         }
 
         @media (max-width: 1024px) {
+          .reviews-section { padding: 3rem 0 3.5rem 0; }
+          .reviews-header-block { margin-bottom: 1.8rem; }
+          .reviews-subtag { font-size: 0.65rem; }
+          .reviews-main-title { font-size: 1.25rem; }
+          .reviews-3-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+          .review-card { padding: 1.2rem; gap: 0.6rem; }
+          .review-quote { font-size: 0.8rem; line-height: 1.45; }
+        }
+
+        @media (max-width: 640px) {
           .reviews-3-grid { grid-template-columns: 1fr; }
         }
       `}</style>

@@ -574,8 +574,20 @@ export default function Header() {
         }
 
         @media (max-width: 1024px) {
+          .main-header-row {
+            padding: 0.5rem 1.5rem;
+          }
+          .site-header.scrolled .main-header-row {
+            padding: 0.4rem 1.5rem;
+          }
+          .logo-wrapper { height: 40px; }
+          .logo-img { height: 38px; }
+          .top-bar-notice {
+            font-size: 0.64rem;
+            padding: 0.25rem 0.5rem;
+          }
           .desktop-nav { display: none; }
-          .mobile-toggle-btn { display: block; }
+          .mobile-toggle-btn { display: flex; }
         }
       `}</style>
     </header>

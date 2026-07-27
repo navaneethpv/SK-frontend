@@ -201,34 +201,34 @@ export default function Hero() {
 
         @media (max-width: 1024px) {
           .hero-section {
-            padding-top: 86px;
+            padding-top: 72px;
           }
           .hero-banner-container {
-            height: 420px;
+            height: 280px;
           }
+          .left-arrow, .right-arrow {
+            width: 36px;
+            height: 36px;
+          }
+          .left-arrow { left: 1rem; }
+          .right-arrow { right: 1rem; }
         }
 
         @media (max-width: 768px) {
           .hero-section {
-            padding-top: 76px;
+            padding-top: 68px;
           }
           .hero-banner-container {
-            height: 300px;
+            height: 240px;
           }
-          .left-arrow, .right-arrow {
-            width: 40px;
-            height: 40px;
-          }
-          .left-arrow { left: 0.8rem; }
-          .right-arrow { right: 0.8rem; }
         }
 
         @media (max-width: 480px) {
           .hero-section {
-            padding-top: 70px;
+            padding-top: 64px;
           }
           .hero-banner-container {
-            height: 220px;
+            height: 180px;
           }
         }
       `}</style>
