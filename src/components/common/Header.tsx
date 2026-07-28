@@ -84,13 +84,6 @@ export default function Header() {
     <header className={`w-screen fixed top-0 left-0 z-[1000] bg-[#121316] transition-all duration-300 ${
       isScrolled ? 'bg-[#121316]/95 backdrop-blur-[14px] shadow-[0_4px_25px_rgba(0,0,0,0.25)]' : ''
     }`} style={{ marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}>
-      {/* Top Banner Notice */}
-      <div className={`bg-[#0A0A0A] text-[#D4AF37] text-[0.7rem] font-semibold text-center tracking-[0.08em] uppercase transition-all duration-300 overflow-hidden ${
-        isScrolled ? 'max-h-0 py-0 opacity-0' : 'max-h-[34px] py-1.5 px-4 opacity-100'
-      }`}>
-        <span>Complimentary Express Shipping on Orders Over ₹499 • 100% Authentic Organic Formulations</span>
-      </div>
-
       {/* Main Header Row */}
       <div className={`w-full flex items-center justify-between transition-all duration-300 bg-[#121316] ${
         isScrolled ? 'bg-transparent py-2.5 px-6 lg:px-14' : 'py-3.5 px-6 lg:px-14'

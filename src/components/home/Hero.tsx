@@ -66,7 +66,7 @@ export default function Hero() {
   return (
     <section
       ref={heroRef}
-      className="w-screen relative bg-[#111111] overflow-hidden pt-[54px] md:pt-[60px] lg:pt-[72px] xl:pt-[96px]"
+      className="w-screen relative bg-[#111111] overflow-hidden pt-[58px] lg:pt-[68px]"
       style={{ marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
