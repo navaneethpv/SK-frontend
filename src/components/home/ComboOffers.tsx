@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ShoppingBag, ArrowRight } from 'lucide-react';
+import { motion, Variants } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 
 interface BundleCard {
@@ -51,6 +52,26 @@ const BUNDLE_ITEMS: BundleCard[] = [
   }
 ];
 
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: 'easeOut' }
+  }
+};
+
 export default function ComboOffers() {
   const { addToCart } = useCart();
 
@@ -69,10 +90,15 @@ export default function ComboOffers() {
   };
 
   return (
-    <section className="w-full py-12 lg:py-20 bg-[#FAF8F5] border-t border-b border-[#F0EDE8] animate-fade-in-up">
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-50px' }}
+      className="w-full py-12 lg:py-20 bg-[#FAF8F5] border-t border-b border-[#F0EDE8]"
+    >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 lg:mb-12 gap-4">
+        <motion.div variants={cardVariants} className="flex flex-col md:flex-row md:items-end justify-between mb-8 lg:mb-12 gap-4">
           <div>
             <span className="text-[0.72rem] font-extrabold tracking-[0.15em] text-[#C39F68] block mb-1 uppercase">
               SPECIAL VALUE BUNDLES
@@ -92,14 +118,16 @@ export default function ComboOffers() {
             <span>Explore All Bundles</span>
             <ArrowRight size={16} />
           </Link>
-        </div>
+        </motion.div>
 
         {/* 3 Main Bundle Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {BUNDLE_ITEMS.map((bundle) => (
-            <div
+            <motion.div
               key={bundle.id}
-              className="group bg-white border border-[#EAE5DC] rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 hover:border-[#C39F68]"
+              variants={cardVariants}
+              whileHover={{ y: -8 }}
+              className="group bg-white border border-[#EAE5DC] rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:border-[#C39F68]"
             >
               <Link href={`/shop?bundle=${bundle.slug}`} className="flex flex-col h-full no-underline">
                 {/* Bundle Image Container */}
@@ -147,10 +175,10 @@ export default function ComboOffers() {
                   <span>BUILD BUNDLE</span>
                 </button>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

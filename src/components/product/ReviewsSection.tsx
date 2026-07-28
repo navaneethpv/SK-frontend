@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star, CheckCircle2, Quote } from 'lucide-react';
+import { motion, Variants } from 'framer-motion';
 
 interface Review {
   id: number;
@@ -53,12 +54,37 @@ const REVIEWS: Review[] = [
   }
 ];
 
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: 'easeOut' }
+  }
+};
+
 export default function ReviewsSection() {
   return (
-    <section className="w-full py-16 lg:py-24 bg-[#FAF8F5] border-t border-b border-[#F0EDE8] relative overflow-hidden animate-fade-in-up">
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-50px' }}
+      className="w-full py-16 lg:py-24 bg-[#FAF8F5] border-t border-b border-[#F0EDE8] relative overflow-hidden"
+    >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Top Social Proof Rating Summary */}
-        <div className="flex flex-col items-center text-center mb-12 lg:mb-16">
+        <motion.div variants={cardVariants} className="flex flex-col items-center text-center mb-12 lg:mb-16">
           <div className="inline-flex items-center gap-2 bg-[#C39F68]/10 border border-[#C39F68]/30 px-3.5 py-1.5 rounded-full mb-4">
             <span className="text-[0.72rem] font-extrabold tracking-[0.14em] text-[#C39F68] uppercase">
               VERIFIED CUSTOMER REVIEWS
@@ -108,14 +134,16 @@ export default function ReviewsSection() {
               Based on <strong className="text-[#121316]">2,450+</strong> verified reviews
             </span>
           </div>
-        </div>
+        </motion.div>
 
         {/* 3 Testimonial Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {REVIEWS.map((rev) => (
-            <div
+            <motion.div
               key={rev.id}
-              className="group bg-white border border-[#EAE5DC] rounded-2xl p-6 lg:p-8 flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 hover:border-[#C39F68] relative"
+              variants={cardVariants}
+              whileHover={{ y: -6 }}
+              className="group bg-white border border-[#EAE5DC] rounded-2xl p-6 lg:p-8 flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:border-[#C39F68] relative"
             >
               <Quote className="absolute top-6 right-6 text-[#C39F68]/15 w-10 h-10 pointer-events-none group-hover:text-[#C39F68]/30 transition-colors" />
 
@@ -165,10 +193,10 @@ export default function ReviewsSection() {
                   <span className="text-[0.82rem] font-bold text-[#121316] truncate">{rev.productName}</span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }
