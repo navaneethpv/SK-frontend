@@ -185,13 +185,13 @@ export default function Header() {
 
               {activeDropdown === String(cat.id) && (
                 <div className="absolute top-full left-0 pt-2 z-50 animate-fade-in">
-                  <div className="w-[300px] bg-[#18191C]/98 backdrop-blur-md border border-[#2D2F36] rounded-xl shadow-[0_16px_40px_rgba(0,0,0,0.5)] p-4">
-                    <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-[#2D2F36]">
-                      <span className="text-[0.8rem] font-extrabold text-white uppercase tracking-wider">{cat.name}</span>
+                  <div className="w-[300px] bg-white border border-[#121316] rounded-xl shadow-[0_16px_36px_rgba(0,0,0,0.15)] p-4">
+                    <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-[#EAE5DC]">
+                      <span className="text-[0.8rem] font-extrabold text-[#121316] uppercase tracking-wider">{cat.name}</span>
                       <Link
                         href={`/shop?category=${cat.slug}`}
                         onClick={() => setActiveDropdown(null)}
-                        className="flex items-center gap-1 text-[0.72rem] font-bold text-[#C39F68] hover:underline"
+                        className="flex items-center gap-1 text-[0.72rem] font-bold text-[#121316] hover:text-[#C39F68] hover:underline"
                       >
                         <span>View all</span>
                         <ArrowRight size={13} />
@@ -211,9 +211,9 @@ export default function Header() {
                             key={prod.id}
                             href={`/product/${prod.slug}`}
                             onClick={() => setActiveDropdown(null)}
-                            className="flex items-center justify-between py-2 px-2.5 rounded-lg hover:bg-[#25272D] transition-colors group/item"
+                            className="flex items-center justify-between py-2 px-2.5 rounded-lg hover:bg-[#FAF8F5] transition-colors group/item"
                           >
-                            <span className="text-[0.82rem] text-gray-200 font-medium line-clamp-1 group-hover/item:text-[#C39F68] transition-colors">{prod.title}</span>
+                            <span className="text-[0.82rem] text-[#27272A] font-medium line-clamp-1 group-hover/item:text-[#121316] transition-colors">{prod.title}</span>
                             <span className="text-[0.78rem] text-[#C39F68] font-bold shrink-0 ml-2">{prod.price}</span>
                           </Link>
                         ))
