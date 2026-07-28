@@ -3,131 +3,50 @@ import { Truck, ShieldCheck, Sparkles, RefreshCw } from 'lucide-react';
 
 export default function TrustBar() {
   return (
-    <section className="trust-bar-section">
-      <div className="section-container">
-        <div className="trust-bar-grid">
-          <div className="trust-item">
-            <div className="trust-icon-box">
+    <section className="w-full bg-[#FAF8F5] py-[1rem] sm:py-[1.2rem] lg:py-[1.8rem] border-t border-b border-[#F0EDE8]">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+          <div className="flex items-center gap-[0.8rem]">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-[42px] lg:h-[42px] rounded-full bg-white border border-[#EAE6DF] flex items-center justify-center shrink-0 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
               <Truck size={20} color="#C5A059" />
             </div>
-            <div className="trust-text-block">
-              <span className="trust-title">Free Express Shipping</span>
-              <span className="trust-desc">On all orders over ₹499</span>
+            <div className="flex flex-col">
+              <span className="text-[0.72rem] sm:text-[0.76rem] lg:text-[0.82rem] font-bold text-[#121316] leading-tight">Free Express Shipping</span>
+              <span className="text-[0.62rem] sm:text-[0.66rem] lg:text-[0.72rem] text-[#6B7280] mt-[2px]">On all orders over ₹499</span>
             </div>
           </div>
 
-          <div className="trust-item">
-            <div className="trust-icon-box">
+          <div className="flex items-center gap-[0.8rem]">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-[42px] lg:h-[42px] rounded-full bg-white border border-[#EAE6DF] flex items-center justify-center shrink-0 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
               <Sparkles size={20} color="#C5A059" />
             </div>
-            <div className="trust-text-block">
-              <span className="trust-title">100% Organic Formulations</span>
-              <span className="trust-desc">Dermatologically tested & certified</span>
+            <div className="flex flex-col">
+              <span className="text-[0.72rem] sm:text-[0.76rem] lg:text-[0.82rem] font-bold text-[#121316] leading-tight">100% Organic Formulations</span>
+              <span className="text-[0.62rem] sm:text-[0.66rem] lg:text-[0.72rem] text-[#6B7280] mt-[2px]">Dermatologically tested & certified</span>
             </div>
           </div>
 
-          <div className="trust-item">
-            <div className="trust-icon-box">
+          <div className="flex items-center gap-[0.8rem]">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-[42px] lg:h-[42px] rounded-full bg-white border border-[#EAE6DF] flex items-center justify-center shrink-0 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
               <ShieldCheck size={20} color="#C5A059" />
             </div>
-            <div className="trust-text-block">
-              <span className="trust-title">Authenticity Guaranteed</span>
-              <span className="trust-desc">Direct from official SK laboratory</span>
+            <div className="flex flex-col">
+              <span className="text-[0.72rem] sm:text-[0.76rem] lg:text-[0.82rem] font-bold text-[#121316] leading-tight">Authenticity Guaranteed</span>
+              <span className="text-[0.62rem] sm:text-[0.66rem] lg:text-[0.72rem] text-[#6B7280] mt-[2px]">Direct from official SK laboratory</span>
             </div>
           </div>
 
-          <div className="trust-item">
-            <div className="trust-icon-box">
+          <div className="flex items-center gap-[0.8rem]">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-[42px] lg:h-[42px] rounded-full bg-white border border-[#EAE6DF] flex items-center justify-center shrink-0 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
               <RefreshCw size={20} color="#C5A059" />
             </div>
-            <div className="trust-text-block">
-              <span className="trust-title">7-Day Easy Returns</span>
-              <span className="trust-desc">100% satisfaction promise</span>
+            <div className="flex flex-col">
+              <span className="text-[0.72rem] sm:text-[0.76rem] lg:text-[0.82rem] font-bold text-[#121316] leading-tight">7-Day Easy Returns</span>
+              <span className="text-[0.62rem] sm:text-[0.66rem] lg:text-[0.72rem] text-[#6B7280] mt-[2px]">100% satisfaction promise</span>
             </div>
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .trust-bar-section {
-          width: 100%;
-          background-color: #FAF8F5;
-          padding: 1.8rem 0;
-          border-top: 1px solid #F0EDE8;
-          border-bottom: 1px solid #F0EDE8;
-        }
-
-        .section-container {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 0 2rem;
-        }
-
-        .trust-bar-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 1.5rem;
-        }
-
-        .trust-item {
-          display: flex;
-          align-items: center;
-          gap: 0.8rem;
-        }
-
-        .trust-icon-box {
-          width: 42px;
-          height: 42px;
-          border-radius: 50%;
-          background-color: #ffffff;
-          border: 1px solid #EAE6DF;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .trust-text-block {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .trust-title {
-          font-size: 0.82rem;
-          font-weight: 700;
-          color: #121316;
-          line-height: 1.2;
-        }
-
-        .trust-desc {
-          font-size: 0.72rem;
-          color: #6B7280;
-          margin-top: 2px;
-        }
-
-        @media (max-width: 1024px) {
-          .trust-bar-section { padding: 1.2rem 0; }
-          .trust-bar-grid {
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-          }
-          .trust-icon-box { width: 36px; height: 36px; }
-          .trust-title { font-size: 0.76rem; }
-          .trust-desc { font-size: 0.66rem; }
-        }
-
-        @media (max-width: 640px) {
-          .trust-bar-section { padding: 1rem 0; }
-          .trust-bar-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-          }
-          .trust-icon-box { width: 32px; height: 32px; }
-          .trust-title { font-size: 0.72rem; }
-          .trust-desc { font-size: 0.62rem; }
-        }
-      `}</style>
     </section>
   );
 }

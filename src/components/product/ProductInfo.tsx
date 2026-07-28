@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { Star, ShoppingCart, Check, Heart, Scale } from 'lucide-react';
 import { IProduct } from '@/types/product';
-import { cartAPI } from '@/api/services/cartAPI';
 import { useCart } from '@/context/CartContext';
 
 interface ProductInfoProps {
@@ -41,7 +40,6 @@ export default function ProductInfo({ product }: ProductInfoProps) {
   };
 
   const handleBuyNow = () => {
-    // Add to cart without opening side drawer, and redirect directly to checkout order page
     addToCart({
       id: product.id,
       title: product.alias,
@@ -52,69 +50,75 @@ export default function ProductInfo({ product }: ProductInfoProps) {
   };
 
   return (
-    <div className="product-info-container">
+    <div className="flex flex-col gap-6">
       {/* Breadcrumbs */}
-      <div className="breadcrumbs">
-        Home &gt; Shop &gt; Power Tools &gt; <span className="active">{product.alias}</span>
+      <div className="text-[0.85rem] text-[#6B7280] flex gap-1.5 items-center">
+        <span>Home</span> &gt; <span>Shop</span> &gt; <span>Power Tools</span> &gt; <span className="text-[#121316] font-medium">{product.alias}</span>
       </div>
 
       {/* Title & Tagline */}
-      <h1 className="product-title">{product.alias}</h1>
-      <p className="product-tagline">{product.sdescription}</p>
+      <div>
+        <h1 className="text-[2.2rem] font-extrabold text-[#121316] leading-tight mb-2">{product.alias}</h1>
+        <p className="text-[1.1rem] text-[#6B7280] leading-relaxed">{product.sdescription}</p>
+      </div>
 
       {/* Ratings & Stock Availability */}
-      <div className="rating-stock-row">
-        <div className="ratings">
-          <div className="stars">
+      <div className="flex items-center justify-between border-b border-[#EAE5DC] pb-5">
+        <div className="flex items-center gap-2.5">
+          <div className="flex text-[#C39F68]">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
                 size={16}
                 fill={i < Math.floor(product.rating || 4.5) ? 'currentColor' : 'none'}
-                className="star-icon"
+                className="text-[#C39F68]"
               />
             ))}
           </div>
-          <span className="rating-text">({product.review_count || 128} Customer Reviews)</span>
+          <span className="text-[0.85rem] text-[#6B7280] font-medium">({product.review_count || 128} Customer Reviews)</span>
         </div>
-        <span className="stock-badge badge-green">In Stock</span>
+        <span className="bg-[#15803D]/10 text-[#15803D] font-semibold text-[0.75rem] px-2.5 py-1 rounded uppercase tracking-wider">In Stock</span>
       </div>
 
       {/* Pricing Showcase */}
-      <div className="price-row">
+      <div className="flex items-center gap-4 my-1">
         {hasDiscount ? (
           <>
-            <span className="sale-price">${salePrice.toFixed(2)}</span>
-            <span className="original-price">${originalPrice.toFixed(2)}</span>
-            <span className="discount-tag">-{discountPercentage}% OFF</span>
+            <span className="text-[2rem] font-extrabold text-[#121316]">₹{salePrice.toFixed(2)}</span>
+            <span className="text-[1.2rem] text-[#6B7280] line-through">₹{originalPrice.toFixed(2)}</span>
+            <span className="bg-[#C39F68] text-white font-bold text-[0.75rem] px-2.5 py-1 rounded">-{discountPercentage}% OFF</span>
           </>
         ) : (
-          <span className="sale-price">${originalPrice.toFixed(2)}</span>
+          <span className="text-[2rem] font-extrabold text-[#121316]">₹{originalPrice.toFixed(2)}</span>
         )}
       </div>
 
       {/* Highlights / Specs bullets */}
-      <div className="bullets-section">
-        <h3 className="section-title">Key Features</h3>
-        <ul className="bullets-list">
-          <li>Brushless motor delivers up to 50% more runtime and lifespan</li>
-          <li>Heavy-duty 2-speed metal transmission for superior durability</li>
-          <li>Compact design fits into tight spaces with ergonomic grip</li>
-          <li>Integrated LED worklight illuminates dark workspaces</li>
+      <div className="bg-[#FAF7F2]/60 rounded-md p-6 border border-[#EAE5DC]">
+        <h3 className="text-[1rem] font-bold mb-3 text-[#121316]">Key Features</h3>
+        <ul className="list-none space-y-2.5 p-0 m-0">
+          <li className="relative pl-6 text-[0.9rem] text-[#6B7280] before:content-['✓'] before:absolute before:left-0 before:text-[#C39F68] before:font-bold">Brushless motor delivers up to 50% more runtime and lifespan</li>
+          <li className="relative pl-6 text-[0.9rem] text-[#6B7280] before:content-['✓'] before:absolute before:left-0 before:text-[#C39F68] before:font-bold">Heavy-duty 2-speed metal transmission for superior durability</li>
+          <li className="relative pl-6 text-[0.9rem] text-[#6B7280] before:content-['✓'] before:absolute before:left-0 before:text-[#C39F68] before:font-bold">Compact design fits into tight spaces with ergonomic grip</li>
+          <li className="relative pl-6 text-[0.9rem] text-[#6B7280] before:content-['✓'] before:absolute before:left-0 before:text-[#C39F68] before:font-bold">Integrated LED worklight illuminates dark workspaces</li>
         </ul>
       </div>
 
       {/* Custom Variant Options */}
-      <div className="variants-section">
+      <div className="flex flex-col gap-5 border-y border-[#EAE5DC] py-6">
         {/* Battery Selection */}
-        <div className="variant-group">
-          <label className="variant-label">Battery Capacity</label>
-          <div className="variant-buttons">
+        <div className="flex flex-col gap-2.5">
+          <label className="text-[0.85rem] font-bold uppercase text-[#6B7280] tracking-wider">Battery Capacity</label>
+          <div className="flex gap-3 flex-wrap">
             {['2.0 Ah', '4.0 Ah (Recommended)', '5.0 Ah'].map((size) => (
               <button
                 key={size}
                 onClick={() => setBatterySize(size)}
-                className={`variant-btn ${batterySize === size ? 'selected' : ''}`}
+                className={`px-5 py-2.5 rounded-md border text-[0.85rem] font-semibold cursor-pointer transition-all duration-300 ${
+                  batterySize === size
+                    ? 'bg-[#121316] text-white border-[#121316]'
+                    : 'border-[#EAE5DC] bg-white text-[#121316] hover:border-gray-400 hover:bg-[#FAF7F2]'
+                }`}
               >
                 {size}
               </button>
@@ -123,14 +127,18 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         </div>
 
         {/* Kit Selection */}
-        <div className="variant-group">
-          <label className="variant-label">Charger & Case Options</label>
-          <div className="variant-buttons">
+        <div className="flex flex-col gap-2.5">
+          <label className="text-[0.85rem] font-bold uppercase text-[#6B7280] tracking-wider">Charger & Case Options</label>
+          <div className="flex gap-3 flex-wrap">
             {['Tool Only', 'Tool + Case', 'Complete Kit'].map((type) => (
               <button
                 key={type}
                 onClick={() => setKitType(type)}
-                className={`variant-btn ${kitType === type ? 'selected' : ''}`}
+                className={`px-5 py-2.5 rounded-md border text-[0.85rem] font-semibold cursor-pointer transition-all duration-300 ${
+                  kitType === type
+                    ? 'bg-[#121316] text-white border-[#121316]'
+                    : 'border-[#EAE5DC] bg-white text-[#121316] hover:border-gray-400 hover:bg-[#FAF7F2]'
+                }`}
               >
                 {type}
               </button>
@@ -140,17 +148,19 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       {/* Quantity & Actions Bar */}
-      <div className="actions-section">
-        <div className="quantity-selector">
-          <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="qty-btn">-</button>
-          <span className="qty-count">{quantity}</span>
-          <button onClick={() => setQuantity(quantity + 1)} className="qty-btn">+</button>
+      <div className="flex gap-4 items-center flex-wrap">
+        <div className="flex items-center border border-[#EAE5DC] rounded-md bg-[#FAF7F2] h-12 overflow-hidden">
+          <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-full border-none bg-none text-[1.2rem] font-semibold cursor-pointer hover:bg-gray-200 transition-colors">-</button>
+          <span className="px-4 font-bold text-[0.95rem] text-[#121316]">{quantity}</span>
+          <button onClick={() => setQuantity(quantity + 1)} className="w-10 h-full border-none bg-none text-[1.2rem] font-semibold cursor-pointer hover:bg-gray-200 transition-colors">+</button>
         </div>
 
         <button
           onClick={handleAddToCart}
           disabled={addingToCart}
-          className={`btn-action btn-add-cart ${addedSuccess ? 'success' : ''}`}
+          className={`flex-1 h-12 rounded-md font-bold text-[0.95rem] cursor-pointer flex items-center justify-center gap-2 border-none min-w-[140px] transition-all duration-300 ${
+            addedSuccess ? 'bg-[#15803D] text-white' : 'bg-[#121316] text-white hover:bg-[#121316]/85'
+          }`}
         >
           {addedSuccess ? (
             <><Check size={18} /> Added to Cart</>
@@ -159,339 +169,42 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           )}
         </button>
 
-        <button onClick={handleBuyNow} className="btn-action btn-buy-now">
+        <button onClick={handleBuyNow} className="flex-1 h-12 rounded-md font-bold text-[0.95rem] cursor-pointer flex items-center justify-center gap-2 border-none min-w-[140px] bg-[#C39F68] text-white hover:bg-[#B08D46] transition-all duration-300">
           Buy Now
         </button>
       </div>
 
       {/* Auxiliary actions: wishlist and compare */}
-      <div className="aux-actions">
+      <div className="flex gap-6 mt-2">
         <button
           onClick={() => setIsWishlisted(!isWishlisted)}
-          className={`aux-btn ${isWishlisted ? 'active' : ''}`}
+          className={`flex items-center gap-1.5 bg-none border-none text-[0.85rem] font-semibold cursor-pointer transition-colors ${
+            isWishlisted ? 'text-[#FF2E93]' : 'text-[#6B7280] hover:text-[#C39F68]'
+          }`}
         >
           <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} />
           {isWishlisted ? 'Wishlisted' : 'Add to Wishlist'}
         </button>
-        <button className="aux-btn">
+        <button className="flex items-center gap-1.5 bg-none border-none text-[0.85rem] font-semibold text-[#6B7280] hover:text-[#C39F68] cursor-pointer transition-colors">
           <Scale size={16} /> Add to Compare
         </button>
       </div>
 
       {/* Meta specifications */}
-      <div className="meta-specs">
-        <div className="meta-item">
-          <span className="meta-label">SKU:</span>
-          <span className="meta-val">SK-PD-18V-BRUSHLESS</span>
+      <div className="border-t border-[#EAE5DC] pt-6 flex flex-col gap-2.5">
+        <div className="flex text-[0.85rem] gap-2">
+          <span className="font-bold text-[#121316]">SKU:</span>
+          <span className="text-[#6B7280]">SK-PD-18V-BRUSHLESS</span>
         </div>
-        <div className="meta-item">
-          <span className="meta-label">Categories:</span>
-          <span className="meta-val">Power Tools, Cordless Drills</span>
+        <div className="flex text-[0.85rem] gap-2">
+          <span className="font-bold text-[#121316]">Categories:</span>
+          <span className="text-[#6B7280]">Power Tools, Cordless Drills</span>
         </div>
-        <div className="meta-item">
-          <span className="meta-label">Tags:</span>
-          <span className="meta-val">Brushless, Cordless, Heavy Duty</span>
+        <div className="flex text-[0.85rem] gap-2">
+          <span className="font-bold text-[#121316]">Tags:</span>
+          <span className="text-[#6B7280]">Brushless, Cordless, Heavy Duty</span>
         </div>
       </div>
-
-      <style jsx>{`
-        .product-info-container {
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-        }
-
-        .breadcrumbs {
-          font-size: 0.85rem;
-          color: hsl(var(--muted-foreground));
-          display: flex;
-          gap: 0.4rem;
-        }
-
-        .breadcrumbs .active {
-          color: hsl(var(--foreground));
-          font-weight: 500;
-        }
-
-        .product-title {
-          font-size: 2.2rem;
-          font-weight: 800;
-          color: hsl(var(--foreground));
-          line-height: 1.2;
-        }
-
-        .product-tagline {
-          font-size: 1.1rem;
-          color: hsl(var(--muted-foreground));
-          line-height: 1.5;
-        }
-
-        .rating-stock-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          border-bottom: 1px solid hsl(var(--border));
-          padding-bottom: 1.2rem;
-        }
-
-        .ratings {
-          display: flex;
-          align-items: center;
-          gap: 0.6rem;
-        }
-
-        .stars {
-          display: flex;
-          color: hsl(var(--rating));
-        }
-
-        .rating-text {
-          font-size: 0.85rem;
-          color: hsl(var(--muted-foreground));
-          font-weight: 500;
-        }
-
-        .price-row {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          margin: 0.5rem 0;
-        }
-
-        .sale-price {
-          font-size: 2rem;
-          font-weight: 800;
-          color: hsl(var(--foreground));
-        }
-
-        .original-price {
-          font-size: 1.2rem;
-          color: hsl(var(--muted-foreground));
-          text-decoration: line-through;
-        }
-
-        .discount-tag {
-          background-color: hsl(var(--primary));
-          color: white;
-          font-weight: 700;
-          font-size: 0.75rem;
-          padding: 0.3rem 0.6rem;
-          border-radius: var(--radius-sm);
-        }
-
-        .bullets-section {
-          background-color: hsl(var(--muted) / 0.4);
-          border-radius: var(--radius-md);
-          padding: 1.5rem;
-          border: 1px solid hsl(var(--border));
-        }
-
-        .bullets-section .section-title {
-          font-size: 1rem;
-          font-weight: 700;
-          margin-bottom: 0.8rem;
-        }
-
-        .bullets-list {
-          list-style: none;
-          display: flex;
-          flex-direction: column;
-          gap: 0.6rem;
-        }
-
-        .bullets-list li {
-          font-size: 0.9rem;
-          position: relative;
-          padding-left: 1.5rem;
-          color: hsl(var(--muted-foreground));
-        }
-
-        .bullets-list li::before {
-          content: '✓';
-          position: absolute;
-          left: 0;
-          color: hsl(var(--primary));
-          font-weight: 700;
-        }
-
-        .variants-section {
-          display: flex;
-          flex-direction: column;
-          gap: 1.2rem;
-          border-top: 1px solid hsl(var(--border));
-          border-bottom: 1px solid hsl(var(--border));
-          padding: 1.5rem 0;
-        }
-
-        .variant-group {
-          display: flex;
-          flex-direction: column;
-          gap: 0.6rem;
-        }
-
-        .variant-label {
-          font-size: 0.85rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          color: hsl(var(--muted-foreground));
-          letter-spacing: 0.05em;
-        }
-
-        .variant-buttons {
-          display: flex;
-          gap: 0.8rem;
-          flex-wrap: wrap;
-        }
-
-        .variant-btn {
-          padding: 0.6rem 1.2rem;
-          border-radius: var(--radius-md);
-          border: 1px solid hsl(var(--border));
-          background-color: hsl(var(--background));
-          font-weight: 600;
-          font-size: 0.85rem;
-          cursor: pointer;
-          transition: var(--transition-smooth);
-        }
-
-        .variant-btn.selected {
-          background-color: hsl(var(--foreground));
-          color: white;
-          border-color: hsl(var(--foreground));
-        }
-
-        .variant-btn:hover:not(.selected) {
-          border-color: hsl(var(--border) / 1.8);
-          background-color: hsl(var(--muted));
-        }
-
-        .actions-section {
-          display: flex;
-          gap: 1rem;
-          align-items: center;
-          flex-wrap: wrap;
-        }
-
-        .quantity-selector {
-          display: flex;
-          align-items: center;
-          border: 1px solid hsl(var(--border));
-          border-radius: var(--radius-md);
-          overflow: hidden;
-          background-color: hsl(var(--muted));
-          height: 48px;
-        }
-
-        .qty-btn {
-          width: 40px;
-          height: 100%;
-          border: none;
-          background: none;
-          font-size: 1.2rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: var(--transition-smooth);
-        }
-
-        .qty-btn:hover {
-          background-color: hsl(var(--border) / 0.4);
-        }
-
-        .qty-count {
-          padding: 0 1rem;
-          font-weight: 700;
-          font-size: 0.95rem;
-        }
-
-        .btn-action {
-          flex: 1;
-          height: 48px;
-          border-radius: var(--radius-md);
-          font-weight: 700;
-          font-size: 0.95rem;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          transition: var(--transition-smooth);
-          border: none;
-          min-width: 140px;
-        }
-
-        .btn-add-cart {
-          background-color: hsl(var(--foreground));
-          color: white;
-        }
-
-        .btn-add-cart:hover {
-          background-color: hsl(var(--foreground) / 0.85);
-        }
-
-        .btn-add-cart.success {
-          background-color: hsl(var(--success));
-        }
-
-        .btn-buy-now {
-          background-color: hsl(var(--primary));
-          color: white;
-        }
-
-        .btn-buy-now:hover {
-          background-color: #E04F00;
-          box-shadow: 0 5px 15px hsla(var(--primary), 0.2);
-        }
-
-        .aux-actions {
-          display: flex;
-          gap: 1.5rem;
-          margin-top: 0.5rem;
-        }
-
-        .aux-btn {
-          display: flex;
-          align-items: center;
-          gap: 0.4rem;
-          background: none;
-          border: none;
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: hsl(var(--muted-foreground));
-          cursor: pointer;
-          transition: var(--transition-smooth);
-        }
-
-        .aux-btn:hover, .aux-btn.active {
-          color: hsl(var(--primary));
-        }
-
-        .aux-btn.active {
-          color: #FF2E93;
-        }
-
-        .meta-specs {
-          border-top: 1px solid hsl(var(--border));
-          padding-top: 1.5rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.6rem;
-        }
-
-        .meta-item {
-          display: flex;
-          font-size: 0.85rem;
-          gap: 0.5rem;
-        }
-
-        .meta-label {
-          font-weight: 700;
-          color: hsl(var(--foreground));
-        }
-
-        .meta-val {
-          color: hsl(var(--muted-foreground));
-        }
-      `}</style>
     </div>
   );
 }

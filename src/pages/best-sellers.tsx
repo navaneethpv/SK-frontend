@@ -93,7 +93,7 @@ export default function BestSellersPage() {
   }, []);
 
   return (
-    <div className="bestsellers-page-wrapper">
+    <div className="min-h-screen flex flex-col bg-[#FAF8F5]">
       <Head>
         <title>Best Sellers | SK Luxury Grooming & Lifestyle</title>
         <meta name="description" content="Shop SK's top-rated best selling hair oils, fragrances, skincare, and luxury lifestyle accessories." />
@@ -101,23 +101,23 @@ export default function BestSellersPage() {
 
       <Header />
 
-      <main className="bestsellers-main">
-        <div className="page-header-banner">
-          <div className="banner-content">
-            <span className="sub-tag">MOST LOVED & TOP RATED</span>
-            <h1 className="main-title">SK Bestsellers</h1>
-            <p className="description-text">
+      <main className="flex-1">
+        <div className="bg-[#121316] text-white py-16 px-6 text-center">
+          <div className="max-w-[800px] mx-auto">
+            <span className="inline-block text-[0.75rem] font-bold tracking-[0.15em] text-[#C39F68] mb-3">MOST LOVED & TOP RATED</span>
+            <h1 className="text-[2.5rem] font-extrabold mb-4 tracking-tight">SK Bestsellers</h1>
+            <p className="text-[1rem] text-[#9CA3AF] leading-relaxed">
               Discover customer favorites—handpicked luxury hair care, long-lasting fragrances, and premium leather essentials.
             </p>
           </div>
         </div>
 
-        <div className="content-container">
-          <div className="filter-bar-row">
-            <span className="results-count">Showing {products.length} Best Sellers</span>
-            <div className="sort-box">
+        <div className="max-w-[1440px] mx-auto px-6 py-12 lg:py-20">
+          <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#E5E7EB]">
+            <span className="text-[0.9rem] font-semibold text-[#4B5563]">Showing {products.length} Best Sellers</span>
+            <div className="flex items-center gap-2.5 text-[0.88rem] text-[#374151]">
               <label htmlFor="sort-select">Sort by:</label>
-              <select id="sort-select" className="sort-dropdown" defaultValue="popular">
+              <select id="sort-select" className="px-3 py-1.5 border border-[#D1D5DB] rounded-md bg-white text-[0.88rem] outline-none cursor-pointer" defaultValue="popular">
                 <option value="popular">Most Popular</option>
                 <option value="rating">Highest Rated</option>
                 <option value="price-low">Price: Low to High</option>
@@ -127,50 +127,49 @@ export default function BestSellersPage() {
           </div>
 
           {loading ? (
-            <div className="bestseller-skeleton-grid">
-              <div className="skeleton-card" />
-              <div className="skeleton-card" />
-              <div className="skeleton-card" />
-              <div className="skeleton-card" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map((n) => (
+                <div key={n} className="w-full h-[320px] rounded-lg bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 animate-pulse" />
+              ))}
             </div>
           ) : (
-            <div className="products-grid">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {products.map((item) => (
-                <div key={item.id} className="product-card">
-                  <Link href={`/product/${getProductSlug(item)}`} className="card-link">
-                    <div className="img-frame">
+                <div key={item.id} className="group bg-white border border-[#E5E7EB] rounded-lg overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_28px_rgba(0,0,0,0.08)] hover:border-[#C39F68]">
+                  <Link href={`/product/${getProductSlug(item)}`} className="flex flex-col h-full no-underline">
+                    <div className="relative w-full aspect-[0.95] p-5 flex items-center justify-center bg-white overflow-hidden">
                       {item.badgeText && (
-                        <span className={`badge-pill ${item.badgeType || 'gold'}`}>{item.badgeText}</span>
+                        <span className="absolute top-3 left-3 px-2 py-1 text-[0.68rem] font-bold rounded bg-[#C39F68] text-white uppercase z-10">{item.badgeText}</span>
                       )}
                       <img
                         src={item.img}
                         alt={item.title}
-                        className="product-img"
+                        className="w-full h-full object-contain transition-transform duration-400 ease-out group-hover:scale-105"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = '/hero cards/4.png';
                         }}
                       />
                     </div>
 
-                    <div className="info-frame">
-                      <div className="rating-row">
-                        <span className="star-gold">★ {item.rating}</span>
-                        <span className="sep-pipe">|</span>
-                        <span className="reviews">{item.reviewsCount} Reviews</span>
+                    <div className="p-4 flex flex-col gap-1.5 flex-1">
+                      <div className="flex items-center gap-1 text-[0.72rem]">
+                        <span className="text-[#F59E0B] font-bold">★ {item.rating}</span>
+                        <span className="text-[#D1D5DB]">|</span>
+                        <span className="text-[#6B7280]">{item.reviewsCount} Reviews</span>
                       </div>
 
-                      <h3 className="product-title">{item.title}</h3>
+                      <h3 className="text-[0.9rem] font-bold text-[#121316] leading-snug line-clamp-2">{item.title}</h3>
 
-                      <div className="price-row">
-                        <span className="curr-price">₹{item.price}</span>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-[1rem] font-extrabold text-[#121316]">₹{item.price}</span>
                         {item.originalPrice && (
-                          <span className="orig-price">₹{item.originalPrice}</span>
+                          <span className="text-[0.82rem] text-[#9CA3AF] line-through">₹{item.originalPrice}</span>
                         )}
                       </div>
                     </div>
                   </Link>
 
-                  <div className="btn-container">
+                  <div className="p-4 pt-0">
                     <button
                       onClick={() =>
                         addToCart({
@@ -181,7 +180,7 @@ export default function BestSellersPage() {
                           img: item.img
                         })
                       }
-                      className="add-to-cart-btn"
+                      className="w-full bg-[#121316] text-white border border-transparent py-2.5 rounded-md text-[0.85rem] font-bold cursor-pointer transition-all duration-200 hover:bg-[#2D3036] hover:border-[#C39F68] active:scale-97"
                     >
                       Add To Cart
                     </button>
@@ -194,287 +193,6 @@ export default function BestSellersPage() {
       </main>
 
       <Footer />
-
-      <style jsx>{`
-        .bestsellers-page-wrapper {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          background-color: #FAF8F5;
-        }
-
-        .bestsellers-main {
-          flex: 1;
-        }
-
-        .page-header-banner {
-          background-color: #121316;
-          color: #ffffff;
-          padding: 4rem 2rem;
-          text-align: center;
-        }
-
-        .banner-content {
-          max-width: 800px;
-          margin: 0 auto;
-        }
-
-        .sub-tag {
-          display: inline-block;
-          font-size: 0.75rem;
-          font-weight: 700;
-          letter-spacing: 0.15em;
-          color: #EAB308;
-          margin-bottom: 0.8rem;
-        }
-
-        .main-title {
-          font-size: 2.5rem;
-          font-weight: 800;
-          margin-bottom: 1rem;
-          letter-spacing: -0.02em;
-        }
-
-        .description-text {
-          font-size: 1rem;
-          color: #9CA3AF;
-          line-height: 1.6;
-        }
-
-        .content-container {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 3rem 2rem 5rem 2rem;
-        }
-
-        .filter-bar-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 2rem;
-          padding-bottom: 1rem;
-          border-bottom: 1px solid #E5E7EB;
-        }
-
-        .results-count {
-          font-size: 0.9rem;
-          font-weight: 600;
-          color: #4B5563;
-        }
-
-        .sort-box {
-          display: flex;
-          align-items: center;
-          gap: 0.6rem;
-          font-size: 0.88rem;
-          color: #374151;
-        }
-
-        .sort-dropdown {
-          padding: 0.4rem 0.8rem;
-          border: 1px solid #D1D5DB;
-          border-radius: 6px;
-          background-color: #ffffff;
-          font-size: 0.88rem;
-          outline: none;
-          cursor: pointer;
-        }
-
-        .products-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 1.5rem;
-        }
-
-        .product-card {
-          background-color: #ffffff;
-          border: 1px solid #E5E7EB;
-          border-radius: 8px;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          transition: all 0.25s ease;
-        }
-
-        .product-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
-          border-color: #C5A059;
-        }
-
-        .product-card:hover .product-img {
-          transform: scale(1.06);
-        }
-
-        .card-link {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-        }
-
-        .img-frame {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 0.95;
-          padding: 1.2rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: #ffffff;
-          overflow: hidden;
-        }
-
-        .badge-pill {
-          position: absolute;
-          top: 0.8rem;
-          left: 0.8rem;
-          padding: 0.25rem 0.6rem;
-          font-size: 0.68rem;
-          font-weight: 700;
-          border-radius: 3px;
-          text-transform: uppercase;
-          z-index: 1;
-        }
-
-        .badge-pill.gold {
-          background-color: #EAB308;
-          color: #ffffff;
-        }
-
-        .product-img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .info-frame {
-          padding: 1rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.4rem;
-          flex: 1;
-        }
-
-        .rating-row {
-          display: flex;
-          align-items: center;
-          gap: 0.3rem;
-          font-size: 0.72rem;
-        }
-
-        .star-gold { color: #F59E0B; font-weight: 700; }
-        .sep-pipe { color: #D1D5DB; }
-
-        .reviews {
-          color: #6B7280;
-        }
-
-        .product-title {
-          font-size: 0.9rem;
-          font-weight: 700;
-          color: #121316;
-          line-height: 1.35;
-        }
-
-        .price-row {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          margin-top: 0.4rem;
-        }
-
-        .curr-price {
-          font-size: 1rem;
-          font-weight: 800;
-          color: #121316;
-        }
-
-        .orig-price {
-          font-size: 0.82rem;
-          color: #9CA3AF;
-          text-decoration: line-through;
-        }
-
-        .btn-container {
-          padding: 0 1rem 1rem 1rem;
-        }
-
-        .add-to-cart-btn {
-          width: 100%;
-          background-color: #121316;
-          color: #ffffff;
-          border: 1px solid transparent;
-          padding: 0.75rem 0;
-          border-radius: 6px;
-          font-size: 0.85rem;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .add-to-cart-btn:hover {
-          background-color: #2D3036;
-          border-color: #C5A059;
-        }
-
-        .add-to-cart-btn:active {
-          transform: scale(0.97);
-        }
-
-        .bestseller-skeleton-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 1.5rem;
-        }
-
-        .skeleton-card {
-          width: 100%;
-          height: 320px;
-          border-radius: 8px;
-          background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
-          background-size: 200% 100%;
-          animation: pulse-shimmer 1.5s infinite ease-in-out;
-        }
-
-        @keyframes pulse-shimmer {
-          0% { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
-        }
-
-        .loading-state {
-          text-align: center;
-          padding: 5rem 0;
-          color: #6B7280;
-        }
-
-        .spinner {
-          width: 40px;
-          height: 40px;
-          border: 3px solid #E5E7EB;
-          border-top-color: #121316;
-          border-radius: 50%;
-          animation: spin 0.8s linear infinite;
-          margin: 0 auto 1rem auto;
-        }
-
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 1024px) {
-          .products-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        @media (max-width: 768px) {
-          .products-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 480px) {
-          .products-grid { grid-template-columns: 1fr; }
-        }
-      `}</style>
     </div>
   );
 }

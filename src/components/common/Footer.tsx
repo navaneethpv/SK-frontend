@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Facebook, Instagram, Youtube, Truck, ShieldCheck, RefreshCw, Award } from 'lucide-react';
+import { Facebook, Instagram, Youtube } from 'lucide-react';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -16,399 +16,95 @@ export default function Footer() {
   };
 
   return (
-    <footer className="site-footer">
-      {/* Trust Badges Bar */}
-      {/* <div className="trust-badges-bar">
-        <div className="trust-container">
-          <div className="trust-item">
-            <Truck size={24} className="trust-icon" />
-            <div className="trust-text">
-              <span className="trust-title">Free Express Delivery</span>
-              <span className="trust-desc">On all orders above ₹499</span>
-            </div>
-          </div>
-
-          <div className="trust-item">
-            <ShieldCheck size={24} className="trust-icon" />
-            <div className="trust-text">
-              <span className="trust-title">100% Authentic Guarantee</span>
-              <span className="trust-desc">Direct from official labs</span>
-            </div>
-          </div>
-
-          <div className="trust-item">
-            <RefreshCw size={24} className="trust-icon" />
-            <div className="trust-text">
-              <span className="trust-title">Hassle-Free Returns</span>
-              <span className="trust-desc">14-day return window</span>
-            </div>
-          </div>
-
-          <div className="trust-item">
-            <Award size={24} className="trust-icon" />
-            <div className="trust-text">
-              <span className="trust-title">Premium Craftsmanship</span>
-              <span className="trust-desc">Pure organic formulations</span>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
-      <div className="footer-main-content">
-        <div className="footer-grid-container">
+    <footer className="w-full bg-[#111111] text-white">
+      <div className="pt-16">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 pb-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-[2.5rem] lg:gap-[3rem]">
           {/* Brand Column */}
-          <div className="footer-brand-col">
-            <Link href="/" className="footer-logo-link">
-              <img src="/SK Logo.svg" alt="SK Logo" className="footer-logo-img" />
+          <div className="flex flex-col gap-[1.2rem]">
+            <Link href="/" className="inline-block">
+              <img src="/SK Logo.svg" alt="SK Logo" className="h-[52px] w-auto object-contain" />
             </Link>
-            <p className="brand-description">
+            <p className="text-[0.85rem] text-[#A3A3A3] leading-[1.6]">
               SK is a luxury grooming and lifestyle brand crafting high-performance organic hair oils, artisanal fragrances, and lifestyle accessories designed for uncompromising quality.
             </p>
-            <div className="social-icons-row">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon-btn" aria-label="Facebook">
+            <div className="flex gap-[0.8rem] mt-2">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Facebook">
                 <Facebook size={16} />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon-btn" aria-label="Instagram">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Instagram">
                 <Instagram size={16} />
               </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="social-icon-btn" aria-label="Youtube">
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Youtube">
                 <Youtube size={16} />
               </a>
             </div>
           </div>
 
           {/* Column 2: Collections */}
-          <div className="footer-links-col">
-            <h3 className="footer-col-title">COLLECTIONS</h3>
-            <ul className="footer-links-list">
-              <li><Link href="/best-sellers">Best Sellers</Link></li>
-              <li><Link href="/products">All Products</Link></li>
-              <li><Link href="/shop?category=haircare">Hair Care Solutions</Link></li>
-              <li><Link href="/shop?category=fragrances">Eau De Parfum</Link></li>
-              <li><Link href="/shop?category=grooming">Face & Body Serums</Link></li>
+          <div className="flex flex-col gap-[1.2rem]">
+            <h3 className="text-[0.8rem] font-bold tracking-[0.12em] text-[#C5A059] uppercase">COLLECTIONS</h3>
+            <ul className="list-none p-0 m-0 flex flex-col gap-[0.8rem]">
+              <li><Link href="/best-sellers" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Best Sellers</Link></li>
+              <li><Link href="/products" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">All Products</Link></li>
+              <li><Link href="/shop?category=haircare" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Hair Care Solutions</Link></li>
+              <li><Link href="/shop?category=fragrances" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Eau De Parfum</Link></li>
+              <li><Link href="/shop?category=grooming" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Face & Body Serums</Link></li>
             </ul>
           </div>
 
           {/* Column 3: Customer Care */}
-          <div className="footer-links-col">
-            <h3 className="footer-col-title">CUSTOMER CARE</h3>
-            <ul className="footer-links-list">
-              <li><Link href="/about">About SK</Link></li>
-              <li><Link href="/checkout">Track Order</Link></li>
-              <li><Link href="/privacy-policy">Privacy Policy</Link></li>
-              <li><Link href="/terms-of-service">Terms of Service</Link></li>
-              <li><Link href="/refund-policy">Refund & Return Policy</Link></li>
+          <div className="flex flex-col gap-[1.2rem]">
+            <h3 className="text-[0.8rem] font-bold tracking-[0.12em] text-[#C5A059] uppercase">CUSTOMER CARE</h3>
+            <ul className="list-none p-0 m-0 flex flex-col gap-[0.8rem]">
+              <li><Link href="/about" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">About SK</Link></li>
+              <li><Link href="/checkout" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Track Order</Link></li>
+              <li><Link href="/privacy-policy" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Privacy Policy</Link></li>
+              <li><Link href="/terms-of-service" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Terms of Service</Link></li>
+              <li><Link href="/refund-policy" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Refund & Return Policy</Link></li>
             </ul>
           </div>
 
           {/* Column 4: Newsletter */}
-          <div className="footer-newsletter-col">
-            <h3 className="footer-col-title">JOIN THE CLUB</h3>
-            <p className="newsletter-text">
+          <div className="flex flex-col gap-4">
+            <h3 className="text-[0.8rem] font-bold tracking-[0.12em] text-[#C5A059] uppercase">JOIN THE CLUB</h3>
+            <p className="text-[0.85rem] text-[#A3A3A3] leading-[1.5]">
               Subscribe to receive private sale invitations, luxury gift launches, and grooming advice.
             </p>
-            <form onSubmit={handleSubscribe} className="newsletter-form">
+            <form onSubmit={handleSubscribe} className="flex gap-2 mt-1.5">
               <input
                 type="email"
                 placeholder="Enter your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="newsletter-input"
+                className="flex-1 h-[42px] px-4 bg-[#1A1A1A] border border-[#333333] rounded-md text-white text-[0.82rem] outline-none transition-colors focus:border-[#C5A059]"
                 required
               />
-              <button type="submit" className="newsletter-btn">
+              <button type="submit" className="h-[42px] px-[1.2rem] bg-[#C5A059] text-white border-none rounded-md text-[0.78rem] font-bold tracking-[0.08em] cursor-pointer transition-colors hover:bg-[#B08D46]">
                 JOIN
               </button>
             </form>
             {subscribed && (
-              <p className="subscribed-success">Thank you for subscribing to SK!</p>
+              <p className="text-[0.78rem] text-[#10B981] font-semibold">Thank you for subscribing to SK!</p>
             )}
           </div>
         </div>
 
         {/* Bottom Legal Bar */}
-        <div className="footer-bottom-bar">
-          <div className="footer-bottom-container">
-            <p className="copyright-text">
+        <div className="border-t border-[#222222] py-6 bg-[#0A0A0A]">
+          <div className="max-w-[1440px] mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <p className="text-[0.78rem] text-[#737373]">
               © {new Date().getFullYear()} SK Luxury Grooming & Lifestyle. All Rights Reserved.
             </p>
-            <div className="legal-links">
-              <Link href="/privacy-policy">Privacy Policy</Link>
-              <span className="dot">•</span>
-              <Link href="/terms-of-service">Terms of Service</Link>
-              <span className="dot">•</span>
-              <Link href="/refund-policy">Refund Policy</Link>
+            <div className="flex items-center gap-[0.8rem]">
+              <Link href="/privacy-policy" className="text-[0.78rem] text-[#737373] no-underline transition-colors hover:text-white">Privacy Policy</Link>
+              <span className="text-[#404040] text-[0.7rem]">•</span>
+              <Link href="/terms-of-service" className="text-[0.78rem] text-[#737373] no-underline transition-colors hover:text-white">Terms of Service</Link>
+              <span className="text-[#404040] text-[0.7rem]">•</span>
+              <Link href="/refund-policy" className="text-[0.78rem] text-[#737373] no-underline transition-colors hover:text-white">Refund Policy</Link>
             </div>
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .site-footer {
-          width: 100%;
-          background-color: #111111;
-          color: #ffffff;
-          font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
-        }
-
-        .trust-badges-bar {
-          background-color: #1A1A1A;
-          border-bottom: 1px solid #262626;
-          padding: 2rem 0;
-        }
-
-        .trust-container {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 0 2rem;
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 2rem;
-        }
-
-        .trust-item {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-
-        :global(.trust-icon) {
-          color: #C5A059;
-          flex-shrink: 0;
-        }
-
-        .trust-text {
-          display: flex;
-          flex-direction: column;
-          gap: 0.2rem;
-        }
-
-        .trust-title {
-          font-size: 0.85rem;
-          font-weight: 700;
-          color: #ffffff;
-          letter-spacing: 0.02em;
-        }
-
-        .trust-desc {
-          font-size: 0.75rem;
-          color: #999999;
-        }
-
-        .footer-main-content {
-          padding-top: 4rem;
-        }
-
-        .footer-grid-container {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 0 2rem 4rem 2rem;
-          display: grid;
-          grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
-          gap: 3rem;
-        }
-
-        .footer-brand-col {
-          display: flex;
-          flex-direction: column;
-          gap: 1.2rem;
-        }
-
-        .footer-logo-img {
-          height: 52px;
-          width: auto;
-          object-fit: contain;
-        }
-
-        .brand-description {
-          font-size: 0.85rem;
-          color: #A3A3A3;
-          line-height: 1.6;
-        }
-
-        .social-icons-row {
-          display: flex;
-          gap: 0.8rem;
-          margin-top: 0.5rem;
-        }
-
-        .social-icon-btn {
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          background-color: #222222;
-          color: #CCCCCC;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
-        }
-
-        .social-icon-btn:hover {
-          background-color: #C5A059;
-          color: #ffffff;
-          transform: translateY(-2px);
-        }
-
-        .footer-links-col {
-          display: flex;
-          flex-direction: column;
-          gap: 1.2rem;
-        }
-
-        .footer-col-title {
-          font-size: 0.8rem;
-          font-weight: 700;
-          letter-spacing: 0.12em;
-          color: #C5A059;
-          text-transform: uppercase;
-        }
-
-        .footer-links-list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 0.8rem;
-        }
-
-        .footer-links-list :global(a) {
-          font-size: 0.85rem;
-          color: #A3A3A3;
-          text-decoration: none;
-          transition: color 0.2s ease;
-        }
-
-        .footer-links-list :global(a:hover) {
-          color: #ffffff;
-        }
-
-        .footer-newsletter-col {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-        }
-
-        .newsletter-text {
-          font-size: 0.85rem;
-          color: #A3A3A3;
-          line-height: 1.5;
-        }
-
-        .newsletter-form {
-          display: flex;
-          gap: 0.5rem;
-          margin-top: 0.4rem;
-        }
-
-        .newsletter-input {
-          flex: 1;
-          height: 42px;
-          padding: 0 1rem;
-          background-color: #1A1A1A;
-          border: 1px solid #333333;
-          border-radius: 6px;
-          color: #ffffff;
-          font-size: 0.82rem;
-          outline: none;
-          transition: border-color 0.2s ease;
-        }
-
-        .newsletter-input:focus {
-          border-color: #C5A059;
-        }
-
-        .newsletter-btn {
-          height: 42px;
-          padding: 0 1.2rem;
-          background-color: #C5A059;
-          color: #ffffff;
-          border: none;
-          border-radius: 6px;
-          font-size: 0.78rem;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          cursor: pointer;
-          transition: background-color 0.2s ease;
-        }
-
-        .newsletter-btn:hover {
-          background-color: #B08D46;
-        }
-
-        .subscribed-success {
-          font-size: 0.78rem;
-          color: #10B981;
-          font-weight: 600;
-        }
-
-        .footer-bottom-bar {
-          border-top: 1px solid #222222;
-          padding: 1.5rem 0;
-          background-color: #0A0A0A;
-        }
-
-        .footer-bottom-container {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 0 2rem;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .copyright-text {
-          font-size: 0.78rem;
-          color: #737373;
-        }
-
-        .legal-links {
-          display: flex;
-          align-items: center;
-          gap: 0.8rem;
-        }
-
-        .legal-links :global(a) {
-          font-size: 0.78rem;
-          color: #737373;
-          text-decoration: none;
-          transition: color 0.2s ease;
-        }
-
-        .legal-links :global(a:hover) {
-          color: #ffffff;
-        }
-
-        .dot {
-          color: #404040;
-          font-size: 0.7rem;
-        }
-
-        @media (max-width: 1024px) {
-          .trust-container {
-            grid-template-columns: repeat(2, 1fr);
-          }
-          .footer-grid-container {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-
-        @media (max-width: 640px) {
-          .trust-container {
-            grid-template-columns: 1fr;
-          }
-          .footer-grid-container {
-            grid-template-columns: 1fr;
-            gap: 2.5rem;
-          }
-          .footer-bottom-container {
-            flex-direction: column;
-            gap: 1rem;
-            text-align: center;
-          }
-        }
-      `}</style>
     </footer>
   );
 }

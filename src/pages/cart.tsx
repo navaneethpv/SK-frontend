@@ -33,136 +33,134 @@ export default function CartPage() {
         <meta name="description" content="View items in your SK shopping cart, apply promotional discount codes, and proceed to checkout." />
       </Head>
 
-      <div className="cart-page-wrapper">
+      <div className="w-full min-h-screen bg-white">
         <Header />
 
-        <main className="cart-main-container">
-          <div className="container">
+        <main className="pt-28 pb-20">
+          <div className="max-w-[1440px] mx-auto px-6 lg:px-8">
             {/* Breadcrumbs */}
-            <div className="breadcrumbs">
-              <Link href="/">Home</Link> &gt; <span className="active">Shopping Cart</span>
+            <div className="text-[0.82rem] text-[#6B7280] mb-6">
+              <Link href="/" className="text-[#6B7280] hover:text-[#121316] transition-colors">Home</Link> &gt; <span className="text-[#121316] font-semibold">Shopping Cart</span>
             </div>
 
-            <h1 className="page-title">Shopping Cart ({cartCount})</h1>
+            <h1 className="text-[2.2rem] font-bold text-[#121316] mb-10">Shopping Cart ({cartCount})</h1>
 
             {cart.length === 0 ? (
-              <div className="empty-cart-card">
-                <ShoppingBag size={64} color="#D1D5DB" />
-                <h2 className="empty-heading">Your cart is currently empty</h2>
-                <p className="empty-text">Before proceeding to checkout you must add some products to your shopping cart.</p>
-                <Link href="/" className="continue-btn">
+              <div className="flex flex-col items-center justify-center py-20 px-8 border border-[#E5E7EB] rounded-xl text-center gap-4">
+                <ShoppingBag size={64} className="text-gray-300" />
+                <h2 className="text-[1.4rem] font-bold text-[#121316]">Your cart is currently empty</h2>
+                <p className="text-[0.95rem] text-[#6B7280] max-w-[400px]">Before proceeding to checkout you must add some products to your shopping cart.</p>
+                <Link href="/" className="mt-4 inline-flex items-center gap-2 bg-[#121316] text-white px-7 py-3 rounded-md text-[0.85rem] font-bold hover:bg-[#C39F68] transition-colors">
                   <ArrowLeft size={16} /> Continue Shopping
                 </Link>
               </div>
             ) : (
-              <div className="cart-content-grid">
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 {/* Left Column: Items Table */}
-                <div className="items-column">
-                  <div className="items-header-bar">
+                <div className="flex flex-col">
+                  <div className="grid grid-cols-[2fr_1fr_1fr] py-4 border-b border-[#E5E7EB] text-[0.8rem] font-bold uppercase tracking-wider text-[#6B7280]">
                     <span>Product</span>
                     <span>Quantity</span>
                     <span>Total</span>
                   </div>
 
-                  <div className="items-list">
+                  <div className="flex flex-col">
                     {cart.map((item) => (
-                      <div key={item.id} className="cart-item-card">
-                        <div className="product-info-group">
-                          <div className="img-box">
-                            <img src={item.img} alt={item.title} />
+                      <div key={item.id} className="grid grid-cols-1 sm:grid-cols-[2fr_1fr_1fr] items-center py-7 border-b border-[#F3F4F6] gap-4 sm:gap-0">
+                        <div className="flex items-center gap-5">
+                          <div className="w-20 h-20 border border-[#E5E7EB] rounded-md p-1.5 flex items-center justify-center bg-white shrink-0">
+                            <img src={item.img} alt={item.title} className="max-w-full max-h-full object-contain" />
                           </div>
-                          <div className="details-box">
-                            <h3 className="item-name">{item.title}</h3>
-                            {item.variant && <span className="item-variant">Size: {item.variant}</span>}
-                            <span className="item-unit-price">₹{item.price.toFixed(0)}</span>
-                          </div>
-                        </div>
-
-                        <div className="qty-group">
-                          <div className="qty-picker">
-                            <button onClick={() => updateQuantity(item.id, -1)} className="qty-btn">-</button>
-                            <span className="qty-val">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.id, 1)} className="qty-btn">+</button>
+                          <div className="flex flex-col gap-1">
+                            <h3 className="text-[0.95rem] font-bold text-[#121316]">{item.title}</h3>
+                            {item.variant && <span className="text-[0.78rem] text-[#6B7280]">Size: {item.variant}</span>}
+                            <span className="text-[0.85rem] text-[#4B5563]">₹{item.price.toFixed(0)}</span>
                           </div>
                         </div>
 
-                        <div className="total-group">
-                          <span className="item-total-price">₹{(item.price * item.quantity).toFixed(0)}</span>
-                          <button onClick={() => removeFromCart(item.id)} className="delete-btn" aria-label="Remove item">
-                            <Trash2 size={16} color="#9CA3AF" />
+                        <div className="flex items-center">
+                          <div className="flex items-center border border-[#D1D5DB] rounded h-8 w-fit">
+                            <button onClick={() => updateQuantity(item.id, -1)} className="w-7 h-full bg-none border-none text-[1rem] font-bold cursor-pointer text-[#374151] hover:bg-gray-100">-</button>
+                            <span className="px-2.5 text-[0.85rem] font-bold text-[#121316]">{item.quantity}</span>
+                            <button onClick={() => updateQuantity(item.id, 1)} className="w-7 h-full bg-none border-none text-[1rem] font-bold cursor-pointer text-[#374151] hover:bg-gray-100">+</button>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pr-4">
+                          <span className="text-[1.1rem] font-extrabold text-[#121316]">₹{(item.price * item.quantity).toFixed(0)}</span>
+                          <button onClick={() => removeFromCart(item.id)} className="bg-none border-none cursor-pointer p-1.5 text-gray-400 hover:text-red-500 transition-colors" aria-label="Remove item">
+                            <Trash2 size={16} />
                           </button>
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  <div className="cart-table-footer">
-                    <Link href="/" className="back-link">
+                  <div className="flex items-center justify-between pt-7">
+                    <Link href="/" className="flex items-center gap-1.5 text-[0.85rem] font-semibold text-[#4B5563] hover:text-[#121316] transition-colors">
                       <ArrowLeft size={16} /> Continue Shopping
                     </Link>
-                    <button onClick={clearCart} className="clear-cart-link">
+                    <button onClick={clearCart} className="bg-none border-none text-[0.85rem] text-red-500 font-semibold cursor-pointer hover:underline">
                       Clear Shopping Cart
                     </button>
                   </div>
                 </div>
 
                 {/* Right Column: Summary Card */}
-                <div className="summary-column">
-                  <div className="summary-card">
-                    <h2 className="summary-title">Order Summary</h2>
+                <div className="bg-[#FAF8F5] border border-[#E5E7EB] rounded-xl p-8 flex flex-col gap-6">
+                  <h2 className="text-[1.25rem] font-bold text-[#121316]">Order Summary</h2>
 
-                    {/* Coupon Input */}
-                    <form onSubmit={handleApplyCoupon} className="coupon-form">
-                      <div className="coupon-input-box">
-                        <Tag size={16} color="#9CA3AF" />
-                        <input
-                          type="text"
-                          placeholder="Promo code (e.g. SK10)"
-                          value={couponCode}
-                          onChange={(e) => setCouponCode(e.target.value)}
-                          className="coupon-input"
-                        />
-                      </div>
-                      <button type="submit" className="apply-coupon-btn">Apply</button>
-                    </form>
-                    {couponSuccess && <p className="coupon-msg">✓ 10% Discount Applied!</p>}
+                  {/* Coupon Input */}
+                  <form onSubmit={handleApplyCoupon} className="flex gap-2">
+                    <div className="flex-1 flex items-center gap-2 bg-white border border-[#D1D5DB] rounded-md px-3 h-10">
+                      <Tag size={16} className="text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Promo code (e.g. SK10)"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value)}
+                        className="w-full border-none outline-none text-[0.82rem]"
+                      />
+                    </div>
+                    <button type="submit" className="bg-[#121316] text-white border-none rounded-md px-5 text-[0.8rem] font-bold cursor-pointer hover:bg-[#C39F68] transition-colors">Apply</button>
+                  </form>
+                  {couponSuccess && <p className="text-[0.8rem] text-emerald-500 font-bold -mt-3">✓ 10% Discount Applied!</p>}
 
-                    <div className="summary-lines">
-                      <div className="summary-line">
-                        <span>Subtotal</span>
-                        <span className="line-val">₹{subtotal.toFixed(0)}</span>
-                      </div>
-
-                      {appliedDiscount > 0 && (
-                        <div className="summary-line discount">
-                          <span>Promo Discount</span>
-                          <span className="line-val">-₹{appliedDiscount.toFixed(0)}</span>
-                        </div>
-                      )}
-
-                      <div className="summary-line">
-                        <span>Estimated Shipping</span>
-                        <span className="line-val">
-                          {shippingCost === 0 ? <strong style={{ color: '#10B981' }}>FREE</strong> : `₹${shippingCost}`}
-                        </span>
-                      </div>
-
-                      <div className="divider-line" />
-
-                      <div className="summary-line total-line">
-                        <span>Total</span>
-                        <span className="total-val">₹{finalTotal.toFixed(0)}</span>
-                      </div>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between text-[0.9rem] text-[#4B5563]">
+                      <span>Subtotal</span>
+                      <span className="font-bold text-[#121316]">₹{subtotal.toFixed(0)}</span>
                     </div>
 
-                    <Link href="/checkout" className="checkout-btn">
-                      Proceed to Checkout <ArrowRight size={18} />
-                    </Link>
+                    {appliedDiscount > 0 && (
+                      <div className="flex items-center justify-between text-[0.9rem] text-emerald-500 font-semibold">
+                        <span>Promo Discount</span>
+                        <span className="font-bold">-₹{appliedDiscount.toFixed(0)}</span>
+                      </div>
+                    )}
 
-                    <div className="secure-badge">
-                      <ShieldCheck size={16} color="#10B981" />
-                      <span>Encrypted 256-Bit SSL Checkout</span>
+                    <div className="flex items-center justify-between text-[0.9rem] text-[#4B5563]">
+                      <span>Estimated Shipping</span>
+                      <span>
+                        {shippingCost === 0 ? <strong className="text-emerald-500">FREE</strong> : `₹${shippingCost}`}
+                      </span>
                     </div>
+
+                    <div className="h-[1px] bg-[#E5E7EB] my-1" />
+
+                    <div className="flex items-center justify-between text-[1.1rem] font-extrabold text-[#121316]">
+                      <span>Total</span>
+                      <span className="text-[1.4rem] font-extrabold text-[#121316]">₹{finalTotal.toFixed(0)}</span>
+                    </div>
+                  </div>
+
+                  <Link href="/checkout" className="w-full h-12 bg-[#121316] text-white border-none rounded-lg text-[0.9rem] font-bold flex items-center justify-center gap-2 hover:bg-[#C39F68] transition-colors">
+                    Proceed to Checkout <ArrowRight size={18} />
+                  </Link>
+
+                  <div className="flex items-center justify-center gap-1.5 text-[0.78rem] text-[#6B7280]">
+                    <ShieldCheck size={16} className="text-emerald-500" />
+                    <span>Encrypted 256-Bit SSL Checkout</span>
                   </div>
                 </div>
               </div>
@@ -172,378 +170,6 @@ export default function CartPage() {
 
         <Footer />
       </div>
-
-      <style jsx>{`
-        .cart-page-wrapper {
-          width: 100%;
-          min-height: 100vh;
-          background-color: #ffffff;
-        }
-
-        .cart-main-container {
-          padding: 8rem 0 6rem 0;
-        }
-
-        .container {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 0 2rem;
-        }
-
-        .breadcrumbs {
-          font-size: 0.82rem;
-          color: #6B7280;
-          margin-bottom: 1.5rem;
-        }
-
-        .breadcrumbs a {
-          color: #6B7280;
-        }
-
-        .breadcrumbs .active {
-          color: #121316;
-          font-weight: 600;
-        }
-
-        .page-title {
-          font-family: var(--font-sans);
-          font-size: 2.2rem;
-          font-weight: 700;
-          color: #121316;
-          margin-bottom: 2.5rem;
-        }
-
-        .empty-cart-card {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 5rem 2rem;
-          border: 1px solid #E5E7EB;
-          border-radius: 12px;
-          text-align: center;
-          gap: 1rem;
-        }
-
-        .empty-heading {
-          font-size: 1.4rem;
-          font-weight: 700;
-          color: #121316;
-        }
-
-        .empty-text {
-          font-size: 0.95rem;
-          color: #6B7280;
-          max-width: 400px;
-        }
-
-        .continue-btn {
-          margin-top: 1rem;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          background-color: #121316;
-          color: #ffffff;
-          padding: 0.8rem 1.8rem;
-          border-radius: 6px;
-          font-size: 0.85rem;
-          font-weight: 700;
-        }
-
-        /* Content Grid */
-        .cart-content-grid {
-          display: grid;
-          grid-template-columns: 1fr 380px;
-          gap: 3rem;
-          align-items: start;
-        }
-
-        .items-column {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .items-header-bar {
-          display: grid;
-          grid-template-columns: 2fr 1fr 1fr;
-          padding: 1rem 0;
-          border-bottom: 1px solid #E5E7EB;
-          font-size: 0.8rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          color: #6B7280;
-        }
-
-        .items-list {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .cart-item-card {
-          display: grid;
-          grid-template-columns: 2fr 1fr 1fr;
-          align-items: center;
-          padding: 1.8rem 0;
-          border-bottom: 1px solid #F3F4F6;
-        }
-
-        .product-info-group {
-          display: flex;
-          align-items: center;
-          gap: 1.2rem;
-        }
-
-        .img-box {
-          width: 80px;
-          height: 80px;
-          border: 1px solid #E5E7EB;
-          border-radius: 6px;
-          padding: 0.4rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: #ffffff;
-          flex-shrink: 0;
-        }
-
-        .img-box img {
-          max-width: 100%;
-          max-height: 100%;
-          object-fit: contain;
-        }
-
-        .details-box {
-          display: flex;
-          flex-direction: column;
-          gap: 0.3rem;
-        }
-
-        .item-name {
-          font-size: 0.95rem;
-          font-weight: 700;
-          color: #121316;
-        }
-
-        .item-variant {
-          font-size: 0.78rem;
-          color: #6B7280;
-        }
-
-        .item-unit-price {
-          font-size: 0.85rem;
-          color: #4B5563;
-        }
-
-        .qty-picker {
-          display: flex;
-          align-items: center;
-          border: 1px solid #D1D5DB;
-          border-radius: 4px;
-          height: 32px;
-          width: fit-content;
-        }
-
-        .qty-btn {
-          width: 30px;
-          height: 100%;
-          background: none;
-          border: none;
-          font-size: 1rem;
-          font-weight: 700;
-          cursor: pointer;
-          color: #374151;
-        }
-
-        .qty-val {
-          padding: 0 0.6rem;
-          font-size: 0.85rem;
-          font-weight: 700;
-          color: #121316;
-        }
-
-        .total-group {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding-right: 1rem;
-        }
-
-        .item-total-price {
-          font-size: 1.1rem;
-          font-weight: 800;
-          color: #121316;
-        }
-
-        .delete-btn {
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 0.4rem;
-        }
-
-        .cart-table-footer {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding-top: 1.8rem;
-        }
-
-        .back-link {
-          display: flex;
-          align-items: center;
-          gap: 0.4rem;
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: #4B5563;
-        }
-
-        .clear-cart-link {
-          background: none;
-          border: none;
-          font-size: 0.85rem;
-          color: #EF4444;
-          cursor: pointer;
-          font-weight: 600;
-        }
-
-        /* Summary Column */
-        .summary-card {
-          background-color: #FAF8F5;
-          border: 1px solid #E5E7EB;
-          border-radius: 12px;
-          padding: 2rem;
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-        }
-
-        .summary-title {
-          font-size: 1.25rem;
-          font-weight: 700;
-          color: #121316;
-        }
-
-        .coupon-form {
-          display: flex;
-          gap: 0.5rem;
-        }
-
-        .coupon-input-box {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          background: #ffffff;
-          border: 1px solid #D1D5DB;
-          border-radius: 6px;
-          padding: 0 0.8rem;
-          height: 40px;
-        }
-
-        .coupon-input {
-          width: 100%;
-          border: none;
-          outline: none;
-          font-size: 0.82rem;
-        }
-
-        .apply-coupon-btn {
-          background-color: #121316;
-          color: #ffffff;
-          border: none;
-          border-radius: 6px;
-          padding: 0 1.2rem;
-          font-size: 0.8rem;
-          font-weight: 700;
-          cursor: pointer;
-        }
-
-        .coupon-msg {
-          font-size: 0.8rem;
-          color: #10B981;
-          font-weight: 700;
-          margin-top: -0.8rem;
-        }
-
-        .summary-lines {
-          display: flex;
-          flex-direction: column;
-          gap: 0.8rem;
-        }
-
-        .summary-line {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          font-size: 0.9rem;
-          color: #4B5563;
-        }
-
-        .summary-line.discount {
-          color: #10B981;
-          font-weight: 600;
-        }
-
-        .line-val {
-          font-weight: 700;
-          color: #121316;
-        }
-
-        .divider-line {
-          height: 1px;
-          background-color: #E5E7EB;
-          margin: 0.4rem 0;
-        }
-
-        .total-line {
-          font-size: 1.1rem;
-          font-weight: 800;
-          color: #121316;
-        }
-
-        .total-val {
-          font-size: 1.4rem;
-          font-weight: 800;
-          color: #121316;
-        }
-
-        .checkout-btn {
-          width: 100%;
-          height: 50px;
-          background-color: #121316;
-          color: #ffffff;
-          border: none;
-          border-radius: 8px;
-          font-size: 0.9rem;
-          font-weight: 700;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          cursor: pointer;
-          transition: background-color 0.2s ease;
-        }
-
-        .checkout-btn:hover {
-          background-color: #C39F68;
-        }
-
-        .secure-badge {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.4rem;
-          font-size: 0.78rem;
-          color: #6B7280;
-        }
-
-        @media (max-width: 1024px) {
-          .cart-content-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-      `}</style>
     </>
   );
 }

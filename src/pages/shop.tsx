@@ -117,31 +117,35 @@ export default function ShopPage() {
         <meta name="description" content="Explore SK luxury fragrances, hair care oils, leather accessories, and body care products." />
       </Head>
 
-      <div className="shop-page-wrapper">
+      <div className="min-h-screen flex flex-col bg-[#FAFAFA]">
         <Header />
 
-        <main className="shop-main-content">
-          <div className="container">
+        <main className="flex-1 pt-28 pb-20">
+          <div className="max-w-[1440px] mx-auto px-6 lg:px-8">
             {/* Header Title */}
-            <div className="shop-header-box">
-              <span className="section-subtag">CATALOGUE</span>
-              <h1 className="shop-title">
+            <div className="text-center mb-10">
+              <span className="text-[0.72rem] font-bold tracking-[0.14em] text-[#C5A059] block mb-1.5 uppercase">CATALOGUE</span>
+              <h1 className="text-[2.2rem] font-extrabold text-[#111111] tracking-wide mb-2">
                 {filter
                   ? `${(filter as string).replace('-', ' ').toUpperCase()} COLLECTION`
                   : category
                   ? `${(category as string).toUpperCase()} COLLECTION`
                   : 'CURATED CATALOGUE'}
               </h1>
-              <p className="shop-subtitle">Discover premium lifestyle, fragrance, and organic grooming essentials.</p>
+              <p className="text-[0.95rem] text-[#666666]">Discover premium lifestyle, fragrance, and organic grooming essentials.</p>
             </div>
 
             {/* Filter Tabs */}
-            <div className="category-tabs-row">
+            <div className="flex items-center justify-center gap-3 mb-12 flex-wrap">
               {categoriesList.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveCategory(tab.id)}
-                  className={`tab-btn ${activeCategory === tab.id ? 'active' : ''}`}
+                  className={`px-5 py-2.5 rounded-full text-[0.78rem] font-bold tracking-wider cursor-pointer transition-all duration-200 border ${
+                    activeCategory === tab.id
+                      ? 'bg-[#111111] text-white border-[#111111]'
+                      : 'bg-white text-[#666666] border-[#EAEAEA] hover:border-[#111111] hover:text-[#111111]'
+                  }`}
                 >
                   {tab.label}
                 </button>
@@ -150,12 +154,12 @@ export default function ShopPage() {
 
             {/* Product Grid */}
             {loading ? (
-              <div className="loading-state">
-                <div className="spinner"></div>
+              <div className="text-center py-20 text-[#6B7280]">
+                <div className="w-10 h-10 border-3 border-[#E5E7EB] border-t-[#111111] rounded-full animate-spin mx-auto mb-4" />
                 <p>Loading shop collection...</p>
               </div>
             ) : (
-              <div className="shop-grid">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {filteredProducts.map((product) => (
                   <ProductCard
                     key={product.id}
@@ -177,124 +181,6 @@ export default function ShopPage() {
 
         <Footer />
       </div>
-
-      <style jsx>{`
-        .shop-page-wrapper {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          background-color: #FAFAFA;
-        }
-
-        .shop-main-content {
-          flex: 1;
-          padding: 8rem 0 6rem 0;
-        }
-
-        .container {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 0 2rem;
-        }
-
-        .shop-header-box {
-          text-align: center;
-          margin-bottom: 3rem;
-        }
-
-        .section-subtag {
-          font-size: 0.72rem;
-          font-weight: 700;
-          letter-spacing: 0.14em;
-          color: #C5A059;
-          display: block;
-          margin-bottom: 0.4rem;
-        }
-
-        .shop-title {
-          font-size: 2.2rem;
-          font-weight: 800;
-          color: #111111;
-          letter-spacing: 0.04em;
-          margin-bottom: 0.6rem;
-        }
-
-        .shop-subtitle {
-          font-size: 0.95rem;
-          color: #666666;
-        }
-
-        .category-tabs-row {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 1rem;
-          margin-bottom: 3rem;
-          flex-wrap: wrap;
-        }
-
-        .tab-btn {
-          background-color: #ffffff;
-          border: 1px solid #EAEAEA;
-          padding: 0.65rem 1.4rem;
-          border-radius: 20px;
-          font-size: 0.78rem;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          color: #666666;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .tab-btn:hover {
-          border-color: #111111;
-          color: #111111;
-        }
-
-        .tab-btn.active {
-          background-color: #111111;
-          border-color: #111111;
-          color: #ffffff;
-        }
-
-        .shop-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 1.5rem;
-        }
-
-        .loading-state {
-          text-align: center;
-          padding: 5rem 0;
-          color: #6B7280;
-        }
-
-        .spinner {
-          width: 40px;
-          height: 40px;
-          border: 3px solid #E5E7EB;
-          border-top-color: #111111;
-          border-radius: 50%;
-          animation: spin 0.8s linear infinite;
-          margin: 0 auto 1rem auto;
-        }
-
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 1024px) {
-          .shop-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        @media (max-width: 768px) {
-          .shop-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 480px) {
-          .shop-grid { grid-template-columns: 1fr; }
-        }
-      `}</style>
     </>
   );
 }

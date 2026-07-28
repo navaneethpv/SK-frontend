@@ -16,7 +16,6 @@ export default function RelatedProducts({ productId }: RelatedProductsProps) {
         if (data && data.length > 0) {
           setProducts(data);
         } else {
-          // Fetch general products as fallback mock
           productAPI.getProducts({ count: '4' })
             .then(fallback => setProducts(fallback.slice(0, 4)))
             .catch(() => {});
@@ -32,55 +31,17 @@ export default function RelatedProducts({ productId }: RelatedProductsProps) {
   if (products.length === 0) return null;
 
   return (
-    <section className="related-section">
-      <h2 className="section-title">You May Also Like</h2>
+    <section className="py-20 border-t border-[#EAE5DC] mt-16">
+      <div className="relative text-center mb-12">
+        <h2 className="text-[1.8rem] font-extrabold text-[#121316]">You May Also Like</h2>
+        <span className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-[50px] h-[3px] bg-[#C39F68] rounded-full" />
+      </div>
       
-      <div className="products-grid">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
-
-      <style jsx>{`
-        .related-section {
-          padding: 5rem 0 2rem 0;
-          border-top: 1px solid hsl(var(--border));
-          margin-top: 4rem;
-        }
-
-        .section-title {
-          font-size: 1.8rem;
-          font-weight: 800;
-          margin-bottom: 3rem;
-          text-align: center;
-          position: relative;
-        }
-
-        .section-title::after {
-          content: '';
-          position: absolute;
-          bottom: -0.6rem;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 50px;
-          height: 3px;
-          background-color: hsl(var(--primary));
-          border-radius: 99px;
-        }
-
-        .products-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-          gap: 2rem;
-        }
-
-        @media (max-width: 600px) {
-          .products-grid {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-          }
-        }
-      `}</style>
     </section>
   );
 }

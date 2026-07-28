@@ -17,112 +17,38 @@ export default function ProductGallery({ images, defaultImage, alias }: ProductG
   ];
 
   return (
-    <div className="gallery-container">
+    <div className="flex flex-col gap-6 w-full">
       {/* Main Image View */}
-      <div className="main-image-wrapper">
-        <img src={activeImage} alt={alias} className="main-image" />
+      <div className="group bg-[#FAF7F2] border border-[#EAE5DC] rounded-2xl h-[320px] md:h-[480px] flex items-center justify-center p-6 md:p-10 overflow-hidden">
+        <img
+          src={activeImage}
+          alt={alias}
+          className="max-w-full max-h-full object-contain transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105"
+        />
       </div>
 
       {/* Thumbnails Row */}
       {allImages.length > 1 && (
-        <div className="thumbnails-row">
+        <div className="flex gap-4 overflow-x-auto pb-2">
           {allImages.map((img) => {
             const isSelected = activeImage === img.image;
             return (
               <button
                 key={img.id}
                 onClick={() => setActiveImage(img.image)}
-                className={`thumbnail-btn ${isSelected ? 'selected' : ''}`}
+                className={`w-[65px] h-[65px] md:w-[80px] md:h-[80px] p-2 rounded-lg cursor-pointer overflow-hidden flex items-center justify-center transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] ${
+                  isSelected
+                    ? 'border-2 border-[#C39F68] bg-white shadow-[0_0_10px_rgba(195,159,104,0.15)]'
+                    : 'border-2 border-[#EAE5DC] bg-[#FAF7F2] hover:border-[#D0C9BE]'
+                }`}
                 aria-label={`View thumbnail ${img.id}`}
               >
-                <img src={img.image} alt={`${alias} thumbnail`} className="thumbnail-img" />
+                <img src={img.image} alt={`${alias} thumbnail`} className="max-w-full max-h-full object-contain" />
               </button>
             );
           })}
         </div>
       )}
-
-      <style jsx>{`
-        .gallery-container {
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-          width: 100%;
-        }
-
-        .main-image-wrapper {
-          background-color: hsl(var(--muted));
-          border: 1px solid hsl(var(--border));
-          border-radius: var(--radius-lg);
-          height: 480px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 2.5rem;
-          overflow: hidden;
-        }
-
-        .main-image {
-          max-width: 100%;
-          max-height: 100%;
-          object-fit: contain;
-          transition: var(--transition-smooth);
-        }
-
-        .main-image-wrapper:hover .main-image {
-          transform: scale(1.05);
-        }
-
-        .thumbnails-row {
-          display: flex;
-          gap: 1rem;
-          overflow-x: auto;
-          padding-bottom: 0.5rem;
-        }
-
-        .thumbnail-btn {
-          width: 80px;
-          height: 80px;
-          background-color: hsl(var(--muted));
-          border: 2px solid hsl(var(--border));
-          border-radius: var(--radius-md);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 0.5rem;
-          cursor: pointer;
-          overflow: hidden;
-          transition: var(--transition-smooth);
-        }
-
-        .thumbnail-btn.selected {
-          border-color: hsl(var(--primary));
-          background-color: hsl(var(--background));
-          box-shadow: 0 0 10px hsla(var(--primary), 0.15);
-        }
-
-        .thumbnail-btn:hover:not(.selected) {
-          border-color: hsl(var(--border) / 1.5);
-          background-color: hsl(var(--border) / 0.1);
-        }
-
-        .thumbnail-img {
-          max-width: 100%;
-          max-height: 100%;
-          object-fit: contain;
-        }
-
-        @media (max-width: 768px) {
-          .main-image-wrapper {
-            height: 320px;
-            padding: 1.5rem;
-          }
-          .thumbnail-btn {
-            width: 65px;
-            height: 65px;
-          }
-        }
-      `}</style>
     </div>
   );
 }

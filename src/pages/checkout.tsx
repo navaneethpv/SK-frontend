@@ -24,14 +24,12 @@ import Footer from '@/components/common/Footer';
 import { useCart } from '@/context/CartContext';
 import { orderAPI } from '@/api/services/orderAPI';
 
-// Default Store WhatsApp number for fallback (configured in ERP/backend)
 const DEFAULT_STORE_WHATSAPP = '918137058308';
 
 export default function CheckoutOrderPage() {
   const router = useRouter();
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
 
-  // Selected item IDs state for selecting/deselecting items directly on the order page
   const [selectedItemIds, setSelectedItemIds] = useState<number[]>(() => cart.map((i) => i.id));
 
   useEffect(() => {
@@ -65,7 +63,6 @@ export default function CheckoutOrderPage() {
   const activeCartCount = activeCartItems.reduce((total, item) => total + item.quantity, 0);
   const activeSubtotal = activeCartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
-  // Customer Form State
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -107,7 +104,6 @@ export default function CheckoutOrderPage() {
 
     setIsSubmitting(true);
 
-    // Auto-incrementing Order ID counter starting from ORD-1001
     let orderNum = 1001;
     try {
       const savedCounter = localStorage.getItem('sk_order_counter');
@@ -115,14 +111,11 @@ export default function CheckoutOrderPage() {
         orderNum = Number(savedCounter) + 1;
       }
       localStorage.setItem('sk_order_counter', String(orderNum));
-    } catch {
-      // Fallback if localStorage unavailable
-    }
+    } catch { }
 
     const orderId = `ORD-${orderNum}`;
     setGeneratedOrderNumber(orderId);
 
-    // Format selected items list for backend API
     const orderItemsPayload = activeCartItems.map((item) => ({
       product: item.id,
       quantity: item.quantity,
@@ -132,9 +125,8 @@ export default function CheckoutOrderPage() {
     }));
 
     try {
-      // 1. Submit Order to ERP Backend API (Guest Checkout)
       await orderAPI.createOrder({
-        customer: 0, // Guest Customer
+        customer: 0,
         items: orderItemsPayload,
         total_amount: finalTotal.toFixed(2),
         status: 'Pending',
@@ -142,11 +134,8 @@ export default function CheckoutOrderPage() {
       }).catch((err) => {
         console.warn('Backend API call notice:', err);
       });
-    } catch {
-      // Proceed even if backend is offline, ensuring WhatsApp message is generated
-    }
+    } catch { }
 
-    // Helper to format product titles cleanly (e.g. malabar-veerasmruthikal-book -> Malabar Veerasmruthikal Book)
     const formatTitle = (name: string) => {
       if (!name) return 'SK Product';
       if (name.includes('-') && !name.includes(' ')) {
@@ -158,7 +147,6 @@ export default function CheckoutOrderPage() {
       return name;
     };
 
-    // 2. Generate Clean Formatted WhatsApp Order Message
     let message = `*NEW WEBSITE ORDER #${orderId}*\n`;
     message += `------------------------------------\n`;
     message += `*Customer Details:*\n`;
@@ -184,319 +172,308 @@ export default function CheckoutOrderPage() {
     message += `------------------------------------\n`;
     message += `Please confirm my order and share payment/delivery details! Thank you`;
 
-    // Safely encode text string for WhatsApp URL
     const encodedText = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${DEFAULT_STORE_WHATSAPP}?text=${encodedText}`;
 
-    // Update state & redirect
     setOrderPlaced(true);
     clearCart();
     setIsSubmitting(false);
 
-    // Open WhatsApp in a new tab / application
     window.open(whatsappUrl, '_blank');
   };
 
   return (
     <>
       <Head>
-        <title>Place Order via WhatsApp | SK E-Commerce</title>
-        <meta name="description" content="Enter your delivery details to place your order directly via WhatsApp." />
+        <title>Checkout & Place Order | SK</title>
+        <meta name="description" content="Complete your purchase securely via WhatsApp order dispatch with SK." />
       </Head>
 
-      <div className="checkout-page-wrapper">
+      <div className="w-full min-h-screen bg-[#F8FAFC]">
         <Header />
 
-        <main className="checkout-main-container">
-          <div className="container">
+        <main className="pt-28 pb-20">
+          <div className="max-w-[1280px] mx-auto px-6">
             {/* Breadcrumbs */}
-            <div className="breadcrumbs">
-              <Link href="/">Home</Link> &gt; <Link href="/cart">Cart</Link> &gt; <span className="active">Order Details</span>
+            <div className="text-[0.85rem] text-[#64748B] mb-5">
+              <Link href="/" className="hover:text-[#0F172A] transition-colors">Home</Link> &gt; <Link href="/cart" className="hover:text-[#0F172A] transition-colors">Cart</Link> &gt; <span className="text-[#0F172A] font-semibold">Checkout</span>
             </div>
 
-            <h1 className="page-title">Complete Your Order</h1>
-            <p className="page-subtitle">Fill in your details below. Your order will be formatted & sent to our team via WhatsApp.</p>
+            <h1 className="text-[2.25rem] font-extrabold text-[#0F172A] mb-2">Express Checkout</h1>
+            <p className="text-[1rem] text-[#64748B] mb-10">Instant 1-Click WhatsApp Order Placement</p>
 
+            {/* Order Confirmation Banner */}
             {orderPlaced ? (
-              <div className="order-success-card">
-                <div className="success-icon-box">
-                  <CheckCircle size={64} color="#10B981" />
+              <div className="bg-white rounded-2xl p-12 text-center max-w-[600px] mx-auto shadow-[0_10px_25px_-5px_rgba(0,0,0,0.05)] border border-[#E2E8F0] animate-fade-in">
+                <div className="inline-flex items-center justify-center w-[90px] h-[90px] bg-[#ECFDF5] rounded-full mb-6">
+                  <CheckCircle size={48} className="text-[#10B981]" />
                 </div>
-                <h2 className="success-heading">Order #{generatedOrderNumber} Created!</h2>
-                <p className="success-text">
-                  Your order details have been formatted and opened in <b>WhatsApp</b>.
-                  If WhatsApp did not open automatically, click the button below to resend your order.
+                <h2 className="text-[1.75rem] font-bold text-[#0F172A] mb-4">Order Placed Successfully!</h2>
+                <p className="text-[1rem] text-[#64748B] leading-relaxed mb-8">
+                  Your order <strong>#{generatedOrderNumber}</strong> has been generated. WhatsApp chat has opened automatically to confirm your delivery details.
                 </p>
-                <div className="success-btn-row">
+                <div className="flex gap-4 justify-center flex-wrap">
                   <button
-                    onClick={() => {
-                      const whatsappUrl = `https://wa.me/${DEFAULT_STORE_WHATSAPP}`;
-                      window.open(whatsappUrl, '_blank');
-                    }}
-                    className="resend-wa-btn"
+                    onClick={() => window.open(`https://wa.me/${DEFAULT_STORE_WHATSAPP}`, '_blank')}
+                    className="inline-flex items-center gap-2 bg-[#25D366] text-white px-7 py-3.5 rounded-xl font-bold border-none cursor-pointer hover:bg-[#1DA851] hover:-translate-y-0.5 transition-all"
                   >
-                    <Send size={18} /> Open WhatsApp Chat
+                    <Send size={18} /> Open WhatsApp
                   </button>
-                  <Link href="/" className="back-home-btn">
-                    Continue Shopping
+                  <Link href="/" className="inline-flex items-center gap-2 bg-[#0F172A] text-white px-7 py-3.5 rounded-xl font-semibold no-underline hover:bg-[#1E293B] transition-colors">
+                    Return to Store
                   </Link>
                 </div>
               </div>
             ) : cart.length === 0 ? (
-              <div className="empty-cart-card">
-                <ShoppingBag size={64} color="#D1D5DB" />
-                <h2 className="empty-heading">No items in your order list</h2>
-                <p className="empty-text">Please add items to your cart before proceeding to order checkout.</p>
-                <Link href="/" className="continue-btn">
-                  <ArrowLeft size={16} /> Explore Products
+              <div className="bg-white rounded-2xl p-12 text-center max-w-[600px] mx-auto shadow-[0_10px_25px_-5px_rgba(0,0,0,0.05)] border border-[#E2E8F0]">
+                <ShoppingBag size={64} className="text-gray-300 mx-auto mb-4" />
+                <h2 className="text-[1.75rem] font-bold text-[#0F172A] mb-4">Your Cart is Empty</h2>
+                <p className="text-[1rem] text-[#64748B] leading-relaxed mb-8">Please add items to your shopping cart before proceeding to checkout.</p>
+                <Link href="/" className="inline-flex items-center gap-2 bg-[#0F172A] text-white px-7 py-3.5 rounded-xl font-semibold no-underline hover:bg-[#C39F68] transition-colors">
+                  <ArrowLeft size={18} /> Explore Products
                 </Link>
               </div>
             ) : (
-              <div className="checkout-grid">
-                {/* Left Column: Customer Information Form */}
-                <div className="form-column">
-                  <div className="form-card">
-                    <h2 className="form-card-title">
-                      <User size={20} className="title-icon" /> Delivery Details
-                    </h2>
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-8 items-start">
+                {/* Customer Details Form */}
+                <div className="bg-white rounded-2xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-[#E2E8F0]">
+                  <h2 className="text-[1.25rem] font-bold text-[#0F172A] flex items-center gap-3 mb-7 pb-4 border-b border-[#F1F5F9]">
+                    <User size={20} className="text-[#2563EB]" />
+                    <span>Shipping & Delivery Details</span>
+                  </h2>
 
-                    <form onSubmit={handlePlaceWhatsAppOrder} className="customer-form">
-                      <div className="input-group">
-                        <label htmlFor="fullName">Full Name <span className="req">*</span></label>
-                        <div className="input-with-icon">
-                          <User size={18} className="field-icon" />
+                  <form onSubmit={handlePlaceWhatsAppOrder} className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-2">
+                      <label className="text-[0.875rem] font-semibold text-[#334155]">Full Name <span className="text-red-500">*</span></label>
+                      <div className="relative flex items-center">
+                        <User size={18} className="absolute left-4 text-[#94A3B8] pointer-events-none" />
+                        <input
+                          type="text"
+                          name="fullName"
+                          required
+                          placeholder="e.g. Navaneeth Krishnan"
+                          value={formData.fullName}
+                          onChange={handleChange}
+                          className="w-full pl-11 pr-4 py-3.5 border-1.5 border-[#E2E8F0] rounded-xl text-[0.95rem] text-[#0F172A] outline-none bg-[#FAFAFA] focus:border-[#2563EB] focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <label className="text-[0.875rem] font-semibold text-[#334155]">WhatsApp Phone Number <span className="text-red-500">*</span></label>
+                      <div className="relative flex items-center">
+                        <Phone size={18} className="absolute left-4 text-[#94A3B8] pointer-events-none" />
+                        <input
+                          type="tel"
+                          name="phone"
+                          required
+                          placeholder="e.g. 9876543210"
+                          value={formData.phone}
+                          onChange={handleChange}
+                          className="w-full pl-11 pr-4 py-3.5 border-1.5 border-[#E2E8F0] rounded-xl text-[0.95rem] text-[#0F172A] outline-none bg-[#FAFAFA] focus:border-[#2563EB] focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all"
+                        />
+                      </div>
+                      <span className="text-[0.78rem] text-[#64748B]">Order updates and tracking will be sent to this WhatsApp number.</span>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <label className="text-[0.875rem] font-semibold text-[#334155]">Delivery Address <span className="text-red-500">*</span></label>
+                      <div className="relative flex items-center">
+                        <MapPin size={18} className="absolute left-4 top-4 text-[#94A3B8] pointer-events-none" />
+                        <textarea
+                          name="address"
+                          required
+                          rows={3}
+                          placeholder="House / Flat No., Street, Landmark"
+                          value={formData.address}
+                          onChange={handleChange}
+                          className="w-full pl-11 pr-4 py-3.5 border-1.5 border-[#E2E8F0] rounded-xl text-[0.95rem] text-[#0F172A] outline-none bg-[#FAFAFA] focus:border-[#2563EB] focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label className="text-[0.875rem] font-semibold text-[#334155]">City / Town</label>
+                        <div className="relative flex items-center">
+                          <Building size={18} className="absolute left-4 text-[#94A3B8] pointer-events-none" />
                           <input
                             type="text"
-                            id="fullName"
-                            name="fullName"
-                            required
-                            placeholder="e.g. Rahul Sharma"
-                            value={formData.fullName}
+                            name="city"
+                            placeholder="e.g. Kozhikode"
+                            value={formData.city}
                             onChange={handleChange}
+                            className="w-full pl-11 pr-4 py-3.5 border-1.5 border-[#E2E8F0] rounded-xl text-[0.95rem] text-[#0F172A] outline-none bg-[#FAFAFA] focus:border-[#2563EB] focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all"
                           />
                         </div>
                       </div>
 
-                      <div className="input-group">
-                        <label htmlFor="phone">WhatsApp Mobile Number <span className="req">*</span></label>
-                        <div className="input-with-icon">
-                          <Phone size={18} className="field-icon" />
+                      <div className="flex flex-col gap-2">
+                        <label className="text-[0.875rem] font-semibold text-[#334155]">Pincode</label>
+                        <div className="relative flex items-center">
+                          <MapPin size={18} className="absolute left-4 text-[#94A3B8] pointer-events-none" />
                           <input
-                            type="tel"
-                            id="phone"
-                            name="phone"
-                            required
-                            placeholder="e.g. +91 9876543210"
-                            value={formData.phone}
+                            type="text"
+                            name="pincode"
+                            placeholder="e.g. 673001"
+                            value={formData.pincode}
                             onChange={handleChange}
-                          />
-                        </div>
-                        <span className="field-hint">We will send order updates to this WhatsApp number.</span>
-                      </div>
-
-                      <div className="input-group">
-                        <label htmlFor="address">Full Delivery Address <span className="req">*</span></label>
-                        <div className="input-with-icon">
-                          <MapPin size={18} className="field-icon icon-top" />
-                          <textarea
-                            id="address"
-                            name="address"
-                            required
-                            rows={3}
-                            placeholder="House / Flat No., Street, Landmark"
-                            value={formData.address}
-                            onChange={handleChange}
+                            className="w-full pl-11 pr-4 py-3.5 border-1.5 border-[#E2E8F0] rounded-xl text-[0.95rem] text-[#0F172A] outline-none bg-[#FAFAFA] focus:border-[#2563EB] focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all"
                           />
                         </div>
                       </div>
+                    </div>
 
-                      <div className="form-row-2col">
-                        <div className="input-group">
-                          <label htmlFor="city">City / District</label>
-                          <div className="input-with-icon">
-                            <Building size={18} className="field-icon" />
-                            <input
-                              type="text"
-                              id="city"
-                              name="city"
-                              placeholder="e.g. Mumbai"
-                              value={formData.city}
-                              onChange={handleChange}
-                            />
-                          </div>
-                        </div>
-
-                        <div className="input-group">
-                          <label htmlFor="pincode">Pincode</label>
-                          <div className="input-with-icon">
-                            <MapPin size={18} className="field-icon" />
-                            <input
-                              type="text"
-                              id="pincode"
-                              name="pincode"
-                              placeholder="e.g. 400001"
-                              value={formData.pincode}
-                              onChange={handleChange}
-                            />
-                          </div>
-                        </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-[0.875rem] font-semibold text-[#334155]">Order Notes (Optional)</label>
+                      <div className="relative flex items-center">
+                        <FileText size={18} className="absolute left-4 top-4 text-[#94A3B8] pointer-events-none" />
+                        <textarea
+                          name="notes"
+                          rows={2}
+                          placeholder="Special delivery instructions or requests"
+                          value={formData.notes}
+                          onChange={handleChange}
+                          className="w-full pl-11 pr-4 py-3.5 border-1.5 border-[#E2E8F0] rounded-xl text-[0.95rem] text-[#0F172A] outline-none bg-[#FAFAFA] focus:border-[#2563EB] focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all"
+                        />
                       </div>
+                    </div>
 
-                      <div className="input-group">
-                        <label htmlFor="notes">Order Notes / Instructions (Optional)</label>
-                        <div className="input-with-icon">
-                          <FileText size={18} className="field-icon icon-top" />
-                          <textarea
-                            id="notes"
-                            name="notes"
-                            rows={2}
-                            placeholder="Preferred delivery time, gift packaging requests, etc."
-                            value={formData.notes}
-                            onChange={handleChange}
-                          />
-                        </div>
-                      </div>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting || activeCartItems.length === 0}
+                      className="mt-4 flex items-center justify-center gap-3 w-full bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white text-[1.05rem] font-bold py-4 px-6 rounded-2xl border-none cursor-pointer shadow-[0_8px_20px_-4px_rgba(37,211,102,0.4)] hover:shadow-[0_12px_25px_-4px_rgba(37,211,102,0.5)] hover:-translate-y-0.5 transition-all disabled:opacity-50"
+                    >
+                      <Send size={20} />
+                      <span>{isSubmitting ? 'Generating Order...' : `PLACE ORDER ON WHATSAPP (₹${finalTotal.toFixed(0)})`}</span>
+                    </button>
 
-                      <button
-                        type="submit"
-                        disabled={isSubmitting || activeCartItems.length === 0}
-                        className="submit-whatsapp-order-btn"
-                      >
-                        <Send size={20} />
-                        <span>{isSubmitting ? 'Formatting Order...' : 'Place Order & Send on WhatsApp'}</span>
-                      </button>
-
-                      <div className="privacy-badge">
-                        <ShieldCheck size={16} color="#10B981" />
-                        <span>Instant Direct WhatsApp Order Confirmation</span>
-                      </div>
-                    </form>
-                  </div>
+                    <div className="flex items-center justify-center gap-2 text-[0.82rem] text-[#64748B] mt-2">
+                      <ShieldCheck size={16} className="text-[#10B981]" />
+                      <span>Safe & Secure Direct WhatsApp Dispatch</span>
+                    </div>
+                  </form>
                 </div>
 
-                {/* Right Column: Order Items Summary with Select / Deselect */}
-                <div className="summary-column">
-                  <div className="summary-card">
-                    <div className="summary-card-header">
-                      <h2 className="summary-title">
-                        <ShoppingBag size={20} className="title-icon" /> Order Items ({activeCartItems.length}/{cart.length} Selected)
-                      </h2>
-                      {cart.length > 1 && (
-                        <button type="button" onClick={toggleSelectAll} className="select-all-btn">
-                          {selectedItemIds.length === cart.length ? 'Deselect All' : 'Select All'}
-                        </button>
-                      )}
-                    </div>
+                {/* Right Summary Column */}
+                <div className="bg-white rounded-2xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-[#E2E8F0]">
+                  <div className="flex items-center justify-between pb-3 border-b border-[#F1F5F9] mb-2">
+                    <h2 className="text-[1.15rem] font-bold text-[#0F172A]">Order Items ({activeCartCount})</h2>
+                    <button
+                      type="button"
+                      onClick={toggleSelectAll}
+                      className="bg-[#F1F5F9] border border-[#CBD5E1] text-[#1E293B] text-[0.75rem] font-bold px-3 py-1 rounded-md cursor-pointer hover:bg-[#E2E8F0] transition-colors"
+                    >
+                      {selectedItemIds.length === cart.length ? 'Deselect All' : 'Select All'}
+                    </button>
+                  </div>
 
-                    <p className="select-hint-text">
-                      Check or uncheck items to include or exclude them from this order.
-                    </p>
+                  <p className="text-[0.75rem] text-[#64748B] mb-4">Toggle checkboxes to include/exclude items from this order:</p>
 
-                    <div className="order-items-preview">
-                      {cart.map((item) => {
-                        const isSelected = selectedItemIds.includes(item.id);
-                        return (
-                          <div key={item.id} className={`preview-item ${isSelected ? 'selected' : 'deselected'}`}>
-                            <button
-                              type="button"
-                              onClick={() => toggleSelectItem(item.id)}
-                              className={`select-checkbox-btn ${isSelected ? 'checked' : ''}`}
-                              title={isSelected ? 'Deselect product' : 'Select product'}
-                            >
-                              {isSelected ? <CheckSquare size={20} color="#2563EB" /> : <Square size={20} color="#94A3B8" />}
-                            </button>
+                  <div className="flex flex-col gap-4 max-h-[340px] overflow-y-auto pr-2 mb-5">
+                    {cart.map((item) => {
+                      const isSelected = selectedItemIds.includes(item.id);
+                      return (
+                        <div key={item.id} className={`flex items-center gap-3 pb-3.5 border-b border-[#F1F5F9] transition-all ${!isSelected ? 'opacity-55 bg-[#F8FAFC] p-2 rounded-lg' : ''}`}>
+                          <button
+                            type="button"
+                            onClick={() => toggleSelectItem(item.id)}
+                            className="bg-none border-none p-1 cursor-pointer flex items-center justify-center hover:scale-110 transition-transform"
+                            title={isSelected ? 'Deselect product' : 'Select product'}
+                          >
+                            {isSelected ? <CheckSquare size={20} className="text-[#2563EB]" /> : <Square size={20} className="text-[#94A3B8]" />}
+                          </button>
 
-                            <div className="item-img-box">
-                              <img src={item.img} alt={item.title} />
-                              <span className="qty-badge">{item.quantity}</span>
-                            </div>
+                          <div className="relative w-[54px] h-[54px] rounded-xl overflow-hidden bg-[#F1F5F9] shrink-0">
+                            <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
+                            <span className="absolute -top-0.5 -right-0.5 bg-[#2563EB] text-white text-[0.7rem] font-bold w-[18px] h-[18px] rounded-full flex items-center justify-center">{item.quantity}</span>
+                          </div>
 
-                            <div className="item-text-box">
-                              <h4 className="item-name">{item.title}</h4>
-                              {item.variant && <span className="item-var">{item.variant}</span>}
+                          <div className="flex-1">
+                            <h4 className={`text-[0.88rem] font-semibold text-[#0F172A] line-clamp-1 ${!isSelected ? 'line-through text-[#94A3B8]' : ''}`}>{item.title}</h4>
+                            {item.variant && <span className="text-[0.75rem] text-[#64748B]">{item.variant}</span>}
 
-                              <div className="order-qty-control">
-                                <button
-                                  type="button"
-                                  onClick={() => updateQuantity(item.id, -1)}
-                                  className="order-qty-btn"
-                                  title="Decrease quantity"
-                                >
-                                  -
-                                </button>
-                                <span className="order-qty-val">{item.quantity}</span>
-                                <button
-                                  type="button"
-                                  onClick={() => updateQuantity(item.id, 1)}
-                                  className="order-qty-btn"
-                                  title="Increase quantity"
-                                >
-                                  +
-                                </button>
-                                <span className="order-unit-price">@ ₹{item.price.toFixed(0)}</span>
-                              </div>
-
-                              {!isSelected && <span className="deselected-badge">Deselected</span>}
-                            </div>
-
-                            <div className="item-action-col">
-                              <div className="item-total-col">
-                                ₹{(item.price * item.quantity).toFixed(0)}
-                              </div>
+                            <div className="flex items-center gap-1.5 mt-1">
                               <button
                                 type="button"
-                                onClick={() => removeFromCart(item.id)}
-                                className="remove-item-btn"
-                                title="Remove item from cart completely"
+                                onClick={() => updateQuantity(item.id, -1)}
+                                className="w-6 h-6 rounded-md border border-[#CBD5E1] bg-white text-[#0F172A] text-[0.85rem] font-bold flex items-center justify-center cursor-pointer hover:bg-[#0F172A] hover:text-white transition-colors"
+                                title="Decrease quantity"
                               >
-                                <Trash2 size={16} color="#94A3B8" />
+                                -
                               </button>
+                              <span className="text-[0.85rem] font-bold text-[#0F172A] min-w-[18px] text-center">{item.quantity}</span>
+                              <button
+                                type="button"
+                                onClick={() => updateQuantity(item.id, 1)}
+                                className="w-6 h-6 rounded-md border border-[#CBD5E1] bg-white text-[#0F172A] text-[0.85rem] font-bold flex items-center justify-center cursor-pointer hover:bg-[#0F172A] hover:text-white transition-colors"
+                                title="Increase quantity"
+                              >
+                                +
+                              </button>
+                              <span className="text-[0.75rem] text-[#64748B] ml-1">@ ₹{item.price.toFixed(0)}</span>
                             </div>
+
+                            {!isSelected && <span className="inline-block text-[0.68rem] font-bold text-red-500 bg-red-100 px-1.5 py-0.5 rounded mt-1">Deselected</span>}
                           </div>
-                        );
-                      })}
+
+                          <div className="flex flex-col items-end gap-1.5">
+                            <div className="text-[0.92rem] font-bold text-[#0F172A]">
+                              ₹{(item.price * item.quantity).toFixed(0)}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => removeFromCart(item.id)}
+                              className="bg-none border-none cursor-pointer p-1 text-gray-400 hover:text-red-500 transition-colors"
+                              title="Remove item from cart completely"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {activeCartItems.length === 0 && (
+                    <div className="bg-red-50 border border-red-300 text-red-800 text-[0.82rem] font-semibold p-3 rounded-xl mb-5 text-center">
+                      ⚠️ Please select at least one item to proceed with your order.
+                    </div>
+                  )}
+
+                  <div className="flex flex-col gap-3 bg-[#F8FAFC] p-5 rounded-2xl mb-6">
+                    <div className="flex justify-between text-[0.9rem] text-[#475569]">
+                      <span>Items Subtotal</span>
+                      <span className="font-bold text-[#0F172A]">₹{activeSubtotal.toFixed(0)}</span>
                     </div>
 
-                    {activeCartItems.length === 0 && (
-                      <div className="no-selection-warning">
-                        ⚠️ Please select at least one item to proceed with your order.
-                      </div>
-                    )}
-
-                    <div className="price-breakdown">
-                      <div className="price-row">
-                        <span>Items Subtotal</span>
-                        <span className="val">₹{activeSubtotal.toFixed(0)}</span>
-                      </div>
-
-                      <div className="price-row">
-                        <span>Estimated Shipping</span>
-                        <span className="val">
-                          {shippingCost === 0 ? (
-                            <strong style={{ color: '#10B981' }}>FREE</strong>
-                          ) : (
-                            `₹${shippingCost}`
-                          )}
-                        </span>
-                      </div>
-
-                      <div className="divider-line" />
-
-                      <div className="price-row total-row">
-                        <span>Grand Total</span>
-                        <span className="grand-val">₹{finalTotal.toFixed(0)}</span>
-                      </div>
+                    <div className="flex justify-between text-[0.9rem] text-[#475569]">
+                      <span>Estimated Shipping</span>
+                      <span>
+                        {shippingCost === 0 ? (
+                          <strong className="text-emerald-500">FREE</strong>
+                        ) : (
+                          `₹${shippingCost}`
+                        )}
+                      </span>
                     </div>
 
-                    <div className="delivery-highlights">
-                      <div className="highlight-item">
-                        <Truck size={18} color="#2563EB" />
-                        <span>Fast Express Dispatch</span>
-                      </div>
-                      <div className="highlight-item">
-                        <Sparkles size={18} color="#EAB308" />
-                        <span>100% Genuine Quality Guarantee</span>
-                      </div>
+                    <div className="h-[1px] bg-[#E2E8F0] my-1" />
+
+                    <div className="flex justify-between items-center text-[1.1rem] font-extrabold text-[#0F172A]">
+                      <span>Grand Total</span>
+                      <span className="text-[1.25rem] font-extrabold text-emerald-600">₹{finalTotal.toFixed(0)}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-3 text-[0.85rem] text-[#475569] font-medium">
+                      <Truck size={18} className="text-[#2563EB]" />
+                      <span>Fast Express Dispatch</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[0.85rem] text-[#475569] font-medium">
+                      <Sparkles size={18} className="text-[#EAB308]" />
+                      <span>100% Genuine Quality Guarantee</span>
                     </div>
                   </div>
                 </div>
@@ -507,550 +484,6 @@ export default function CheckoutOrderPage() {
 
         <Footer />
       </div>
-
-      <style jsx>{`
-        .checkout-page-wrapper {
-          width: 100%;
-          min-height: 100vh;
-          background-color: #F8FAFC;
-        }
-
-        .checkout-main-container {
-          padding: 8rem 0 6rem 0;
-        }
-
-        .container {
-          max-width: 1280px;
-          margin: 0 auto;
-          padding: 0 1.5rem;
-        }
-
-        .breadcrumbs {
-          font-size: 0.85rem;
-          color: #64748B;
-          margin-bottom: 1.25rem;
-        }
-
-        .page-title {
-          font-size: 2.25rem;
-          font-weight: 800;
-          color: #0F172A;
-          margin-bottom: 0.5rem;
-        }
-
-        .page-subtitle {
-          font-size: 1rem;
-          color: #64748B;
-          margin-bottom: 2.5rem;
-        }
-
-        /* Success & Empty Card */
-        .order-success-card, .empty-cart-card {
-          background: #ffffff;
-          border-radius: 20px;
-          padding: 4rem 2rem;
-          text-align: center;
-          max-width: 600px;
-          margin: 0 auto;
-          box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-          border: 1px solid #E2E8F0;
-        }
-
-        .success-icon-box {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 90px;
-          height: 90px;
-          background: #ECFDF5;
-          border-radius: 50%;
-          margin-bottom: 1.5rem;
-        }
-
-        .success-heading, .empty-heading {
-          font-size: 1.75rem;
-          font-weight: 700;
-          color: #0F172A;
-          margin-bottom: 1rem;
-        }
-
-        .success-text, .empty-text {
-          font-size: 1rem;
-          color: #64748B;
-          line-height: 1.6;
-          margin-bottom: 2rem;
-        }
-
-        .success-btn-row {
-          display: flex;
-          gap: 1rem;
-          justify-content: center;
-          flex-wrap: wrap;
-        }
-
-        .resend-wa-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          background: #25D366;
-          color: #ffffff;
-          padding: 0.85rem 1.75rem;
-          border-radius: 12px;
-          font-weight: 700;
-          border: none;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-
-        .resend-wa-btn:hover {
-          background: #1DA851;
-          transform: translateY(-2px);
-        }
-
-        .back-home-btn, .continue-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          background: #0F172A;
-          color: #ffffff;
-          padding: 0.85rem 1.75rem;
-          border-radius: 12px;
-          font-weight: 600;
-          text-decoration: none;
-          transition: all 0.2s;
-        }
-
-        /* Grid Layout */
-        .checkout-grid {
-          display: grid;
-          grid-template-columns: 1fr 420px;
-          gap: 2rem;
-          align-items: start;
-        }
-
-        @media (max-width: 992px) {
-          .checkout-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        .form-card, .summary-card {
-          background: #ffffff;
-          border-radius: 20px;
-          padding: 2rem;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-          border: 1px solid #E2E8F0;
-        }
-
-        .form-card-title, .summary-title {
-          font-size: 1.25rem;
-          font-weight: 700;
-          color: #0F172A;
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          margin-bottom: 1.75rem;
-          padding-bottom: 1rem;
-          border-bottom: 1px solid #F1F5F9;
-        }
-
-        .customer-form {
-          display: flex;
-          flex-direction: column;
-          gap: 1.25rem;
-        }
-
-        .input-group {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-
-        .input-group label {
-          font-size: 0.875rem;
-          font-weight: 600;
-          color: #334155;
-        }
-
-        .req {
-          color: #EF4444;
-        }
-
-        .input-with-icon {
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
-
-        .input-with-icon input,
-        .input-with-icon textarea {
-          width: 100%;
-          padding: 0.85rem 1rem 0.85rem 2.75rem;
-          border: 1.5px solid #E2E8F0;
-          border-radius: 12px;
-          font-size: 0.95rem;
-          color: #0F172A;
-          outline: none;
-          transition: all 0.2s ease;
-          background: #FAFAFA;
-        }
-
-        .input-with-icon input:focus,
-        .input-with-icon textarea:focus {
-          border-color: #2563EB;
-          background: #ffffff;
-          box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-        }
-
-        :global(.field-icon) {
-          position: absolute;
-          left: 1rem;
-          color: #94A3B8;
-          pointer-events: none;
-        }
-
-        :global(.icon-top) {
-          top: 1rem;
-        }
-
-        .field-hint {
-          font-size: 0.78rem;
-          color: #64748B;
-        }
-
-        .form-row-2col {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1rem;
-        }
-
-        @media (max-width: 576px) {
-          .form-row-2col {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        .submit-whatsapp-order-btn {
-          margin-top: 1rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.75rem;
-          width: 100%;
-          background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-          color: #ffffff;
-          font-size: 1.05rem;
-          font-weight: 700;
-          padding: 1.1rem 1.5rem;
-          border-radius: 14px;
-          border: none;
-          cursor: pointer;
-          box-shadow: 0 8px 20px -4px rgba(37, 211, 102, 0.4);
-          transition: all 0.25s ease;
-        }
-
-        .submit-whatsapp-order-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 25px -4px rgba(37, 211, 102, 0.5);
-        }
-
-        .privacy-badge {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          font-size: 0.82rem;
-          color: #64748B;
-          margin-top: 0.5rem;
-        }
-
-        .summary-card-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding-bottom: 0.75rem;
-          border-bottom: 1px solid #F1F5F9;
-          margin-bottom: 0.5rem;
-        }
-
-        .summary-card-header .summary-title {
-          margin-bottom: 0;
-          padding-bottom: 0;
-          border-bottom: none;
-          font-size: 1.15rem;
-        }
-
-        .select-all-btn {
-          background: #F1F5F9;
-          border: 1px solid #CBD5E1;
-          color: #1E293B;
-          font-size: 0.75rem;
-          font-weight: 700;
-          padding: 0.3rem 0.75rem;
-          border-radius: 6px;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-
-        .select-all-btn:hover {
-          background: #E2E8F0;
-        }
-
-        .select-hint-text {
-          font-size: 0.75rem;
-          color: #64748B;
-          margin-bottom: 1rem;
-        }
-
-        /* Order Summary Items */
-        .order-items-preview {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          max-height: 340px;
-          overflow-y: auto;
-          padding-right: 0.5rem;
-          margin-bottom: 1.25rem;
-        }
-
-        .preview-item {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          padding-bottom: 0.85rem;
-          border-bottom: 1px solid #F1F5F9;
-          transition: all 0.2s ease;
-        }
-
-        .preview-item.deselected {
-          opacity: 0.55;
-          background: #F8FAFC;
-          padding: 0.5rem;
-          border-radius: 8px;
-        }
-
-        .preview-item.deselected .item-name {
-          text-decoration: line-through;
-          color: #94A3B8;
-        }
-
-        .select-checkbox-btn {
-          background: none;
-          border: none;
-          padding: 0.25rem;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: transform 0.15s ease;
-        }
-
-        .select-checkbox-btn:hover {
-          transform: scale(1.1);
-        }
-
-        .deselected-badge {
-          display: inline-block;
-          font-size: 0.68rem;
-          font-weight: 700;
-          color: #EF4444;
-          background: #FEE2E2;
-          padding: 0.1rem 0.4rem;
-          border-radius: 4px;
-          margin-top: 0.2rem;
-        }
-
-        .order-qty-control {
-          display: flex;
-          align-items: center;
-          gap: 0.4rem;
-          margin-top: 0.3rem;
-        }
-
-        .order-qty-btn {
-          width: 24px;
-          height: 24px;
-          border-radius: 6px;
-          border: 1px solid #CBD5E1;
-          background: #ffffff;
-          color: #0F172A;
-          font-size: 0.85rem;
-          font-weight: 700;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.15s ease;
-        }
-
-        .order-qty-btn:hover {
-          background: #0F172A;
-          color: #ffffff;
-          border-color: #0F172A;
-        }
-
-        .order-qty-val {
-          font-size: 0.85rem;
-          font-weight: 700;
-          color: #0F172A;
-          min-width: 18px;
-          text-align: center;
-        }
-
-        .order-unit-price {
-          font-size: 0.75rem;
-          color: #64748B;
-          margin-left: 0.4rem;
-        }
-
-        .item-img-box {
-          position: relative;
-          width: 54px;
-          height: 54px;
-          border-radius: 10px;
-          overflow: hidden;
-          background: #F1F5F9;
-          flex-shrink: 0;
-        }
-
-        .item-img-box img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .qty-badge {
-          position: absolute;
-          top: -2px;
-          right: -2px;
-          background: #2563EB;
-          color: #ffffff;
-          font-size: 0.7rem;
-          font-weight: 700;
-          width: 18px;
-          height: 18px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .item-text-box {
-          flex: 1;
-        }
-
-        .item-name {
-          font-size: 0.88rem;
-          font-weight: 600;
-          color: #0F172A;
-          margin: 0 0 0.2rem 0;
-          display: -webkit-box;
-          -webkit-line-clamp: 1;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-
-        .item-var {
-          display: block;
-          font-size: 0.75rem;
-          color: #64748B;
-        }
-
-        .item-price {
-          font-size: 0.8rem;
-          color: #94A3B8;
-        }
-
-        .item-action-col {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          gap: 0.4rem;
-        }
-
-        .item-total-col {
-          font-size: 0.92rem;
-          font-weight: 700;
-          color: #0F172A;
-        }
-
-        .remove-item-btn {
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 0.2rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: opacity 0.2s;
-        }
-
-        .remove-item-btn:hover {
-          opacity: 0.7;
-        }
-
-        .no-selection-warning {
-          background-color: #FEF2F2;
-          border: 1px solid #FCA5A5;
-          color: #991B1B;
-          font-size: 0.82rem;
-          font-weight: 600;
-          padding: 0.75rem 1rem;
-          border-radius: 10px;
-          margin-bottom: 1.25rem;
-          text-align: center;
-        }
-
-        /* Price breakdown */
-        .price-breakdown {
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-          background: #F8FAFC;
-          padding: 1.25rem;
-          border-radius: 14px;
-          margin-bottom: 1.5rem;
-        }
-
-        .price-row {
-          display: flex;
-          justify-content: space-between;
-          font-size: 0.9rem;
-          color: #475569;
-        }
-
-        .divider-line {
-          height: 1px;
-          background: #E2E8F0;
-          margin: 0.25rem 0;
-        }
-
-        .total-row {
-          font-size: 1.1rem;
-          font-weight: 800;
-          color: #0F172A;
-        }
-
-        .grand-val {
-          color: #16A34A;
-          font-size: 1.25rem;
-        }
-
-        .delivery-highlights {
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-        }
-
-        .highlight-item {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          font-size: 0.85rem;
-          color: #475569;
-          font-weight: 500;
-        }
-      `}</style>
     </>
   );
 }

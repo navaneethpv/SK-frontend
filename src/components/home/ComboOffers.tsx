@@ -3,47 +3,48 @@ import Link from 'next/link';
 
 export default function ComboOffers() {
   return (
-    <section className="bundle-section">
-      <div className="bundle-container">
+    <section className="w-full py-[1.8rem] sm:py-[2.2rem] lg:py-16 bg-white">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
         {/* Section Header */}
-        <div className="bundle-header">
-          <h2 className="bundle-title">Build Your Bundle</h2>
-          <p className="bundle-subtitle">Get Super Saving Deals - <span>Starting at @599</span></p>
+        <div className="mb-[1.4rem] lg:mb-[2.2rem]">
+          <h2 className="text-[1.15rem] sm:text-[1.25rem] lg:text-[1.6rem] font-bold text-[#121316] mb-[0.3rem]">
+            Build Your Bundle
+          </h2>
+          <p className="text-[0.75rem] sm:text-[0.8rem] lg:text-[0.9rem] text-[#6B7280]">
+            Get Super Saving Deals - <span className="italic font-semibold text-[#121316]">Starting at @599</span>
+          </p>
         </div>
 
         {/* 3 Main Bundle Cards */}
-        <div className="main-bundles-grid">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-[1.2rem] lg:mb-[1.8rem]">
           {/* Card 1: Essential Grooming Kit */}
-          <div className="bundle-card">
-            <div className="bundle-card-img-wrapper">
-              <img src="/bundle - combo offer/1.png" alt="Essential Grooming Kit" className="bundle-img" />
-              <div className="bundle-overlay-content">
-                <Link href="/shop?bundle=grooming" className="shop-bundle-btn">
+          <div className="rounded-lg overflow-hidden bg-[#f5f5f5] shadow-[0_4px_14px_rgba(0,0,0,0.05)] transition-transform duration-300 hover:-translate-y-1">
+            <div className="relative w-full aspect-[1.1] max-h-[130px] sm:aspect-[1.15] sm:max-h-[180px] lg:aspect-[0.92] lg:max-h-none overflow-hidden">
+              <img src="/bundle - combo offer/1.png" alt="Essential Grooming Kit" className="w-full h-full object-cover block" />
+              <div className="absolute top-6 left-6 right-6 z-10 flex flex-col items-start gap-2">
+                <Link href="/shop?bundle=grooming" className="mt-1 bg-black text-white text-[0.75rem] font-bold px-5 py-2 rounded transition-colors hover:bg-[#C39F68]">
                 </Link>
               </div>
             </div>
           </div>
 
           {/* Card 2: Premium Lifestyle Collection */}
-          <div className="bundle-card">
-            <div className="bundle-card-img-wrapper">
-              <img src="/bundle - combo offer/2.png" alt="Premium Lifestyle Collection" className="bundle-img" />
-              <div className="bundle-overlay-content">
-                <Link href="/shop?bundle=lifestyle" className="shop-bundle-btn">
+          <div className="rounded-lg overflow-hidden bg-[#f5f5f5] shadow-[0_4px_14px_rgba(0,0,0,0.05)] transition-transform duration-300 hover:-translate-y-1">
+            <div className="relative w-full aspect-[1.1] max-h-[130px] sm:aspect-[1.15] sm:max-h-[180px] lg:aspect-[0.92] lg:max-h-none overflow-hidden">
+              <img src="/bundle - combo offer/2.png" alt="Premium Lifestyle Collection" className="w-full h-full object-cover block" />
+              <div className="absolute top-6 left-6 right-6 z-10 flex flex-col items-start gap-2">
+                <Link href="/shop?bundle=lifestyle" className="mt-1 bg-black text-white text-[0.75rem] font-bold px-5 py-2 rounded transition-colors hover:bg-[#C39F68]">
                 </Link>
               </div>
             </div>
           </div>
 
           {/* Card 3: Executive Essentials */}
-          <div className="bundle-card">
-            <div className="bundle-card-img-wrapper">
-              <img src="/bundle - combo offer/3.png" alt="Executive Essentials" className="bundle-img" />
-              <div className="bundle-overlay-content">
-                {/* <h3 className="bundle-card-title">Executive Essentials</h3> */}
-                {/* <p className="bundle-card-desc">Refined leather accessories crafted for everyday sophistication.</p> */}
-                <Link href="/shop?bundle=executive" className="shop-bundle-btn">
-                  {/* Shop Bundle */}
+          <div className="rounded-lg overflow-hidden bg-[#f5f5f5] shadow-[0_4px_14px_rgba(0,0,0,0.05)] transition-transform duration-300 hover:-translate-y-1">
+            <div className="relative w-full aspect-[1.1] max-h-[130px] sm:aspect-[1.15] sm:max-h-[180px] lg:aspect-[0.92] lg:max-h-none overflow-hidden">
+              <img src="/bundle - combo offer/3.png" alt="Executive Essentials" className="w-full h-full object-cover block" />
+              <div className="absolute top-6 left-6 right-6 z-10 flex flex-col items-start gap-2">
+                <Link href="/shop?bundle=executive" className="mt-1 bg-black text-white text-[0.75rem] font-bold px-5 py-2 rounded transition-colors hover:bg-[#C39F68]">
                 </Link>
               </div>
             </div>
@@ -51,287 +52,40 @@ export default function ComboOffers() {
         </div>
 
         {/* 3 Mini Offer Cards below */}
-        <div className="mini-offers-grid">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4 lg:gap-6">
           {/* Offer Card 1 */}
-          <div className="mini-offer-card">
-            <div className="offer-info">
-              <h4 className="offer-name">Luxury Scent Box</h4>
-              <span className="offer-badge green-badge">LUXURY SCENTS</span>
-              <span className="offer-price">₹1,099</span>
+          <div className="bg-transparent border-0 rounded-none pt-2.5 sm:pt-3.2 pb-2.5 sm:pb-0 border-b border-[#F0EDE8] sm:border-b-0 flex items-end justify-between">
+            <div className="flex flex-col gap-1.5">
+              <h4 className="text-[0.82rem] sm:text-[0.88rem] lg:text-[1.05rem] font-bold text-black">Luxury Scent Box</h4>
+              <span className="inline-block text-[0.62rem] font-bold px-[0.45rem] py-[0.15rem] rounded-[3px] tracking-wide self-start border-[1.5px] border-[#10B981] text-[#10B981] bg-transparent">LUXURY SCENTS</span>
+              <span className="text-[0.82rem] sm:text-[0.88rem] lg:text-[1.05rem] font-extrabold text-black">₹1,099</span>
             </div>
-            <button className="build-box-btn">Build Box</button>
+            <button className="bg-[#27272A] text-white border-none text-[0.68rem] sm:text-[0.7rem] lg:text-[0.76rem] font-bold px-3 sm:px-3.5 lg:px-4.5 py-1.5 sm:py-2 rounded-md cursor-pointer transition-colors hover:bg-black">Build Box</button>
           </div>
 
           {/* Offer Card 2 */}
-          <div className="mini-offer-card">
-            <div className="offer-info">
-              <h4 className="offer-name">Mini Perfume Box</h4>
-              <span className="offer-badge gold-badge">BESTSELLER</span>
-              <span className="offer-price">₹599 <del className="strike-price">₹4,497</del></span>
+          <div className="bg-transparent border-0 rounded-none pt-2.5 sm:pt-3.2 pb-2.5 sm:pb-0 border-b border-[#F0EDE8] sm:border-b-0 flex items-end justify-between">
+            <div className="flex flex-col gap-1.5">
+              <h4 className="text-[0.82rem] sm:text-[0.88rem] lg:text-[1.05rem] font-bold text-black">Mini Perfume Box</h4>
+              <span className="inline-block text-[0.62rem] font-bold px-[0.45rem] py-[0.15rem] rounded-[3px] tracking-wide self-start bg-[#FEF08A] text-[#854D0E]">BESTSELLER</span>
+              <span className="text-[0.82rem] sm:text-[0.88rem] lg:text-[1.05rem] font-extrabold text-black">
+                ₹599 <del className="text-[0.82rem] text-[#9CA3AF] ml-1 font-normal line-through">₹4,497</del>
+              </span>
             </div>
-            <button className="build-box-btn">Build Box</button>
+            <button className="bg-[#27272A] text-white border-none text-[0.68rem] sm:text-[0.7rem] lg:text-[0.76rem] font-bold px-3 sm:px-3.5 lg:px-4.5 py-1.5 sm:py-2 rounded-md cursor-pointer transition-colors hover:bg-black">Build Box</button>
           </div>
 
           {/* Offer Card 3 */}
-          <div className="mini-offer-card">
-            <div className="offer-info">
-              <h4 className="offer-name">Self Grooming Kit</h4>
-              <span className="offer-badge blue-badge">VALUE DEAL</span>
-              <span className="offer-price">₹599</span>
+          <div className="bg-transparent border-0 rounded-none pt-2.5 sm:pt-3.2 pb-2.5 sm:pb-0 flex items-end justify-between">
+            <div className="flex flex-col gap-1.5">
+              <h4 className="text-[0.82rem] sm:text-[0.88rem] lg:text-[1.05rem] font-bold text-black">Self Grooming Kit</h4>
+              <span className="inline-block text-[0.62rem] font-bold px-[0.45rem] py-[0.15rem] rounded-[3px] tracking-wide self-start border-[1.5px] border-[#06B6D4] text-[#06B6D4] bg-transparent">VALUE DEAL</span>
+              <span className="text-[0.82rem] sm:text-[0.88rem] lg:text-[1.05rem] font-extrabold text-black">₹599</span>
             </div>
-            <button className="build-box-btn">Build Box</button>
+            <button className="bg-[#27272A] text-white border-none text-[0.68rem] sm:text-[0.7rem] lg:text-[0.76rem] font-bold px-3 sm:px-3.5 lg:px-4.5 py-1.5 sm:py-2 rounded-md cursor-pointer transition-colors hover:bg-black">Build Box</button>
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .bundle-section {
-          width: 100%;
-          padding: 4rem 0;
-          background-color: #ffffff;
-        }
-
-        .bundle-container {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 0 2rem;
-        }
-
-        .bundle-header {
-          margin-bottom: 2.2rem;
-        }
-
-        .bundle-title {
-          font-family: var(--font-sans);
-          font-size: 1.6rem;
-          font-weight: 700;
-          color: #121316;
-          margin-bottom: 0.3rem;
-        }
-
-        .bundle-subtitle {
-          font-size: 0.9rem;
-          color: #6B7280;
-        }
-
-        .bundle-subtitle span {
-          font-style: italic;
-          font-weight: 600;
-          color: #121316;
-        }
-
-        .main-bundles-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1.5rem;
-          margin-bottom: 1.8rem;
-        }
-
-        .bundle-card {
-          border-radius: 8px;
-          overflow: hidden;
-          background-color: #f5f5f5;
-          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-          transition: transform 0.3s ease;
-        }
-
-        .bundle-card:hover {
-          transform: translateY(-4px);
-        }
-
-        .bundle-card-img-wrapper {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 0.92;
-          overflow: hidden;
-        }
-
-        .bundle-img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-
-        .bundle-overlay-content {
-          position: absolute;
-          top: 1.5rem;
-          left: 1.5rem;
-          right: 1.5rem;
-          z-index: 2;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.5rem;
-        }
-
-        .bundle-card-title {
-          font-family: var(--font-sans);
-          font-size: 1.25rem;
-          font-weight: 700;
-          color: #121316;
-        }
-
-        .bundle-card-desc {
-          font-size: 0.82rem;
-          color: #4B5563;
-          max-width: 240px;
-          line-height: 1.4;
-        }
-
-        .shop-bundle-btn {
-          margin-top: 0.4rem;
-          background-color: #000000;
-          color: #ffffff;
-          font-size: 0.75rem;
-          font-weight: 700;
-          padding: 0.5rem 1.2rem;
-          border-radius: 4px;
-          transition: background-color 0.2s ease;
-        }
-
-        .shop-bundle-btn:hover {
-          background-color: #C39F68;
-        }
-
-        /* Mini Offer Cards */
-        .mini-offers-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1.5rem;
-        }
-
-        .mini-offer-card {
-          background-color: transparent;
-          border: none;
-          border-radius: 0;
-          padding: 0.8rem 0 0 0;
-          display: flex;
-          align-items: flex-end;
-          justify-content: space-between;
-        }
-
-        .offer-info {
-          display: flex;
-          flex-direction: column;
-          gap: 0.35rem;
-        }
-
-        .offer-name {
-          font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
-          font-size: 1.05rem;
-          font-weight: 700;
-          color: #000000;
-        }
-
-        .offer-badge {
-          display: inline-block;
-          font-size: 0.62rem;
-          font-weight: 700;
-          padding: 0.15rem 0.45rem;
-          border-radius: 3px;
-          letter-spacing: 0.03em;
-          align-self: flex-start;
-        }
-
-        .green-badge {
-          border: 1.5px solid #10B981;
-          color: #10B981;
-          background: transparent;
-        }
-
-        .gold-badge {
-          background-color: #FEF08A;
-          color: #854D0E;
-          border: none;
-        }
-
-        .blue-badge {
-          border: 1.5px solid #06B6D4;
-          color: #06B6D4;
-          background: transparent;
-        }
-
-        .offer-price {
-          font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
-          font-size: 1.05rem;
-          font-weight: 800;
-          color: #000000;
-        }
-
-        .strike-price {
-          font-size: 0.82rem;
-          color: #9CA3AF;
-          margin-left: 4px;
-          font-weight: 400;
-          text-decoration: line-through;
-        }
-
-        .build-box-btn {
-          background-color: #27272A;
-          color: #ffffff;
-          border: none;
-          font-family: 'Plus Jakarta Sans', sans-serif;
-          font-size: 0.76rem;
-          font-weight: 700;
-          padding: 0.6rem 1.15rem;
-          border-radius: 6px;
-          cursor: pointer;
-          transition: background-color 0.2s ease;
-        }
-
-        .build-box-btn:hover {
-          background-color: #000000;
-        }
-
-        @media (max-width: 1024px) {
-          .bundle-section { padding: 2.2rem 0; }
-          .bundle-header { margin-bottom: 1.4rem; }
-          .bundle-title { font-size: 1.25rem; }
-          .bundle-subtitle { font-size: 0.8rem; }
-          .main-bundles-grid {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.2rem;
-          }
-          .bundle-card-img-wrapper {
-            aspect-ratio: 1.15;
-            max-height: 180px;
-          }
-          .mini-offers-grid {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-          }
-          .offer-name { font-size: 0.88rem; }
-          .offer-price { font-size: 0.88rem; }
-          .build-box-btn { padding: 0.45rem 0.8rem; font-size: 0.7rem; }
-        }
-
-        @media (max-width: 640px) {
-          .bundle-section { padding: 1.8rem 0; }
-          .bundle-title { font-size: 1.15rem; }
-          .bundle-subtitle { font-size: 0.75rem; }
-          .main-bundles-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem;
-          }
-          .bundle-card-img-wrapper {
-            max-height: 130px;
-            aspect-ratio: 1.1;
-          }
-          .mini-offers-grid {
-            grid-template-columns: 1fr;
-            gap: 0.6rem;
-          }
-          .mini-offer-card {
-            padding: 0.6rem 0;
-            border-bottom: 1px solid #F0EDE8;
-          }
-          .offer-name { font-size: 0.82rem; }
-          .offer-price { font-size: 0.82rem; }
-          .build-box-btn { padding: 0.4rem 0.7rem; font-size: 0.68rem; }
-        }
-      `}</style>
     </section>
   );
 }

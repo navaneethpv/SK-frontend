@@ -128,42 +128,26 @@ export default function ProductDetail() {
 
   if (loading || !productData) {
     return (
-      <div className="product-detail-wrapper">
+      <div className="min-h-screen flex flex-col bg-white">
         <Head>
           <title>Loading Product | SK Selection</title>
         </Head>
         <Header />
-        <main className="product-detail-main">
-          <div className="skeleton-container">
-            <div className="skeleton-grid">
-              <div className="skeleton-box img-skeleton" />
-              <div className="skeleton-info">
-                <div className="skeleton-line short" />
-                <div className="skeleton-line title" />
-                <div className="skeleton-line medium" />
-                <div className="skeleton-line price" />
-                <div className="skeleton-box btn-skeleton" />
+        <main className="flex-1 pt-24 sm:pt-32 pb-20">
+          <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
+              <div className="h-[300px] md:h-[480px] w-full rounded-xl bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 animate-pulse" />
+              <div className="flex flex-col gap-5">
+                <div className="h-4 w-1/3 rounded bg-gray-200 animate-pulse" />
+                <div className="h-8 w-4/5 rounded bg-gray-200 animate-pulse" />
+                <div className="h-4 w-3/5 rounded bg-gray-200 animate-pulse" />
+                <div className="h-7 w-2/5 rounded bg-gray-200 animate-pulse" />
+                <div className="h-14 w-full rounded-xl bg-gray-200 animate-pulse mt-8" />
               </div>
             </div>
           </div>
         </main>
         <Footer />
-        <style jsx>{`
-          .product-detail-wrapper { min-height: 100vh; display: flex; flex-direction: column; background-color: #ffffff; }
-          .product-detail-main { flex: 1; padding: 8rem 0 5rem 0; }
-          .skeleton-container { max-width: 1440px; margin: 0 auto; padding: 0 2rem; }
-          .skeleton-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem; }
-          .skeleton-box { border-radius: 12px; background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%); background-size: 200% 100%; animation: pulse 1.5s infinite; }
-          .img-skeleton { height: 480px; width: 100%; }
-          .btn-skeleton { height: 52px; width: 100%; margin-top: 2rem; }
-          .skeleton-info { display: flex; flex-direction: column; gap: 1.2rem; }
-          .skeleton-line { height: 16px; border-radius: 4px; background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%); background-size: 200% 100%; animation: pulse 1.5s infinite; }
-          .short { width: 30%; }
-          .title { width: 85%; height: 32px; }
-          .medium { width: 60%; }
-          .price { width: 40%; height: 28px; }
-          @keyframes pulse { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-        `}</style>
       </div>
     );
   }
@@ -196,32 +180,34 @@ export default function ProductDetail() {
         <meta name="description" content={productData.tagline} />
       </Head>
 
-      <div className="product-page-wrapper">
+      <div className="w-full min-h-screen bg-white">
         <Header />
 
-        <main className="product-main-content">
-          <div className="product-container">
+        <main className="pt-24 sm:pt-32 pb-20">
+          <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
             {/* Breadcrumb Bar */}
-            <div className="breadcrumb-nav">
-              <Link href="/" className="crumb-link">Home</Link>
+            <div className="flex items-center gap-2 text-[0.8rem] text-[#6B7280] mb-8">
+              <Link href="/" className="text-[#6B7280] no-underline hover:text-[#121316] transition-colors">Home</Link>
               <ChevronRight size={13} color="#9CA3AF" />
-              <Link href="/products" className="crumb-link">Catalogue</Link>
+              <Link href="/products" className="text-[#6B7280] no-underline hover:text-[#121316] transition-colors">Catalogue</Link>
               <ChevronRight size={13} color="#9CA3AF" />
-              <span className="crumb-active">{productData.title}</span>
+              <span className="text-[#121316] font-semibold">{productData.title}</span>
             </div>
 
             {/* Top Detail Grid */}
-            <div className="product-top-grid">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 mb-20">
               {/* Left Column: Product Image Gallery */}
-              <div className="gallery-left-col">
-                <div className="main-display-box">
+              <div className="flex flex-col gap-6 relative md:sticky top-0 md:top-[110px] self-start">
+                <div className="relative w-full aspect-square md:aspect-[0.92] max-h-[300px] md:max-h-none border border-[#E5E7EB] rounded-xl flex items-center justify-center p-4 md:p-10 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden group">
                   {productData.discountBadge && (
-                    <span className="discount-badge-tag">{productData.discountBadge}</span>
+                    <span className="absolute top-4 left-4 bg-[#15803D] text-white text-[0.68rem] font-extrabold px-2.5 py-1 rounded tracking-wider z-10 uppercase">
+                      {productData.discountBadge}
+                    </span>
                   )}
                   <img
                     src={productData.gallery[selectedImgIndex] || productData.mainImg}
                     alt={productData.title}
-                    className="main-display-img"
+                    className="max-w-[90%] max-h-[90%] md:max-h-[250px] lg:max-h-[90%] object-contain transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/hero cards/4.png';
                     }}
@@ -229,14 +215,16 @@ export default function ProductDetail() {
                 </div>
 
                 {productData.gallery.length > 1 && (
-                  <div className="thumbnails-row">
+                  <div className="flex gap-4">
                     {productData.gallery.map((img, idx) => (
                       <button
                         key={idx}
                         onClick={() => setSelectedImgIndex(idx)}
-                        className={`thumb-box ${selectedImgIndex === idx ? 'active' : ''}`}
+                        className={`w-14 h-14 md:w-[76px] md:h-[76px] border rounded-lg p-1 bg-white cursor-pointer transition-all duration-200 ${
+                          selectedImgIndex === idx ? 'border-[#C5A059] shadow-[0_0_0_2px_rgba(197,160,89,0.3)]' : 'border-[#E5E7EB]'
+                        }`}
                       >
-                        <img src={img} alt={`Thumbnail ${idx + 1}`} />
+                        <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-contain" />
                       </button>
                     ))}
                   </div>
@@ -244,53 +232,53 @@ export default function ProductDetail() {
               </div>
 
               {/* Right Column: Product Information & Purchase Form */}
-              <div className="info-right-col">
-                <span className="category-subtag">{productData.subtag}</span>
-                <h1 className="product-main-title">{productData.title}</h1>
-                <p className="product-tagline">{productData.tagline}</p>
+              <div className="flex flex-col gap-4.5">
+                <span className="text-[0.68rem] lg:text-[0.72rem] font-extrabold text-[#C5A059] tracking-[0.12em] uppercase">{productData.subtag}</span>
+                <h1 className="text-[1.45rem] sm:text-[1.5rem] lg:text-[2.2rem] font-extrabold text-[#121316] leading-tight tracking-[0.01em]">{productData.title}</h1>
+                <p className="text-[0.82rem] lg:text-[0.95rem] text-[#4B5563] leading-relaxed">{productData.tagline}</p>
 
                 {/* Rating Row */}
-                <div className="rating-row">
-                  <span className="star-gold">★ {productData.rating}</span>
-                  <span className="sep">|</span>
-                  <span className="reviews-cnt">{productData.reviewsCount} Verified Reviews</span>
-                  <span className="sep">|</span>
-                  <span className="in-stock-badge">
+                <div className="flex items-center gap-1.5 sm:gap-2.5 text-[0.78rem] lg:text-[0.85rem]">
+                  <span className="text-[#F59E0B] font-extrabold">★ {productData.rating}</span>
+                  <span className="text-[#E5E7EB]">|</span>
+                  <span className="text-[#4B5563] font-medium">{productData.reviewsCount} Verified Reviews</span>
+                  <span className="text-[#E5E7EB]">|</span>
+                  <span className="inline-flex items-center gap-1 text-[#15803D] font-bold text-[0.8rem]">
                     <CheckCircle2 size={13} color="#15803D" />
                     <span>In Stock</span>
                   </span>
                 </div>
 
                 {/* Pricing Block */}
-                <div className="price-block">
-                  <div className="price-values">
-                    <span className="selling-price">₹{productData.price * quantity}</span>
+                <div className="flex flex-col gap-1 mt-1">
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-[1.65rem] sm:text-[1.8rem] lg:text-[2.4rem] font-extrabold text-[#121316]">₹{productData.price * quantity}</span>
                     {productData.originalPrice > productData.price && (
-                      <span className="original-price">₹{productData.originalPrice * quantity}</span>
+                      <span className="text-[1rem] lg:text-[1.25rem] text-[#9CA3AF] line-through">₹{productData.originalPrice * quantity}</span>
                     )}
                   </div>
-                  <span className="taxes-subtext">Inclusive of all taxes & free shipping across India</span>
+                  <span className="text-[0.72rem] lg:text-[0.78rem] text-[#6B7280]">Inclusive of all taxes & free shipping across India</span>
                 </div>
 
-                <div className="divider-line" />
+                <div className="w-full h-[1px] bg-[#F0F0F0] my-1" />
 
                 {/* Quantity Selector Row */}
-                <div className="qty-selector-row">
-                  <span className="qty-label">Quantity</span>
-                  <div className="qty-box-group">
+                <div className="flex items-center gap-5">
+                  <span className="text-[0.8rem] lg:text-[0.88rem] font-bold text-[#121316]">Quantity</span>
+                  <div className="flex items-center border border-[#D1D5DB] rounded-lg overflow-hidden bg-white">
                     <button
                       type="button"
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                      className="qty-step-btn"
+                      className="w-8 h-8 lg:w-[38px] lg:h-[38px] border-none bg-[#F9FAFB] text-[#121316] text-[0.95rem] lg:text-[1.1rem] font-bold cursor-pointer transition-colors hover:bg-[#E5E7EB] flex items-center justify-center"
                       aria-label="Decrease quantity"
                     >
                       -
                     </button>
-                    <span className="qty-display-val">{quantity}</span>
+                    <span className="w-9 lg:w-[44px] text-center font-bold text-[0.85rem] lg:text-[0.95rem] text-[#121316]">{quantity}</span>
                     <button
                       type="button"
                       onClick={() => setQuantity((q) => q + 1)}
-                      className="qty-step-btn"
+                      className="w-8 h-8 lg:w-[38px] lg:h-[38px] border-none bg-[#F9FAFB] text-[#121316] text-[0.95rem] lg:text-[1.1rem] font-bold cursor-pointer transition-colors hover:bg-[#E5E7EB] flex items-center justify-center"
                       aria-label="Increase quantity"
                     >
                       +
@@ -299,20 +287,20 @@ export default function ProductDetail() {
                 </div>
 
                 {/* Action Buttons Row */}
-                <div className="action-buttons-group">
+                <div className="grid grid-cols-1 sm:grid-cols-[1.2fr_1fr] gap-4 mt-3">
                   <button
                     onClick={handleAddToCartClick}
-                    className="add-to-cart-main-btn"
+                    className="bg-[#121316] text-white border border-transparent text-[0.74rem] lg:text-[0.85rem] font-extrabold tracking-[0.06em] py-3 lg:py-3.8 px-4 rounded-lg cursor-pointer transition-all duration-200 flex items-center justify-center gap-2.5 shadow-[0_4px_14px_rgba(0,0,0,0.12)] hover:border-[#C5A059] hover:shadow-[0_8px_22px_rgba(197,160,89,0.25)] active:scale-98"
                   >
                     <ShoppingBag size={18} />
                     <span>ADD TO CART</span>
-                    <span className="btn-price-divider">|</span>
+                    <span className="opacity-40">|</span>
                     <span>₹{productData.price * quantity}</span>
                   </button>
 
                   <button
                     onClick={handleBuyNowClick}
-                    className="buy-now-main-btn"
+                    className="bg-[#C5A059] text-[#111111] border-none text-[0.74rem] lg:text-[0.85rem] font-extrabold tracking-[0.06em] py-3 lg:py-3.8 px-4 rounded-lg cursor-pointer transition-all duration-200 flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(197,160,89,0.3)] hover:bg-[#111111] hover:text-white hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(0,0,0,0.25)] active:scale-98"
                   >
                     <Zap size={18} />
                     <span>BUY NOW</span>
@@ -320,59 +308,59 @@ export default function ProductDetail() {
                 </div>
 
                 {/* Trust Guarantee Cards Row */}
-                <div className="product-trust-strip">
-                  <div className="trust-mini-card">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 lg:gap-3 mt-4 p-3 lg:p-4 bg-[#FAF8F5] border border-[#F0EDE8] rounded-xl">
+                  <div className="flex items-center gap-1.5 lg:gap-2 text-[0.66rem] lg:text-[0.75rem] font-bold text-[#121316]">
                     <Truck size={18} color="#C5A059" />
                     <span>Free Express Shipping</span>
                   </div>
-                  <div className="trust-mini-card">
+                  <div className="flex items-center gap-1.5 lg:gap-2 text-[0.66rem] lg:text-[0.75rem] font-bold text-[#121316]">
                     <ShieldCheck size={18} color="#C5A059" />
                     <span>100% Authentic Product</span>
                   </div>
-                  <div className="trust-mini-card">
+                  <div className="flex items-center gap-1.5 lg:gap-2 text-[0.66rem] lg:text-[0.75rem] font-bold text-[#121316]">
                     <RefreshCw size={18} color="#C5A059" />
                     <span>Easy 7-Day Replacement</span>
                   </div>
                 </div>
 
                 {/* Accordions Block */}
-                <div className="accordions-wrapper">
-                  <div className="accordion-item">
-                    <button onClick={() => toggleAccordion('description')} className="accordion-header">
+                <div className="flex flex-col border-t border-[#E5E7EB] mt-6">
+                  <div className="border-b border-[#E5E7EB]">
+                    <button onClick={() => toggleAccordion('description')} className="w-full flex items-center justify-between py-3.5 lg:py-4 bg-none border-none text-[0.8rem] lg:text-[0.88rem] font-extrabold tracking-[0.05em] text-[#121316] cursor-pointer">
                       <span>PRODUCT DESCRIPTION</span>
                       {openAccordions.description ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                     </button>
                     {openAccordions.description && (
-                      <div className="accordion-body">
+                      <div className="pb-4 text-[0.82rem] lg:text-[0.9rem] text-[#4B5563] leading-relaxed">
                         <p>{productData.description || 'Malabar Veerasmruthikal is an authentic, inspiring historical book highlighting courage, legacy, and timeless stories of freedom fighters. Published with high quality archival paper and durable binding for avid readers and collectors alike.'}</p>
                       </div>
                     )}
                   </div>
 
-                  <div className="accordion-item">
-                    <button onClick={() => toggleAccordion('specifications')} className="accordion-header">
+                  <div className="border-b border-[#E5E7EB]">
+                    <button onClick={() => toggleAccordion('specifications')} className="w-full flex items-center justify-between py-3.5 lg:py-4 bg-none border-none text-[0.8rem] lg:text-[0.88rem] font-extrabold tracking-[0.05em] text-[#121316] cursor-pointer">
                       <span>SPECIFICATIONS & DETAILS</span>
                       {openAccordions.specifications ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                     </button>
                     {openAccordions.specifications && (
-                      <div className="accordion-body">
-                        <ul className="spec-list">
-                          <li><strong>Language:</strong> Malayalam</li>
-                          <li><strong>Binding:</strong> Premium Paperback</li>
-                          <li><strong>Publisher:</strong> SK Publications</li>
-                          <li><strong>Quality:</strong> 100% Guaranteed Official Edition</li>
+                      <div className="pb-4 text-[0.82rem] lg:text-[0.9rem] text-[#4B5563] leading-relaxed">
+                        <ul className="list-none p-0 m-0 flex flex-col gap-2">
+                          <li className="text-[0.88rem] text-[#4B5563]"><strong>Language:</strong> Malayalam</li>
+                          <li className="text-[0.88rem] text-[#4B5563]"><strong>Binding:</strong> Premium Paperback</li>
+                          <li className="text-[0.88rem] text-[#4B5563]"><strong>Publisher:</strong> SK Publications</li>
+                          <li className="text-[0.88rem] text-[#4B5563]"><strong>Quality:</strong> 100% Guaranteed Official Edition</li>
                         </ul>
                       </div>
                     )}
                   </div>
 
-                  <div className="accordion-item">
-                    <button onClick={() => toggleAccordion('shipping')} className="accordion-header">
+                  <div className="border-b border-[#E5E7EB]">
+                    <button onClick={() => toggleAccordion('shipping')} className="w-full flex items-center justify-between py-3.5 lg:py-4 bg-none border-none text-[0.8rem] lg:text-[0.88rem] font-extrabold tracking-[0.05em] text-[#121316] cursor-pointer">
                       <span>SHIPPING & RETURNS</span>
                       {openAccordions.shipping ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                     </button>
                     {openAccordions.shipping && (
-                      <div className="accordion-body">
+                      <div className="pb-4 text-[0.82rem] lg:text-[0.9rem] text-[#4B5563] leading-relaxed">
                         <p>Orders are dispatched within 24 hours via express air courier. Delivered within 3-5 business days across India. 7-day hassle-free replacement promise for damaged or incorrect deliveries.</p>
                       </div>
                     )}
@@ -388,447 +376,6 @@ export default function ProductDetail() {
 
         <Footer />
       </div>
-
-      <style jsx>{`
-        .product-page-wrapper {
-          width: 100%;
-          min-height: 100vh;
-          background-color: #ffffff;
-        }
-
-        .product-main-content {
-          padding: 8rem 0 5rem 0;
-        }
-
-        .product-container {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 0 2rem;
-        }
-
-        /* Breadcrumbs */
-        .breadcrumb-nav {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 0.8rem;
-          color: #6B7280;
-          margin-bottom: 2rem;
-        }
-
-        .crumb-link {
-          color: #6B7280;
-          text-decoration: none;
-          transition: color 0.15s ease;
-        }
-
-        .crumb-link:hover { color: #121316; }
-        .crumb-active { color: #121316; font-weight: 600; }
-
-        .product-top-grid {
-          display: grid;
-          grid-template-columns: 1fr 1.1fr;
-          gap: 4rem;
-          margin-bottom: 5rem;
-        }
-
-        /* Left Gallery */
-        .gallery-left-col {
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-          position: sticky;
-          top: 110px;
-          align-self: flex-start;
-        }
-
-        .main-display-box {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 0.92;
-          border: 1px solid #E5E7EB;
-          border-radius: 12px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 2.5rem;
-          background-color: #ffffff;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-          overflow: hidden;
-        }
-
-        .discount-badge-tag {
-          position: absolute;
-          top: 1rem;
-          left: 1rem;
-          background-color: #15803D;
-          color: #ffffff;
-          font-size: 0.68rem;
-          font-weight: 800;
-          padding: 0.25rem 0.6rem;
-          border-radius: 4px;
-          letter-spacing: 0.05em;
-          z-index: 2;
-        }
-
-        .main-display-img {
-          max-width: 90%;
-          max-height: 90%;
-          object-fit: contain;
-          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .main-display-box:hover .main-display-img {
-          transform: scale(1.05);
-        }
-
-        .thumbnails-row {
-          display: flex;
-          gap: 1rem;
-        }
-
-        .thumb-box {
-          width: 76px;
-          height: 76px;
-          border: 1px solid #E5E7EB;
-          border-radius: 8px;
-          padding: 0.4rem;
-          background: #ffffff;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .thumb-box.active {
-          border-color: #C5A059;
-          box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.3);
-        }
-
-        .thumb-box img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-
-        /* Right Info */
-        .info-right-col {
-          display: flex;
-          flex-direction: column;
-          gap: 1.1rem;
-        }
-
-        .category-subtag {
-          font-size: 0.72rem;
-          font-weight: 800;
-          color: #C5A059;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-        }
-
-        .product-main-title {
-          font-size: 2.2rem;
-          font-weight: 800;
-          color: #121316;
-          line-height: 1.25;
-          letter-spacing: 0.01em;
-        }
-
-        .product-tagline {
-          font-size: 0.95rem;
-          color: #4B5563;
-          line-height: 1.5;
-        }
-
-        .rating-row {
-          display: flex;
-          align-items: center;
-          gap: 0.6rem;
-          font-size: 0.85rem;
-        }
-
-        .star-gold { color: #F59E0B; font-weight: 800; }
-        .sep { color: #E5E7EB; }
-        .reviews-cnt { color: #4B5563; font-weight: 500; }
-        
-        .in-stock-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.3rem;
-          color: #15803D;
-          font-size: 0.8rem;
-          font-weight: 700;
-        }
-
-        .price-block {
-          display: flex;
-          flex-direction: column;
-          gap: 0.3rem;
-          margin-top: 0.4rem;
-        }
-
-        .price-values {
-          display: flex;
-          align-items: baseline;
-          gap: 0.8rem;
-        }
-
-        .selling-price {
-          font-size: 2.4rem;
-          font-weight: 800;
-          color: #121316;
-        }
-
-        .original-price {
-          font-size: 1.25rem;
-          color: #9CA3AF;
-          text-decoration: line-through;
-        }
-
-        .taxes-subtext {
-          font-size: 0.78rem;
-          color: #6B7280;
-        }
-
-        .divider-line {
-          width: 100%;
-          height: 1px;
-          background-color: #F0F0F0;
-          margin: 0.4rem 0;
-        }
-
-        .qty-selector-row {
-          display: flex;
-          align-items: center;
-          gap: 1.2rem;
-        }
-
-        .qty-label {
-          font-size: 0.88rem;
-          font-weight: 700;
-          color: #121316;
-        }
-
-        .qty-box-group {
-          display: flex;
-          align-items: center;
-          border: 1px solid #D1D5DB;
-          border-radius: 8px;
-          overflow: hidden;
-          background: #ffffff;
-        }
-
-        .qty-step-btn {
-          width: 38px;
-          height: 38px;
-          border: none;
-          background: #F9FAFB;
-          color: #121316;
-          font-size: 1.1rem;
-          font-weight: 700;
-          cursor: pointer;
-          transition: background-color 0.15s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .qty-step-btn:hover { background-color: #E5E7EB; }
-
-        .qty-display-val {
-          width: 44px;
-          text-align: center;
-          font-weight: 700;
-          font-size: 0.95rem;
-          color: #121316;
-        }
-
-        .action-buttons-group {
-          display: grid;
-          grid-template-columns: 1.2fr 1fr;
-          gap: 1rem;
-          margin-top: 0.8rem;
-        }
-
-        .add-to-cart-main-btn {
-          background: #121316;
-          color: #ffffff;
-          border: 1px solid transparent;
-          font-size: 0.85rem;
-          font-weight: 800;
-          letter-spacing: 0.06em;
-          padding: 0.95rem 1rem;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.6rem;
-          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-        }
-
-        .add-to-cart-main-btn:hover {
-          border-color: #C5A059;
-          box-shadow: 0 8px 22px rgba(197, 160, 89, 0.25);
-        }
-
-        .add-to-cart-main-btn:active {
-          transform: scale(0.98);
-        }
-
-        .btn-price-divider { opacity: 0.4; }
-
-        .buy-now-main-btn {
-          background: #C5A059;
-          color: #111111;
-          border: none;
-          font-size: 0.85rem;
-          font-weight: 800;
-          letter-spacing: 0.06em;
-          padding: 0.95rem 1rem;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          box-shadow: 0 4px 14px rgba(197, 160, 89, 0.3);
-        }
-
-        .buy-now-main-btn:hover {
-          background: #111111;
-          color: #ffffff;
-          transform: translateY(-2px);
-          box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
-        }
-
-        .buy-now-main-btn:active {
-          transform: scale(0.98);
-        }
-
-        /* Trust Strip */
-        .product-trust-strip {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 0.8rem;
-          margin-top: 1rem;
-          padding: 1rem;
-          background: #FAF8F5;
-          border: 1px solid #F0EDE8;
-          border-radius: 10px;
-        }
-
-        .trust-mini-card {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 0.75rem;
-          font-weight: 700;
-          color: #121316;
-        }
-
-        /* Accordions */
-        .accordions-wrapper {
-          display: flex;
-          flex-direction: column;
-          border-top: 1px solid #E5E7EB;
-          margin-top: 1.5rem;
-        }
-
-        .accordion-item {
-          border-bottom: 1px solid #E5E7EB;
-        }
-
-        .accordion-header {
-          width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 1.2rem 0;
-          background: none;
-          border: none;
-          font-size: 0.88rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-          color: #121316;
-          cursor: pointer;
-        }
-
-        .accordion-body {
-          padding-bottom: 1.2rem;
-          font-size: 0.9rem;
-          color: #4B5563;
-          line-height: 1.6;
-        }
-
-        .spec-list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-
-        .spec-list li {
-          font-size: 0.88rem;
-          color: #4B5563;
-        }
-
-        @media (max-width: 1024px) {
-          .product-main-content { padding: 5.2rem 0 2.5rem 0; }
-          .product-top-grid {
-            grid-template-columns: 1fr 1fr;
-            gap: 1.8rem;
-            margin-bottom: 3rem;
-          }
-          .main-display-box {
-            padding: 1rem;
-            max-height: 300px;
-            aspect-ratio: 1;
-          }
-          .main-display-img { max-height: 250px; }
-          .thumb-box { width: 56px; height: 56px; padding: 0.25rem; }
-          .category-subtag { font-size: 0.68rem; }
-          .product-main-title { font-size: 1.45rem; line-height: 1.25; }
-          .product-tagline { font-size: 0.82rem; }
-          .rating-row { font-size: 0.78rem; gap: 0.4rem; }
-          .selling-price { font-size: 1.65rem; }
-          .original-price { font-size: 1rem; }
-          .taxes-subtext { font-size: 0.72rem; }
-          .qty-label { font-size: 0.8rem; }
-          .qty-step-btn { width: 32px; height: 32px; font-size: 0.95rem; }
-          .qty-display-val { width: 36px; font-size: 0.85rem; }
-          .add-to-cart-main-btn, .buy-now-main-btn {
-            padding: 0.7rem 0.6rem;
-            font-size: 0.74rem;
-          }
-          .gallery-left-col { position: relative; top: 0; }
-          .product-trust-strip {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.4rem;
-            padding: 0.75rem 0.5rem;
-          }
-          .trust-mini-card { font-size: 0.66rem; gap: 0.3rem; }
-          .accordion-header { padding: 0.9rem 0; font-size: 0.8rem; }
-          .accordion-body { font-size: 0.82rem; }
-        }
-
-        @media (max-width: 768px) {
-          .product-top-grid {
-            grid-template-columns: 1fr;
-            gap: 2.5rem;
-          }
-          .product-trust-strip { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 640px) {
-          .product-main-content { padding: 6rem 0 3rem 0; }
-          .action-buttons-group { grid-template-columns: 1fr; }
-          .selling-price { font-size: 1.8rem; }
-          .product-main-title { font-size: 1.5rem; }
-        }
-      `}</style>
     </>
   );
 }

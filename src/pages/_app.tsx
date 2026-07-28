@@ -34,19 +34,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <CartProvider>
-      <div className="site-wrapper">
+      <div className="flex flex-col min-h-screen bg-white text-[#121316]">
         <Component {...pageProps} />
         <CartDrawer />
-        
-        <style jsx global>{`
-          .site-wrapper {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: hsl(var(--background));
-            color: hsl(var(--foreground));
-          }
-        `}</style>
       </div>
     </CartProvider>
   );

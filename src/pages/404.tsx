@@ -5,57 +5,18 @@ import Footer from '@/components/common/Footer';
 
 export default function Custom404() {
   return (
-    <div className="error-page-wrapper">
+    <div className="min-h-screen flex flex-col bg-white">
       <Header />
-      <main className="error-main">
-        <div className="error-card">
-          <h1 className="error-code">404</h1>
-          <p className="error-message">Page Not Found - The page you are looking for does not exist.</p>
-          <Link href="/" className="home-btn">
+      <main className="flex-1 flex items-center justify-center pt-32 pb-16 px-8">
+        <div className="text-center max-w-[450px]">
+          <h1 className="text-[3.5rem] font-extrabold text-[#121316]">404</h1>
+          <p className="text-[1rem] text-[#6B7280] my-4 mb-8">Page Not Found - The page you are looking for does not exist.</p>
+          <Link href="/" className="inline-block bg-[#121316] text-white px-7 py-3 rounded-md font-bold text-[0.88rem] hover:bg-[#C5A059] transition-colors">
             Return to Homepage
           </Link>
         </div>
       </main>
       <Footer />
-
-      <style jsx>{`
-        .error-page-wrapper {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          background-color: #ffffff;
-        }
-        .error-main {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 8rem 2rem 4rem 2rem;
-        }
-        .error-card {
-          text-align: center;
-          max-width: 450px;
-        }
-        .error-code {
-          font-size: 3.5rem;
-          font-weight: 800;
-          color: #121316;
-        }
-        .error-message {
-          font-size: 1rem;
-          color: #6B7280;
-          margin: 1rem 0 2rem 0;
-        }
-        .home-btn {
-          display: inline-block;
-          background-color: #121316;
-          color: #ffffff;
-          padding: 0.8rem 1.8rem;
-          border-radius: 6px;
-          font-weight: 700;
-          font-size: 0.88rem;
-        }
-      `}</style>
     </div>
   );
 }

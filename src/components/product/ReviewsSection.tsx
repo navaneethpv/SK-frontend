@@ -2,181 +2,51 @@ import React from 'react';
 
 export default function ReviewsSection() {
   return (
-    <section className="reviews-section">
-      <div className="section-container">
-        <div className="reviews-header-block">
-          <span className="reviews-subtag">REAL RESULTS</span>
-          <h2 className="reviews-main-title">LOVED BY THOUSANDS</h2>
+    <section className="w-full py-[2rem] sm:py-[3rem] lg:py-[4.5rem] bg-[#FAF8F5] border-t border-[#F0EDE8]">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
+        <div className="text-center mb-[1.4rem] sm:mb-[1.8rem] lg:mb-[2.5rem]">
+          <span className="text-[0.65rem] lg:text-[0.72rem] font-extrabold tracking-[0.14em] text-[#C5A059] block mb-[0.3rem]">REAL RESULTS</span>
+          <h2 className="text-[1.15rem] sm:text-[1.25rem] lg:text-[1.5rem] font-extrabold text-[#121316] tracking-[0.04em]">LOVED BY THOUSANDS</h2>
         </div>
 
-        <div className="reviews-3-grid">
-          <div className="review-card">
-            <div className="reviewer-header">
-              <div className="avatar-circle">AK</div>
-              <div className="reviewer-info">
-                <span className="reviewer-name">Ananya K.</span>
-                <span className="verified-tag">✔ Verified Buyer</span>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.2 sm:gap-4 lg:gap-6">
+          <div className="bg-white border border-[#EAE6DF] rounded-xl p-4 sm:p-5 lg:p-7 flex flex-col gap-2.5 sm:gap-3 lg:gap-3.2 shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] hover:border-[#C5A059]">
+            <div className="flex items-center gap-[0.8rem]">
+              <div className="w-[34px] sm:w-[40px] h-[34px] sm:h-[40px] rounded-full bg-gradient-to-br from-[#121316] to-[#27272A] text-[#C5A059] text-[0.75rem] sm:text-[0.82rem] font-extrabold flex items-center justify-center">AK</div>
+              <div className="flex flex-col">
+                <span className="text-[0.82rem] sm:text-[0.9rem] font-bold text-[#121316]">Ananya K.</span>
+                <span className="text-[0.68rem] font-semibold text-[#15803D]">✔ Verified Buyer</span>
               </div>
             </div>
-            <div className="stars-gold">★★★★★</div>
-            <p className="review-quote">"The SK Noir Eau De Parfum smells divine and lasts literally all day. Everyone asks me what fragrance I am wearing!"</p>
+            <div className="text-[#F59E0B] text-[0.9rem] tracking-[0.1em]">★★★★★</div>
+            <p className="text-[0.78rem] sm:text-[0.8rem] lg:text-[0.86rem] text-[#4B5563] leading-[1.4] sm:leading-[1.45] lg:leading-[1.55] italic">"The SK Noir Eau De Parfum smells divine and lasts literally all day. Everyone asks me what fragrance I am wearing!"</p>
           </div>
 
-          <div className="review-card">
-            <div className="reviewer-header">
-              <div className="avatar-circle">RM</div>
-              <div className="reviewer-info">
-                <span className="reviewer-name">Rahul M.</span>
-                <span className="verified-tag">✔ Verified Buyer</span>
+          <div className="bg-white border border-[#EAE6DF] rounded-xl p-4 sm:p-5 lg:p-7 flex flex-col gap-2.5 sm:gap-3 lg:gap-3.2 shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] hover:border-[#C5A059]">
+            <div className="flex items-center gap-[0.8rem]">
+              <div className="w-[34px] sm:w-[40px] h-[34px] sm:h-[40px] rounded-full bg-gradient-to-br from-[#121316] to-[#27272A] text-[#C5A059] text-[0.75rem] sm:text-[0.82rem] font-extrabold flex items-center justify-center">RM</div>
+              <div className="flex flex-col">
+                <span className="text-[0.82rem] sm:text-[0.9rem] font-bold text-[#121316]">Rahul M.</span>
+                <span className="text-[0.68rem] font-semibold text-[#15803D]">✔ Verified Buyer</span>
               </div>
             </div>
-            <div className="stars-gold">★★★★★</div>
-            <p className="review-quote">"SK Organic Hair Oil changed my hair routine completely. Noticeable thickness and shine within two weeks."</p>
+            <div className="text-[#F59E0B] text-[0.9rem] tracking-[0.1em]">★★★★★</div>
+            <p className="text-[0.78rem] sm:text-[0.8rem] lg:text-[0.86rem] text-[#4B5563] leading-[1.4] sm:leading-[1.45] lg:leading-[1.55] italic">"SK Organic Hair Oil changed my hair routine completely. Noticeable thickness and shine within two weeks."</p>
           </div>
 
-          <div className="review-card">
-            <div className="reviewer-header">
-              <div className="avatar-circle">PS</div>
-              <div className="reviewer-info">
-                <span className="reviewer-name">Priya S.</span>
-                <span className="verified-tag">✔ Verified Buyer</span>
+          <div className="bg-white border border-[#EAE6DF] rounded-xl p-4 sm:p-5 lg:p-7 flex flex-col gap-2.5 sm:gap-3 lg:gap-3.2 shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] hover:border-[#C5A059]">
+            <div className="flex items-center gap-[0.8rem]">
+              <div className="w-[34px] sm:w-[40px] h-[34px] sm:h-[40px] rounded-full bg-gradient-to-br from-[#121316] to-[#27272A] text-[#C5A059] text-[0.75rem] sm:text-[0.82rem] font-extrabold flex items-center justify-center">PS</div>
+              <div className="flex flex-col">
+                <span className="text-[0.82rem] sm:text-[0.9rem] font-bold text-[#121316]">Priya S.</span>
+                <span className="text-[0.68rem] font-semibold text-[#15803D]">✔ Verified Buyer</span>
               </div>
             </div>
-            <div className="stars-gold">★★★★★</div>
-            <p className="review-quote">"The Vitamin C Face Wash is super gentle yet powerful. Skin feels refreshed, bright, and deeply hydrated."</p>
+            <div className="text-[#F59E0B] text-[0.9rem] tracking-[0.1em]">★★★★★</div>
+            <p className="text-[0.78rem] sm:text-[0.8rem] lg:text-[0.86rem] text-[#4B5563] leading-[1.4] sm:leading-[1.45] lg:leading-[1.55] italic">"The Vitamin C Face Wash is super gentle yet powerful. Skin feels refreshed, bright, and deeply hydrated."</p>
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .reviews-section {
-          width: 100%;
-          padding: 4.5rem 0 5rem 0;
-          background-color: #FAF8F5;
-          border-top: 1px solid #F0EDE8;
-        }
-
-        .section-container {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 0 2rem;
-        }
-
-        .reviews-header-block {
-          text-align: center;
-          margin-bottom: 2.5rem;
-        }
-
-        .reviews-subtag {
-          font-size: 0.72rem;
-          font-weight: 800;
-          letter-spacing: 0.14em;
-          color: #C5A059;
-          display: block;
-          margin-bottom: 0.3rem;
-        }
-
-        .reviews-main-title {
-          font-size: 1.5rem;
-          font-weight: 800;
-          color: #121316;
-          letter-spacing: 0.04em;
-        }
-
-        .reviews-3-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1.5rem;
-        }
-
-        .review-card {
-          background-color: #ffffff;
-          border: 1px solid #EAE6DF;
-          border-radius: 12px;
-          padding: 1.8rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.8rem;
-          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .review-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-          border-color: #C5A059;
-        }
-
-        .reviewer-header {
-          display: flex;
-          align-items: center;
-          gap: 0.8rem;
-        }
-
-        .avatar-circle {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #121316 0%, #27272A 100%);
-          color: #C5A059;
-          font-size: 0.82rem;
-          font-weight: 800;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .reviewer-info {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .reviewer-name {
-          font-size: 0.9rem;
-          font-weight: 700;
-          color: #121316;
-        }
-
-        .verified-tag {
-          font-size: 0.68rem;
-          font-weight: 600;
-          color: #15803D;
-        }
-
-        .stars-gold {
-          color: #F59E0B;
-          font-size: 0.9rem;
-          letter-spacing: 0.1em;
-        }
-
-        .review-quote {
-          font-size: 0.86rem;
-          color: #4B5563;
-          line-height: 1.55;
-          font-style: italic;
-        }
-
-        @media (max-width: 1024px) {
-          .reviews-section { padding: 3rem 0 3.5rem 0; }
-          .reviews-header-block { margin-bottom: 1.8rem; }
-          .reviews-subtag { font-size: 0.65rem; }
-          .reviews-main-title { font-size: 1.25rem; }
-          .reviews-3-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-          .review-card { padding: 1.2rem; gap: 0.6rem; }
-          .review-quote { font-size: 0.8rem; line-height: 1.45; }
-        }
-
-        @media (max-width: 640px) {
-          .reviews-section { padding: 2rem 0 2.5rem 0; }
-          .reviews-header-block { margin-bottom: 1.4rem; }
-          .reviews-main-title { font-size: 1.15rem; }
-          .reviews-3-grid { grid-template-columns: 1fr; gap: 0.8rem; }
-          .review-card { padding: 1rem; gap: 0.5rem; }
-          .avatar-circle { width: 34px; height: 34px; font-size: 0.75rem; }
-          .reviewer-name { font-size: 0.82rem; }
-          .review-quote { font-size: 0.78rem; line-height: 1.4; }
-        }
-      `}</style>
     </section>
   );
 }

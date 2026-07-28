@@ -40,371 +40,173 @@ export function RenderProductCard({ item }: { item: ItemCard }) {
   };
 
   return (
-    <div className="card-box">
-      <Link href={`/product/${getProductSlug(item)}`} className="card-link">
-        <div className="img-frame">
+    <div className="group bg-white border border-[#E5E7EB] rounded-lg overflow-hidden flex flex-col h-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] hover:border-[#D1D5DB] hover:-translate-y-1">
+      <Link href={`/product/${getProductSlug(item)}`} className="flex flex-col h-full flex-1 no-underline">
+        <div className="relative w-full aspect-[0.95] flex items-center justify-center p-4 bg-white">
           {item.badgeText && item.badgeType && (
-            <span className={`badge-pill ${item.badgeType}`}>{item.badgeText}</span>
+            <span
+              className={`absolute top-2 left-2 text-[0.62rem] font-bold px-2 py-0.5 rounded tracking-wider uppercase z-10 ${
+                item.badgeType === 'green' ? 'bg-[#10B981] text-white' : 'bg-[#C5A059] text-white'
+              }`}
+            >
+              {item.badgeText}
+            </span>
           )}
           <img
             src={item.img}
             alt={item.title}
-            className="product-img"
+            className="max-w-[85%] max-h-[85%] object-contain transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-106"
             onError={(e) => {
               (e.target as HTMLImageElement).src = '/hero cards/4.png';
             }}
           />
         </div>
 
-        <div className="info-frame">
-          <div className="info-top-block">
-            <div className="rating-slot">
+        <div className="p-3.5 flex flex-col justify-between flex-1 gap-2 border-t border-[#F3F4F6]">
+          <div className="flex flex-col gap-1">
+            <div className="min-h-[1.2rem]">
               {item.rating && (
-                <div className="rating-row">
-                  <span className="star-gold">★ {item.rating}</span>
-                  <span className="sep-pipe">|</span>
-                  <span className="reviews-cnt">{item.reviewsCount} Reviews</span>
+                <div className="flex items-center gap-1.5 text-[0.72rem] text-[#71717A]">
+                  <span className="font-bold text-[#EAB308]">★ {item.rating}</span>
+                  <span className="text-[#D4D4D8]">|</span>
+                  <span className="text-[#71717A]">{item.reviewsCount} Reviews</span>
                 </div>
               )}
             </div>
 
-            <h3 className="title-text">{item.title}</h3>
+            <h3 className="text-[0.88rem] font-bold text-[#18181B] leading-tight line-clamp-2 min-h-[2.3rem]">
+              {item.title}
+            </h3>
 
-            <div className="discount-slot">
-              {item.discountBadge && <span className="discount-badge">{item.discountBadge}</span>}
+            <div className="min-h-[1.4rem]">
+              {item.discountBadge && (
+                <span className="inline-block bg-[#FEF2F2] text-[#EF4444] border border-[#FCA5A5] text-[0.62rem] font-extrabold px-1.5 py-0.5 rounded uppercase">
+                  {item.discountBadge}
+                </span>
+              )}
             </div>
 
-            <div className="price-slot">
+            <div className="min-h-[1.4rem]">
               {item.price && (
-                <div className="price-row">
-                  <span className="curr-price">{item.price}</span>
-                  {item.originalPrice && <span className="orig-price">{item.originalPrice}</span>}
+                <div className="flex items-baseline gap-1.5 mt-0.5">
+                  <span className="text-[0.98rem] font-extrabold text-[#18181B]">{item.price}</span>
+                  {item.originalPrice && (
+                    <span className="text-[0.78rem] text-[#A1A1AA] line-through font-normal">{item.originalPrice}</span>
+                  )}
                 </div>
               )}
             </div>
           </div>
 
-          <div className="btn-slot">
-            <button onClick={handleAddToCart} className="action-btn">{item.actionText}</button>
+          <div className="mt-2">
+            <button
+              onClick={handleAddToCart}
+              className="w-full bg-[#18181B] text-white border-0 text-[0.75rem] font-bold py-2 px-3 rounded cursor-pointer transition-all duration-200 hover:bg-[#C5A059]"
+            >
+              {item.actionText}
+            </button>
           </div>
         </div>
       </Link>
-
-      <style jsx>{`
-        .card-box {
-          background-color: #ffffff;
-          border: 1px solid #E5E7EB;
-          border-radius: 8px;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .card-box:hover {
-          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-          border-color: #D1D5DB;
-          transform: translateY(-4px);
-        }
-
-        .card-box:hover .product-img {
-          transform: scale(1.06);
-        }
-
-        .card-link {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          flex: 1;
-        }
-
-        .img-frame {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 0.95;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 1rem;
-          background-color: #ffffff;
-        }
-
-        .product-img {
-          max-width: 85%;
-          max-height: 85%;
-          object-fit: contain;
-          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .badge-pill {
-          position: absolute;
-          top: 0.6rem;
-          left: 0.6rem;
-          font-size: 0.62rem;
-          font-weight: 700;
-          padding: 0.2rem 0.5rem;
-          border-radius: 3px;
-          z-index: 2;
-        }
-
-        .badge-pill.green {
-          background-color: #15803D;
-          color: #ffffff;
-        }
-
-        .badge-pill.gold {
-          background-color: #C5A059;
-          color: #ffffff;
-        }
-
-        .info-frame {
-          padding: 0.8rem 1rem 1rem 1rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          flex: 1;
-        }
-
-        .info-top-block {
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-        }
-
-        .rating-slot {
-          min-height: 18px;
-          display: flex;
-          align-items: center;
-        }
-
-        .rating-row {
-          display: flex;
-          align-items: center;
-          gap: 0.35rem;
-          font-size: 0.72rem;
-        }
-
-        .star-gold { color: #F59E0B; font-weight: 700; }
-        .sep-pipe { color: #D1D5DB; }
-        .reviews-cnt { color: #4B5563; font-weight: 500; }
-
-        .title-text {
-          font-size: 0.86rem;
-          font-weight: 700;
-          color: #121316;
-          line-height: 1.35;
-          margin-top: 0.1rem;
-          min-height: 2.3rem;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-
-        .discount-slot {
-          min-height: 18px;
-          display: flex;
-          align-items: center;
-        }
-
-        .discount-badge {
-          color: #15803D;
-          font-size: 0.72rem;
-          font-weight: 700;
-        }
-
-        .price-slot {
-          min-height: 22px;
-          display: flex;
-          align-items: center;
-        }
-
-        .price-row {
-          display: flex;
-          align-items: center;
-          gap: 0.4rem;
-          margin: 0.1rem 0;
-        }
-
-        .curr-price {
-          font-size: 0.95rem;
-          font-weight: 800;
-          color: #121316;
-        }
-
-        .orig-price {
-          font-size: 0.75rem;
-          color: #9CA3AF;
-          text-decoration: line-through;
-        }
-
-        .btn-slot {
-          margin-top: auto;
-          padding-top: 0.6rem;
-        }
-
-        .action-btn {
-          width: 100%;
-          background: linear-gradient(180deg, #27272A 0%, #121316 100%);
-          color: #ffffff;
-          border: 1px solid transparent;
-          font-size: 0.72rem;
-          font-weight: 700;
-          padding: 0.65rem 0.5rem;
-          border-radius: 6px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .action-btn:hover {
-          border-color: #C5A059;
-          box-shadow: 0 4px 12px rgba(197, 160, 89, 0.2);
-        }
-
-        .action-btn:active {
-          transform: scale(0.98);
-        }
-
-        @media (max-width: 640px) {
-          .info-frame { padding: 0.6rem; }
-          .title-text { font-size: 0.78rem; min-height: 2.1rem; line-height: 1.28; }
-          .curr-price { font-size: 0.88rem; }
-          .orig-price { font-size: 0.7rem; }
-          .badge-pill { font-size: 0.58rem; padding: 0.15rem 0.4rem; }
-          .action-btn { font-size: 0.68rem; padding: 0.5rem 0.4rem; }
-        }
-      `}</style>
     </div>
   );
 }
 
-export default function ProductCarousel({ items }: { items: ItemCard[] }) {
+export default function ProductCarousel({
+  items,
+  title,
+  subtag,
+  viewAllLink
+}: {
+  items: ItemCard[];
+  title?: string;
+  subtag?: string;
+  viewAllLink?: string;
+}) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(4);
 
   useEffect(() => {
-    setCurrentIndex(0);
-  }, [items]);
+    const handleResize = () => {
+      if (window.innerWidth <= 650) {
+        setItemsPerPage(2);
+      } else if (window.innerWidth <= 1100) {
+        setItemsPerPage(3);
+      } else {
+        setItemsPerPage(4);
+      }
+    };
 
-  const maxIndex = Math.max(0, items.length - 4);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const maxIndex = Math.max(0, items.length - Math.floor(itemsPerPage));
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : maxIndex));
+    setCurrentIndex((prev) => Math.max(0, prev - 1));
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev < maxIndex ? prev + 1 : 0));
+    setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
   };
 
+  if (!items || items.length === 0) return null;
+
   return (
-    <div className="carousel-outer-wrapper">
-      {items.length > 4 && (
-        <button onClick={handlePrev} className="nav-arrow arrow-left" aria-label="Previous">
-          <ChevronLeft size={16} color="#71717A" />
-        </button>
-      )}
-
-      <div className="carousel-clip-container">
-        <div
-          className="carousel-smooth-track"
-          style={{
-            transform: `translateX(-${currentIndex * 24.5}%)`,
-          }}
-        >
-          {items.map((item) => (
-            <div key={item.id} className="carousel-card-item">
-              <RenderProductCard item={item} />
-            </div>
-          ))}
+    <div className="w-full relative my-8">
+      {(title || subtag || viewAllLink) && (
+        <div className="flex items-end justify-between mb-6">
+          <div>
+            {subtag && <span className="text-[0.72rem] font-bold tracking-[0.14em] text-[#C5A059] block mb-1 uppercase">{subtag}</span>}
+            {title && <h2 className="text-[1.35rem] lg:text-[1.5rem] font-extrabold tracking-[0.04em] text-[#111111]">{title}</h2>}
+          </div>
+          {viewAllLink && (
+            <Link href={viewAllLink} className="text-[0.82rem] font-bold text-[#111111] hover:text-[#C5A059] transition-colors no-underline">
+              View All →
+            </Link>
+          )}
         </div>
-      </div>
-
-      {items.length > 4 && (
-        <button onClick={handleNext} className="nav-arrow arrow-right" aria-label="Next">
-          <ChevronRight size={16} color="#71717A" />
-        </button>
       )}
 
-      <style jsx>{`
-        .carousel-outer-wrapper {
-          position: relative;
-          width: 100%;
-        }
+      <div className="relative w-full">
+        {currentIndex > 0 && (
+          <button
+            onClick={handlePrev}
+            className="absolute top-1/2 -translate-y-1/2 -left-4 sm:left-1 w-[38px] h-[38px] rounded-full bg-white border border-[#E4E4E7] flex items-center justify-center cursor-pointer z-30 shadow-[0_4px_14px_rgba(0,0,0,0.12)] transition-all duration-200 hover:bg-[#121316] hover:border-[#121316] hover:scale-108 group"
+            aria-label="Previous"
+          >
+            <ChevronLeft size={16} className="text-[#71717A] group-hover:text-white transition-colors" />
+          </button>
+        )}
 
-        .carousel-clip-container {
-          overflow: hidden;
-          width: 100%;
-          padding: 0.5rem 0;
-        }
+        <div className="overflow-hidden w-full py-2">
+          <div
+            className="flex gap-4 lg:gap-[1.2rem] transition-transform duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-transform"
+            style={{ transform: `translateX(-${currentIndex * (100 / itemsPerPage)}%)` }}
+          >
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="shrink-0 grow-0 w-[calc((100%-1rem)/2)] sm:w-[calc((100%-2rem)/3)] lg:w-[calc((100%-3.6rem)/4)]"
+              >
+                <RenderProductCard item={item} />
+              </div>
+            ))}
+          </div>
+        </div>
 
-        .carousel-smooth-track {
-          display: flex;
-          gap: 1.2rem;
-          transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-          will-change: transform;
-        }
-
-        .carousel-card-item {
-          flex: 0 0 calc((100% - 3.6rem) / 4.25);
-          min-width: calc((100% - 3.6rem) / 4.25);
-        }
-
-        .nav-arrow {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 38px;
-          height: 38px;
-          border-radius: 50%;
-          background: #ffffff;
-          border: 1px solid #E4E4E7;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          z-index: 30;
-          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-          transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .nav-arrow:hover {
-          background: #121316;
-          border-color: #121316;
-          transform: translateY(-50%) scale(1.08);
-        }
-
-        .nav-arrow:hover :global(svg) {
-          color: #ffffff !important;
-          stroke: #ffffff !important;
-        }
-
-        .arrow-left {
-          left: -16px;
-        }
-
-        .arrow-right {
-          right: -16px;
-        }
-
-        @media (max-width: 1100px) {
-          .carousel-card-item {
-            flex: 0 0 calc((100% - 2.4rem) / 3.25);
-            min-width: calc((100% - 2.4rem) / 3.25);
-          }
-          .arrow-left { left: 4px; }
-          .arrow-right { right: 4px; }
-        }
-
-        @media (max-width: 650px) {
-          .carousel-card-item {
-            flex: 0 0 calc((100% - 1.2rem) / 2.2);
-            min-width: calc((100% - 1.2rem) / 2.2);
-          }
-        }
-      `}</style>
+        {items.length > itemsPerPage && currentIndex < maxIndex && (
+          <button
+            onClick={handleNext}
+            className="absolute top-1/2 -translate-y-1/2 -right-4 sm:right-1 w-[38px] h-[38px] rounded-full bg-white border border-[#E4E4E7] flex items-center justify-center cursor-pointer z-30 shadow-[0_4px_14px_rgba(0,0,0,0.12)] transition-all duration-200 hover:bg-[#121316] hover:border-[#121316] hover:scale-108 group"
+            aria-label="Next"
+          >
+            <ChevronRight size={16} className="text-[#71717A] group-hover:text-white transition-colors" />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

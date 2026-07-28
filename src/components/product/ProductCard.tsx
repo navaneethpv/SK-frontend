@@ -63,217 +63,59 @@ export default function ProductCard({
   };
 
   return (
-    <div className="product-luxury-card">
-      <Link href={`/product/${cardId}`} className="card-link-wrapper">
-        <div className="card-image-box">
+    <div className="group bg-white border border-[#EAEAEA] rounded-[10px] overflow-hidden relative flex flex-col justify-between transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.07)] hover:-translate-y-1 hover:border-[#D4D4D4]">
+      <Link href={`/product/${cardId}`} className="flex flex-col h-full no-underline">
+        <div className="relative w-full aspect-[0.95] flex items-center justify-center p-6 bg-[#F9F9F8] overflow-hidden">
           {badgeText && badgeType !== 'none' && (
-            <span className={`product-badge ${badgeType}`}>{badgeText}</span>
+            <span
+              className={`absolute top-[0.8rem] left-[0.8rem] text-[0.65rem] font-bold px-[0.6rem] py-[0.25rem] rounded tracking-[0.06em] uppercase z-10 ${
+                badgeType === 'green' ? 'bg-[#10B981] text-white' : 'bg-[#C5A059] text-white'
+              }`}
+            >
+              {badgeText}
+            </span>
           )}
           <img
             src={cardImg}
             alt={cardTitle}
-            className="card-product-img"
+            className="max-w-[88%] max-h-[88%] object-contain transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-106"
             onError={(e) => {
               (e.target as HTMLImageElement).src = '/hero cards/4.png';
             }}
           />
         </div>
 
-        <div className="card-info-content">
-          <div className="rating-pill">
-            <Star size={12} className="star-icon-filled" />
-            <span className="rating-num">{rating}</span>
-            <span className="rating-sep">•</span>
-            <CheckCircle2 size={12} className="verified-check" />
-            <span className="reviews-cnt">({reviewsCount})</span>
+        <div className="p-[1.1rem] pb-[0.5rem] flex flex-col gap-[0.45rem] flex-1">
+          <div className="flex items-center gap-[0.3rem] text-[0.75rem] text-[#666666]">
+            <Star size={12} className="text-[#C5A059] fill-[#C5A059]" />
+            <span className="font-bold text-[#111111]">{rating}</span>
+            <span className="text-[#CCCCCC]">•</span>
+            <CheckCircle2 size={12} className="text-[#0284C7]" />
+            <span className="text-[#888888]">({reviewsCount})</span>
           </div>
 
-          <h3 className="card-title">{cardTitle}</h3>
+          <h3 className="text-[0.92rem] font-semibold text-[#111111] leading-[1.35] line-clamp-2 min-h-[2.5rem]">
+            {cardTitle}
+          </h3>
 
-          <div className="price-row">
-            <span className="current-price">₹{displayPrice}</span>
+          <div className="flex items-baseline gap-[0.6rem] mt-[0.2rem]">
+            <span className="text-[1.05rem] font-extrabold text-[#111111]">₹{displayPrice}</span>
             {displayOriginalPrice && (
-              <span className="strikethrough-price">₹{displayOriginalPrice}</span>
+              <span className="text-[0.82rem] text-[#999999] line-through">₹{displayOriginalPrice}</span>
             )}
           </div>
         </div>
       </Link>
 
-      <div className="card-action-bar">
-        <button onClick={handleAddToCart} className="add-cart-btn">
+      <div className="p-[0.8rem] pt-0 pb-[1.1rem] px-[1.1rem]">
+        <button
+          onClick={handleAddToCart}
+          className="w-full h-[42px] bg-[#111111] text-white border-none rounded-md text-[0.78rem] font-bold tracking-[0.08em] flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 hover:bg-[#2D2D2D] hover:-translate-y-[1px]"
+        >
           <ShoppingBag size={15} />
           <span>ADD TO CART</span>
         </button>
       </div>
-
-      <style jsx>{`
-        .product-luxury-card {
-          background-color: #ffffff;
-          border: 1px solid #EAEAEA;
-          border-radius: 10px;
-          overflow: hidden;
-          position: relative;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .product-luxury-card:hover {
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
-          transform: translateY(-4px);
-          border-color: #D4D4D4;
-        }
-
-        .card-link-wrapper {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          text-decoration: none;
-        }
-
-        .card-image-box {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 0.95;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 1.5rem;
-          background-color: #F9F9F8;
-          overflow: hidden;
-        }
-
-        .card-product-img {
-          max-width: 88%;
-          max-height: 88%;
-          object-fit: contain;
-          transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .product-luxury-card:hover .card-product-img {
-          transform: scale(1.06);
-        }
-
-        .product-badge {
-          position: absolute;
-          top: 0.8rem;
-          left: 0.8rem;
-          font-size: 0.65rem;
-          font-weight: 700;
-          padding: 0.25rem 0.6rem;
-          border-radius: 4px;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-          z-index: 2;
-        }
-
-        .product-badge.green {
-          background-color: #10B981;
-          color: #ffffff;
-        }
-
-        .product-badge.gold {
-          background-color: #C5A059;
-          color: #ffffff;
-        }
-
-        .card-info-content {
-          padding: 1.1rem 1.1rem 0.5rem 1.1rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.45rem;
-          flex: 1;
-        }
-
-        .rating-pill {
-          display: flex;
-          align-items: center;
-          gap: 0.3rem;
-          font-size: 0.75rem;
-          color: #666666;
-        }
-
-        :global(.star-icon-filled) {
-          color: #C5A059;
-          fill: #C5A059;
-        }
-
-        .rating-num {
-          font-weight: 700;
-          color: #111111;
-        }
-
-        .rating-sep {
-          color: #CCCCCC;
-        }
-
-        :global(.verified-check) {
-          color: #0284C7;
-        }
-
-        .reviews-cnt {
-          color: #888888;
-        }
-
-        .card-title {
-          font-size: 0.92rem;
-          font-weight: 600;
-          color: #111111;
-          line-height: 1.35;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          min-height: 2.5rem;
-        }
-
-        .price-row {
-          display: flex;
-          align-items: baseline;
-          gap: 0.6rem;
-          margin-top: 0.2rem;
-        }
-
-        .current-price {
-          font-size: 1.05rem;
-          font-weight: 800;
-          color: #111111;
-        }
-
-        .strikethrough-price {
-          font-size: 0.82rem;
-          color: #999999;
-          text-decoration: line-through;
-        }
-
-        .card-action-bar {
-          padding: 0.8rem 1.1rem 1.1rem 1.1rem;
-        }
-
-        .add-cart-btn {
-          width: 100%;
-          height: 42px;
-          background-color: #111111;
-          color: #ffffff;
-          border: none;
-          border-radius: 6px;
-          font-size: 0.78rem;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          cursor: pointer;
-          transition: background-color 0.2s ease, transform 0.15s ease;
-        }
-
-        .add-cart-btn:hover {
-          background-color: #2D2D2D;
-          transform: translateY(-1px);
-        }
-      `}</style>
     </div>
   );
 }

@@ -79,7 +79,7 @@ export default function AllProductsPage() {
   }, []);
 
   return (
-    <div className="products-page-wrapper">
+    <div className="min-h-screen flex flex-col bg-[#FAFAFA]">
       <Head>
         <title>All Products | SK Luxury Grooming & Lifestyle</title>
         <meta name="description" content="Browse full range of SK organic hair care, artisanal perfumes, face serums, and leather accessories." />
@@ -87,29 +87,29 @@ export default function AllProductsPage() {
 
       <Header />
 
-      <main className="products-main">
-        <div className="page-header-banner">
-          <div className="banner-content">
-            <span className="sub-tag">SK CATALOGUE</span>
-            <h1 className="main-title">ALL PRODUCTS</h1>
-            <p className="description-text">
+      <main className="flex-1">
+        <div className="bg-[#111111] text-white pt-28 pb-16 px-6 text-center">
+          <div className="max-w-[800px] mx-auto">
+            <span className="inline-block text-[0.72rem] font-bold tracking-[0.14em] text-[#C5A059] mb-3">SK CATALOGUE</span>
+            <h1 className="text-[2.2rem] font-extrabold mb-3 tracking-wide">ALL PRODUCTS</h1>
+            <p className="text-[0.95rem] text-[#A3A3A3] leading-relaxed">
               Explore our full collection of organic grooming formulations and lifestyle essentials.
             </p>
           </div>
         </div>
 
-        <div className="content-container">
-          <div className="filter-bar-row">
-            <span className="results-count">Showing {products.length} Products</span>
+        <div className="max-w-[1440px] mx-auto px-6 py-12 lg:py-20">
+          <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#EAEAEA]">
+            <span className="text-[0.85rem] font-bold tracking-wider text-[#666666]">Showing {products.length} Products</span>
           </div>
 
           {loading ? (
-            <div className="loading-state">
-              <div className="spinner"></div>
+            <div className="text-center py-20 text-[#6B7280]">
+              <div className="w-10 h-10 border-3 border-[#E5E7EB] border-t-[#111111] rounded-full animate-spin mx-auto mb-4" />
               <p>Loading products catalogue...</p>
             </div>
           ) : (
-            <div className="products-grid">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {products.map((item) => (
                 <ProductCard
                   key={item.id}
@@ -130,113 +130,6 @@ export default function AllProductsPage() {
       </main>
 
       <Footer />
-
-      <style jsx>{`
-        .products-page-wrapper {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          background-color: #FAFAFA;
-        }
-
-        .products-main {
-          flex: 1;
-        }
-
-        .page-header-banner {
-          background-color: #111111;
-          color: #ffffff;
-          padding: 7rem 2rem 4rem 2rem;
-          text-align: center;
-        }
-
-        .banner-content {
-          max-width: 800px;
-          margin: 0 auto;
-        }
-
-        .sub-tag {
-          display: inline-block;
-          font-size: 0.72rem;
-          font-weight: 700;
-          letter-spacing: 0.14em;
-          color: #C5A059;
-          margin-bottom: 0.8rem;
-        }
-
-        .main-title {
-          font-size: 2.2rem;
-          font-weight: 800;
-          margin-bottom: 0.8rem;
-          letter-spacing: 0.04em;
-        }
-
-        .description-text {
-          font-size: 0.95rem;
-          color: #A3A3A3;
-          line-height: 1.6;
-        }
-
-        .content-container {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 3rem 2rem 5rem 2rem;
-        }
-
-        .filter-bar-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 2rem;
-          padding-bottom: 1rem;
-          border-bottom: 1px solid #EAEAEA;
-        }
-
-        .results-count {
-          font-size: 0.85rem;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          color: #666666;
-        }
-
-        .products-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 1.5rem;
-        }
-
-        .loading-state {
-          text-align: center;
-          padding: 5rem 0;
-          color: #6B7280;
-        }
-
-        .spinner {
-          width: 40px;
-          height: 40px;
-          border: 3px solid #E5E7EB;
-          border-top-color: #111111;
-          border-radius: 50%;
-          animation: spin 0.8s linear infinite;
-          margin: 0 auto 1rem auto;
-        }
-
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 1024px) {
-          .products-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        @media (max-width: 768px) {
-          .products-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 480px) {
-          .products-grid { grid-template-columns: 1fr; }
-        }
-      `}</style>
     </div>
   );
 }

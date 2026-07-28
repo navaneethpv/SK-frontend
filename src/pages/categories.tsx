@@ -51,7 +51,7 @@ export default function CategoriesPage() {
   }, []);
 
   return (
-    <div className="categories-page-wrapper">
+    <div className="min-h-screen flex flex-col bg-[#FAF8F5]">
       <Head>
         <title>Product Categories | SK Luxury Grooming & Lifestyle</title>
         <meta name="description" content="Explore SK product categories: Bags, Watches, Footwear, Perfumes, Belts, and Hair Care." />
@@ -59,41 +59,41 @@ export default function CategoriesPage() {
 
       <Header />
 
-      <main className="categories-main">
-        <div className="page-header-banner">
-          <div className="banner-content">
-            <span className="sub-tag">EXPLORE BY CATEGORY</span>
-            <h1 className="main-title">Product Categories</h1>
-            <p className="description-text">
+      <main className="flex-1">
+        <div className="bg-[#121316] text-white py-16 px-6 text-center">
+          <div className="max-w-[800px] mx-auto">
+            <span className="inline-block text-[0.75rem] font-bold tracking-[0.15em] text-[#C39F68] mb-3">EXPLORE BY CATEGORY</span>
+            <h1 className="text-[2.5rem] font-extrabold mb-4 tracking-tight">Product Categories</h1>
+            <p className="text-[1rem] text-[#9CA3AF] leading-relaxed">
               Browse our curated luxury categories designed for your hair care, fragrance, and lifestyle needs.
             </p>
           </div>
         </div>
 
-        <div className="content-container">
+        <div className="max-w-[1440px] mx-auto px-6 py-12 lg:py-20">
           {loading ? (
-            <div className="loading-state">
-              <div className="spinner"></div>
+            <div className="text-center py-20 text-[#6B7280]">
+              <div className="w-10 h-10 border-3 border-[#E5E7EB] border-t-[#121316] rounded-full animate-spin mx-auto mb-4" />
               <p>Loading categories...</p>
             </div>
           ) : (
-            <div className="categories-grid">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
               {categories.map((cat, idx) => (
-                <Link key={cat.id} href={`/shop?category=${cat.slug}`} className="category-card">
-                  <div className="img-wrapper">
+                <Link key={cat.id} href={`/shop?category=${cat.slug}`} className="group relative rounded-xl overflow-hidden bg-white shadow-[0_4px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.14)] hover:-translate-y-1.5 transition-all duration-300">
+                  <div className="relative w-full aspect-[1.1] overflow-hidden">
                     <img
                       src={cat.img}
                       alt={cat.name}
-                      className="category-img"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = DEFAULT_CATEGORIES[idx % DEFAULT_CATEGORIES.length].img;
                       }}
                     />
-                    <div className="overlay-gradient"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   </div>
-                  <div className="card-caption">
-                    <h3 className="cat-title">{cat.name}</h3>
-                    <span className="shop-link-text">Shop Collection →</span>
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white flex flex-col gap-1">
+                    <h3 className="text-[1.25rem] font-bold">{cat.name}</h3>
+                    <span className="text-[0.85rem] font-semibold text-[#C39F68]">Shop Collection →</span>
                   </div>
                 </Link>
               ))}
@@ -103,154 +103,6 @@ export default function CategoriesPage() {
       </main>
 
       <Footer />
-
-      <style jsx>{`
-        .categories-page-wrapper {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          background-color: #FAF8F5;
-        }
-
-        .categories-main {
-          flex: 1;
-        }
-
-        .page-header-banner {
-          background-color: #121316;
-          color: #ffffff;
-          padding: 4rem 2rem;
-          text-align: center;
-        }
-
-        .banner-content {
-          max-width: 800px;
-          margin: 0 auto;
-        }
-
-        .sub-tag {
-          display: inline-block;
-          font-size: 0.75rem;
-          font-weight: 700;
-          letter-spacing: 0.15em;
-          color: #EAB308;
-          margin-bottom: 0.8rem;
-        }
-
-        .main-title {
-          font-size: 2.5rem;
-          font-weight: 800;
-          margin-bottom: 1rem;
-          letter-spacing: -0.02em;
-        }
-
-        .description-text {
-          font-size: 1rem;
-          color: #9CA3AF;
-          line-height: 1.6;
-        }
-
-        .content-container {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 3rem 2rem 5rem 2rem;
-        }
-
-        .categories-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1.8rem;
-        }
-
-        .category-card {
-          position: relative;
-          border-radius: 12px;
-          overflow: hidden;
-          background-color: #ffffff;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-          transition: all 0.3s ease;
-        }
-
-        .category-card:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
-        }
-
-        .img-wrapper {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 1.1;
-          overflow: hidden;
-        }
-
-        .category-img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.5s ease;
-        }
-
-        .category-card:hover .category-img {
-          transform: scale(1.06);
-        }
-
-        .overlay-gradient {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 65%);
-        }
-
-        .card-caption {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          padding: 1.5rem;
-          color: #ffffff;
-          display: flex;
-          flex-direction: column;
-          gap: 0.3rem;
-        }
-
-        .cat-title {
-          font-size: 1.25rem;
-          font-weight: 700;
-        }
-
-        .shop-link-text {
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: #EAB308;
-        }
-
-        .loading-state {
-          text-align: center;
-          padding: 5rem 0;
-          color: #6B7280;
-        }
-
-        .spinner {
-          width: 40px;
-          height: 40px;
-          border: 3px solid #E5E7EB;
-          border-top-color: #121316;
-          border-radius: 50%;
-          animation: spin 0.8s linear infinite;
-          margin: 0 auto 1rem auto;
-        }
-
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 900px) {
-          .categories-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 600px) {
-          .categories-grid { grid-template-columns: 1fr; }
-        }
-      `}</style>
     </div>
   );
 }

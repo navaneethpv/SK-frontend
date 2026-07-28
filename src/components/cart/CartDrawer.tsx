@@ -15,74 +15,76 @@ export default function CartDrawer() {
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
 
   return (
-    <div className="cart-drawer-overlay">
-      <div className="cart-drawer-backdrop" onClick={() => setIsCartDrawerOpen(false)} />
+    <div className="fixed inset-0 z-[9999] flex justify-end">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-[4px] animate-fade-in" onClick={() => setIsCartDrawerOpen(false)} />
 
-      <div className="cart-drawer-panel">
+      <div className="relative w-full max-w-[440px] h-full bg-white shadow-[-10px_0_30px_rgba(0,0,0,0.2)] flex flex-col z-10 animate-slide-left">
         {/* Drawer Header */}
-        <div className="drawer-header">
-          <div className="drawer-title-row">
+        <div className="flex items-center justify-between p-5 border-b border-[#E5E7EB]">
+          <div className="flex items-center gap-2.5">
             <ShoppingBag size={20} color="#121316" />
-            <h2 className="drawer-title">Your Cart ({cartCount})</h2>
+            <h2 className="text-[1.1rem] font-extrabold text-[#121316] tracking-tight">Your Cart ({cartCount})</h2>
           </div>
-          <button onClick={() => setIsCartDrawerOpen(false)} className="close-btn" aria-label="Close Cart">
+          <button onClick={() => setIsCartDrawerOpen(false)} className="p-1 rounded-full hover:bg-gray-100 transition-colors" aria-label="Close Cart">
             <X size={22} color="#121316" />
           </button>
         </div>
 
         {/* Free Shipping Progress */}
-        <div className="shipping-progress-box">
+        <div className="bg-[#FAF8F5] p-4 border-b border-[#EAE6DF] flex flex-col gap-2">
           {remainingForFreeShipping > 0 ? (
-            <p className="shipping-msg">
-              Add <strong>₹{remainingForFreeShipping.toFixed(0)}</strong> more to get <strong>FREE Shipping</strong>!
+            <p className="text-[0.78rem] text-[#4B5563]">
+              Add <strong className="text-[#121316]">₹{remainingForFreeShipping.toFixed(0)}</strong> more to get <strong className="text-[#121316]">FREE Shipping</strong>!
             </p>
           ) : (
-            <p className="shipping-msg success">
-              🎉 Congratulations! You unlocked <strong>FREE Shipping</strong>!
+            <p className="text-[0.78rem] text-[#15803D] font-medium">
+              🎉 Congratulations! You unlocked <strong className="font-bold">FREE Shipping</strong>!
             </p>
           )}
-          <div className="progress-bar-track">
-            <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
+          <div className="w-full h-2 bg-[#E5E7EB] rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-[#C5A059] to-[#D4B06A] rounded-full transition-all duration-300" style={{ width: `${progressPercent}%` }} />
           </div>
         </div>
 
         {/* Cart Items List */}
-        <div className="drawer-items-list">
+        <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-4">
           {cart.length === 0 ? (
-            <div className="empty-cart-state">
-              <ShoppingBag size={48} color="#D1D5DB" />
-              <p className="empty-title">Your cart is empty</p>
-              <p className="empty-desc">Explore our luxury fragrances and grooming essentials.</p>
-              <button onClick={() => setIsCartDrawerOpen(false)} className="start-shopping-btn">
+            <div className="flex flex-col items-center justify-center py-16 text-center my-auto">
+              <ShoppingBag size={48} className="text-gray-300 mb-3" />
+              <p className="text-[1rem] font-bold text-[#121316] mb-1">Your cart is empty</p>
+              <p className="text-[0.82rem] text-[#6B7280] max-w-[240px] mb-5">Explore our luxury fragrances and grooming essentials.</p>
+              <button onClick={() => setIsCartDrawerOpen(false)} className="bg-[#121316] text-white text-[0.8rem] font-bold px-6 py-2.5 rounded-md hover:bg-[#C5A059] transition-colors">
                 Start Shopping
               </button>
             </div>
           ) : (
             cart.map((item) => (
-              <div key={item.id} className="cart-item-row">
-                <div className="item-img-box">
-                  <img src={item.img} alt={item.title} className="item-img" />
+              <div key={item.id} className="flex gap-4 pb-4 border-b border-[#F3F4F6] last:border-b-0">
+                <div className="w-[80px] h-[80px] bg-[#FAF7F2] border border-[#EAE5DC] rounded-lg p-2 shrink-0 flex items-center justify-center">
+                  <img src={item.img} alt={item.title} className="max-w-full max-h-full object-contain" />
                 </div>
 
-                <div className="item-details">
-                  <h3 className="item-title">{item.title}</h3>
-                  {item.variant && <span className="item-variant">Size: {item.variant}</span>}
-                  <div className="item-price-row">
-                    <span className="item-price">₹{item.price.toFixed(0)}</span>
-                    {item.originalPrice && (
-                      <span className="item-orig-price">₹{item.originalPrice.toFixed(0)}</span>
-                    )}
+                <div className="flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-[0.88rem] font-bold text-[#121316] leading-tight line-clamp-1">{item.title}</h3>
+                    {item.variant && <span className="text-[0.72rem] text-[#6B7280] mt-0.5 block">Size: {item.variant}</span>}
+                    <div className="flex items-baseline gap-2 mt-1">
+                      <span className="text-[0.92rem] font-extrabold text-[#121316]">₹{item.price.toFixed(0)}</span>
+                      {item.originalPrice && (
+                        <span className="text-[0.78rem] text-[#9CA3AF] line-through">₹{item.originalPrice.toFixed(0)}</span>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="qty-controls">
-                    <div className="qty-picker">
-                      <button onClick={() => updateQuantity(item.id, -1)} className="qty-btn">-</button>
-                      <span className="qty-num">{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, 1)} className="qty-btn">+</button>
+                  <div className="flex items-center justify-between mt-2">
+                    <div className="flex items-center border border-[#E5E7EB] rounded-md bg-[#F9FAFB]">
+                      <button onClick={() => updateQuantity(item.id, -1)} className="w-7 h-7 flex items-center justify-center text-[0.88rem] font-bold text-[#4B5563] hover:bg-gray-200 rounded-l-md transition-colors">-</button>
+                      <span className="w-8 text-center text-[0.78rem] font-bold text-[#121316]">{item.quantity}</span>
+                      <button onClick={() => updateQuantity(item.id, 1)} className="w-7 h-7 flex items-center justify-center text-[0.88rem] font-bold text-[#4B5563] hover:bg-gray-200 rounded-r-md transition-colors">+</button>
                     </div>
 
-                    <button onClick={() => removeFromCart(item.id)} className="remove-btn" aria-label="Remove Item">
-                      <Trash2 size={16} color="#9CA3AF" />
+                    <button onClick={() => removeFromCart(item.id)} className="p-1 text-[#9CA3AF] hover:text-red-500 transition-colors" aria-label="Remove Item">
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </div>
@@ -93,15 +95,15 @@ export default function CartDrawer() {
 
         {/* Drawer Footer */}
         {cart.length > 0 && (
-          <div className="drawer-footer">
-            <div className="subtotal-row">
-              <span className="subtotal-label">Subtotal</span>
-              <span className="subtotal-amount">₹{subtotal.toFixed(0)}</span>
+          <div className="p-5 border-t border-[#E5E7EB] bg-white flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[0.88rem] text-[#6B7280]">Subtotal</span>
+              <span className="text-[1.2rem] font-extrabold text-[#121316]">₹{subtotal.toFixed(0)}</span>
             </div>
-            <p className="subtotal-note">Taxes and shipping calculated at checkout.</p>
+            <p className="text-[0.72rem] text-[#9CA3AF]">Taxes and shipping calculated at checkout.</p>
 
-            <div className="footer-actions-row">
-              <Link href="/cart" onClick={() => setIsCartDrawerOpen(false)} className="view-cart-btn">
+            <div className="grid grid-cols-2 gap-3 mt-1">
+              <Link href="/cart" onClick={() => setIsCartDrawerOpen(false)} className="flex items-center justify-center h-11 border border-[#121316] text-[#121316] text-[0.78rem] font-bold rounded-md hover:bg-gray-50 transition-colors no-underline">
                 View Full Cart
               </Link>
               <button
@@ -109,359 +111,19 @@ export default function CartDrawer() {
                   setIsCartDrawerOpen(false);
                   router.push('/checkout');
                 }}
-                className="checkout-primary-btn"
+                className="flex items-center justify-center gap-2 h-11 bg-[#121316] text-white text-[0.78rem] font-bold rounded-md hover:bg-[#C5A059] transition-colors"
               >
                 Checkout <ArrowRight size={16} />
               </button>
             </div>
 
-            <div className="security-guarantee">
+            <div className="flex items-center justify-center gap-1.5 pt-1 text-[0.72rem] text-[#10B981] font-semibold">
               <ShieldCheck size={14} color="#10B981" />
               <span>100% Secure Checkout Guaranteed</span>
             </div>
           </div>
         )}
       </div>
-
-      <style jsx>{`
-        .cart-drawer-overlay {
-          position: fixed;
-          inset: 0;
-          z-index: 9999;
-          display: flex;
-          justify-content: flex-end;
-        }
-
-        .cart-drawer-backdrop {
-          position: absolute;
-          inset: 0;
-          background: rgba(0, 0, 0, 0.5);
-          backdrop-filter: blur(4px);
-          animation: fadeIn 0.3s ease;
-        }
-
-        .cart-drawer-panel {
-          position: relative;
-          width: 100%;
-          max-width: 440px;
-          height: 100%;
-          background: #ffffff;
-          box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
-          display: flex;
-          flex-direction: column;
-          z-index: 2;
-          animation: slideLeft 0.3s ease;
-        }
-
-        .drawer-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 1.2rem 1.5rem;
-          border-bottom: 1px solid #E5E7EB;
-        }
-
-        .drawer-title-row {
-          display: flex;
-          align-items: center;
-          gap: 0.6rem;
-        }
-
-        .drawer-title {
-          font-family: var(--font-sans);
-          font-size: 1.1rem;
-          font-weight: 700;
-          color: #121316;
-        }
-
-        .close-btn {
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 0.3rem;
-          display: flex;
-          align-items: center;
-        }
-
-        /* Shipping Box */
-        .shipping-progress-box {
-          background-color: #FAF8F5;
-          padding: 1rem 1.5rem;
-          border-bottom: 1px solid #E5E7EB;
-        }
-
-        .shipping-msg {
-          font-size: 0.8rem;
-          color: #4B5563;
-          margin-bottom: 0.5rem;
-        }
-
-        .shipping-msg.success {
-          color: #059669;
-        }
-
-        .progress-bar-track {
-          width: 100%;
-          height: 6px;
-          background-color: #E5E7EB;
-          border-radius: 99px;
-          overflow: hidden;
-        }
-
-        .progress-bar-fill {
-          height: 100%;
-          background: linear-gradient(90deg, #EAB308 0%, #10B981 100%);
-          border-radius: 99px;
-          transition: width 0.4s ease;
-        }
-
-        /* Items List */
-        .drawer-items-list {
-          flex: 1;
-          overflow-y: auto;
-          padding: 1.5rem;
-          display: flex;
-          flex-direction: column;
-          gap: 1.2rem;
-        }
-
-        .empty-cart-state {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          height: 100%;
-          gap: 0.8rem;
-        }
-
-        .empty-title {
-          font-size: 1.1rem;
-          font-weight: 700;
-          color: #121316;
-        }
-
-        .empty-desc {
-          font-size: 0.85rem;
-          color: #6B7280;
-          max-width: 240px;
-        }
-
-        .start-shopping-btn {
-          margin-top: 0.5rem;
-          background-color: #121316;
-          color: #ffffff;
-          border: none;
-          font-size: 0.8rem;
-          font-weight: 700;
-          padding: 0.7rem 1.5rem;
-          border-radius: 6px;
-          cursor: pointer;
-        }
-
-        .cart-item-row {
-          display: flex;
-          gap: 1rem;
-          padding-bottom: 1.2rem;
-          border-bottom: 1px solid #F3F4F6;
-        }
-
-        .item-img-box {
-          width: 76px;
-          height: 76px;
-          border: 1px solid #E5E7EB;
-          border-radius: 6px;
-          padding: 0.4rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: #ffffff;
-          flex-shrink: 0;
-        }
-
-        .item-img {
-          max-width: 100%;
-          max-height: 100%;
-          object-fit: contain;
-        }
-
-        .item-details {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          gap: 0.3rem;
-        }
-
-        .item-title {
-          font-size: 0.88rem;
-          font-weight: 700;
-          color: #121316;
-          line-height: 1.3;
-        }
-
-        .item-variant {
-          font-size: 0.75rem;
-          color: #6B7280;
-        }
-
-        .item-price-row {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-
-        .item-price {
-          font-size: 0.95rem;
-          font-weight: 800;
-          color: #121316;
-        }
-
-        .item-orig-price {
-          font-size: 0.75rem;
-          color: #9CA3AF;
-          text-decoration: line-through;
-        }
-
-        .qty-controls {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-top: 0.4rem;
-        }
-
-        .qty-picker {
-          display: flex;
-          align-items: center;
-          border: 1px solid #D1D5DB;
-          border-radius: 4px;
-          height: 28px;
-        }
-
-        .qty-btn {
-          width: 26px;
-          height: 100%;
-          background: none;
-          border: none;
-          font-size: 0.9rem;
-          font-weight: 700;
-          cursor: pointer;
-          color: #374151;
-        }
-
-        .qty-num {
-          padding: 0 0.5rem;
-          font-size: 0.8rem;
-          font-weight: 700;
-          color: #121316;
-        }
-
-        .remove-btn {
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 0.2rem;
-          display: flex;
-          align-items: center;
-        }
-
-        /* Drawer Footer */
-        .drawer-footer {
-          padding: 1.5rem;
-          border-top: 1px solid #E5E7EB;
-          background-color: #ffffff;
-          display: flex;
-          flex-direction: column;
-          gap: 0.8rem;
-        }
-
-        .subtotal-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .subtotal-label {
-          font-size: 0.95rem;
-          font-weight: 700;
-          color: #121316;
-        }
-
-        .subtotal-amount {
-          font-size: 1.25rem;
-          font-weight: 800;
-          color: #121316;
-        }
-
-        .subtotal-note {
-          font-size: 0.75rem;
-          color: #6B7280;
-        }
-
-        .footer-actions-row {
-          display: flex;
-          gap: 0.8rem;
-          margin-top: 0.4rem;
-        }
-
-        .view-cart-btn {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 1px solid #D1D5DB;
-          border-radius: 6px;
-          color: #121316;
-          font-size: 0.8rem;
-          font-weight: 700;
-          height: 44px;
-          transition: background 0.2s ease;
-        }
-
-        .view-cart-btn:hover {
-          background: #F3F4F6;
-        }
-
-        .checkout-primary-btn {
-          flex: 1.4;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.4rem;
-          background-color: #121316;
-          color: #ffffff;
-          border: none;
-          border-radius: 6px;
-          font-size: 0.82rem;
-          font-weight: 700;
-          height: 44px;
-          cursor: pointer;
-          transition: background 0.2s ease;
-        }
-
-        .checkout-primary-btn:hover {
-          background-color: #C39F68;
-        }
-
-        .security-guarantee {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.3rem;
-          font-size: 0.72rem;
-          color: #6B7280;
-          margin-top: 0.2rem;
-        }
-
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        @keyframes slideLeft {
-          from { transform: translateX(100%); }
-          to { transform: translateX(0); }
-        }
-      `}</style>
     </div>
   );
 }
