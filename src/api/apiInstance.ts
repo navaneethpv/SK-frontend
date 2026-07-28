@@ -1,9 +1,7 @@
 import axios from "axios";
 
 const apiInstance = axios.create({
-  // baseURL: "http://192.168.1.49:8000/",
-  baseURL: "https://erpbackend.exouzia.com/",
-  // baseURL: "https://pyerp.parrotgreen.in/",
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.1.95:8000/",
   headers: {
     "Content-Type": "application/json",
   },

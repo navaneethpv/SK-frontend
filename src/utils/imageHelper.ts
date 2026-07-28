@@ -9,7 +9,7 @@ export function getImageUrl(url?: string | null, fallback: string = '/hero cards
   }
 
   // Handle relative backend paths like "media/..." or "/media/..."
-  const backendBase = process.env.NEXT_PUBLIC_API_BASE_URL || "https://erpbackend.exouzia.com";
+  const backendBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.1.95:8000";
   const path = clean.startsWith('/') ? clean : `/${clean}`;
   return `${backendBase.replace(/\/$/, '')}${path}`;
 }
