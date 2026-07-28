@@ -9,6 +9,7 @@ import ComboOffers from '@/components/home/ComboOffers';
 import Footer from '@/components/common/Footer';
 import DealOfTheDay from '@/components/home/DealOfTheDay';
 import TrustBar from '@/components/common/TrustBar';
+import BrandFlare from '@/components/home/BrandFlare';
 import ReviewsSection from '@/components/product/ReviewsSection';
 import ProductCarousel, { ItemCard } from '@/components/product/ProductCarousel';
 import { productAPI } from '@/api/services/productAPI';
@@ -298,7 +299,10 @@ export default function Home() {
           </section>
         )}
 
-        {/* 5. Loved by Customers - Testimonials */}
+        {/* 5. Brand Story & Craftsmanship Flare Section */}
+        <BrandFlare />
+
+        {/* 6. Loved by Customers - Testimonials */}
         <ReviewsSection />
 
         {/* Footer */}
