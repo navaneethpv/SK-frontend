@@ -1,89 +1,154 @@
 import React from 'react';
 import Link from 'next/link';
+import { ShoppingBag, Sparkles, ArrowRight } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
+
+interface BundleCard {
+  id: number;
+  tag: string;
+  title: string;
+  subtitle: string;
+  price: number;
+  originalPrice: number;
+  discountBadge: string;
+  img: string;
+  slug: string;
+}
+
+const BUNDLE_ITEMS: BundleCard[] = [
+  {
+    id: 901,
+    tag: 'ORGANIC CARE',
+    title: 'Essential Grooming Kit',
+    subtitle: 'Organic Hair Oil + Vitamin C Face Wash + Derma Roller',
+    price: 1099,
+    originalPrice: 1499,
+    discountBadge: '27% OFF',
+    img: '/bundle - combo offer/1.png',
+    slug: 'essential-grooming-kit'
+  },
+  {
+    id: 902,
+    tag: 'LUXURY LIFESTYLE',
+    title: 'Premium Lifestyle Collection',
+    subtitle: 'SK Noir Eau De Parfum + Leather Belt + Leather Wallet',
+    price: 1499,
+    originalPrice: 2299,
+    discountBadge: '35% OFF',
+    img: '/bundle - combo offer/2.png',
+    slug: 'premium-lifestyle-collection'
+  },
+  {
+    id: 903,
+    tag: 'EXECUTIVE COLLECTION',
+    title: 'Executive Essentials Set',
+    subtitle: 'Full-Grain Leather Briefcase + Wristwatch + Leather Wallet',
+    price: 2999,
+    originalPrice: 3999,
+    discountBadge: '25% OFF',
+    img: '/bundle - combo offer/3.png',
+    slug: 'executive-essentials-set'
+  }
+];
 
 export default function ComboOffers() {
+  const { addToCart } = useCart();
+
+  const handleAddBundle = (bundle: BundleCard) => {
+    addToCart(
+      {
+        id: bundle.id,
+        title: bundle.title,
+        price: bundle.price,
+        originalPrice: bundle.originalPrice,
+        img: bundle.img
+      },
+      1,
+      true
+    );
+  };
+
   return (
-    <section className="w-full py-[1.8rem] sm:py-[2.2rem] lg:py-16 bg-white">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
+    <section className="w-full py-12 lg:py-20 bg-[#FAF8F5] border-t border-b border-[#F0EDE8]">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="mb-[1.4rem] lg:mb-[2.2rem]">
-          <h2 className="text-[1.15rem] sm:text-[1.25rem] lg:text-[1.6rem] font-bold text-[#121316] mb-[0.3rem]">
-            Build Your Bundle
-          </h2>
-          <p className="text-[0.75rem] sm:text-[0.8rem] lg:text-[0.9rem] text-[#6B7280]">
-            Get Super Saving Deals - <span className="italic font-semibold text-[#121316]">Starting at @599</span>
-          </p>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 lg:mb-12 gap-4">
+          <div>
+            <span className="text-[0.72rem] font-extrabold tracking-[0.15em] text-[#C39F68] block mb-1 uppercase flex items-center gap-1.5">
+              <Sparkles size={14} /> SPECIAL VALUE BUNDLES
+            </span>
+            <h2 className="text-[1.5rem] sm:text-[1.8rem] lg:text-[2.2rem] font-bold text-[#121316] tracking-tight">
+              Build Your Bundle
+            </h2>
+            <p className="text-[0.88rem] sm:text-[0.95rem] text-[#6B7280] mt-1">
+              Curated luxury box combinations — <span className="font-bold text-[#121316]">Save up to 35% OFF</span>
+            </p>
+          </div>
+
+          <Link
+            href="/shop?filter=bundle"
+            className="inline-flex items-center gap-2 text-[0.85rem] font-bold text-[#121316] hover:text-[#C39F68] transition-colors no-underline self-start md:self-auto"
+          >
+            <span>Explore All Bundles</span>
+            <ArrowRight size={16} />
+          </Link>
         </div>
 
         {/* 3 Main Bundle Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-[1.2rem] lg:mb-[1.8rem]">
-          {/* Card 1: Essential Grooming Kit */}
-          <div className="rounded-lg overflow-hidden bg-[#f5f5f5] shadow-[0_4px_14px_rgba(0,0,0,0.05)] transition-transform duration-300 hover:-translate-y-1">
-            <div className="relative w-full aspect-[1.1] max-h-[130px] sm:aspect-[1.15] sm:max-h-[180px] lg:aspect-[0.92] lg:max-h-none overflow-hidden">
-              <img src="/bundle - combo offer/1.png" alt="Essential Grooming Kit" className="w-full h-full object-cover block" />
-              <div className="absolute top-6 left-6 right-6 z-10 flex flex-col items-start gap-2">
-                <Link href="/shop?bundle=grooming" className="mt-1 bg-black text-white text-[0.75rem] font-bold px-5 py-2 rounded transition-colors hover:bg-[#C39F68]">
-                </Link>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          {BUNDLE_ITEMS.map((bundle) => (
+            <div
+              key={bundle.id}
+              className="group bg-white border border-[#EAE5DC] rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 hover:border-[#C39F68]"
+            >
+              <Link href={`/shop?bundle=${bundle.slug}`} className="flex flex-col h-full no-underline">
+                {/* Bundle Image Container */}
+                <div className="relative w-full aspect-[1.05] bg-[#FAF8F5] overflow-hidden">
+                  <img
+                    src={bundle.img}
+                    alt={bundle.title}
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                  {/* Category Tag Badge */}
+                  <div className="absolute top-3.5 left-3.5 flex items-center gap-2 z-10">
+                    <span className="bg-[#121316]/90 backdrop-blur-md text-white text-[0.65rem] font-extrabold px-2.5 py-1 rounded-md tracking-wider uppercase">
+                      {bundle.tag}
+                    </span>
+                    <span className="bg-[#C39F68] text-white text-[0.65rem] font-extrabold px-2.5 py-1 rounded-md tracking-wider uppercase shadow-sm">
+                      {bundle.discountBadge}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Card Details */}
+                <div className="p-5 flex flex-col gap-2 flex-1">
+                  <h3 className="text-[1.1rem] font-bold text-[#121316] leading-snug transition-colors group-hover:text-[#C39F68]">
+                    {bundle.title}
+                  </h3>
+                  <p className="text-[0.82rem] text-[#6B7280] leading-relaxed line-clamp-2">
+                    {bundle.subtitle}
+                  </p>
+
+                  <div className="flex items-baseline gap-2 mt-auto pt-3 border-t border-[#F1F5F9]">
+                    <span className="text-[1.2rem] font-extrabold text-[#121316]">₹{bundle.price}</span>
+                    <span className="text-[0.85rem] text-[#9CA3AF] line-through font-normal">₹{bundle.originalPrice}</span>
+                  </div>
+                </div>
+              </Link>
+
+              {/* Action Button */}
+              <div className="px-5 pb-5 pt-0">
+                <button
+                  type="button"
+                  onClick={() => handleAddBundle(bundle)}
+                  className="w-full h-11 bg-[#121316] text-white border-none rounded-xl text-[0.8rem] font-extrabold tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 hover:bg-[#C39F68] hover:shadow-md active:scale-98"
+                >
+                  <ShoppingBag size={15} />
+                  <span>BUILD BUNDLE</span>
+                </button>
               </div>
             </div>
-          </div>
-
-          {/* Card 2: Premium Lifestyle Collection */}
-          <div className="rounded-lg overflow-hidden bg-[#f5f5f5] shadow-[0_4px_14px_rgba(0,0,0,0.05)] transition-transform duration-300 hover:-translate-y-1">
-            <div className="relative w-full aspect-[1.1] max-h-[130px] sm:aspect-[1.15] sm:max-h-[180px] lg:aspect-[0.92] lg:max-h-none overflow-hidden">
-              <img src="/bundle - combo offer/2.png" alt="Premium Lifestyle Collection" className="w-full h-full object-cover block" />
-              <div className="absolute top-6 left-6 right-6 z-10 flex flex-col items-start gap-2">
-                <Link href="/shop?bundle=lifestyle" className="mt-1 bg-black text-white text-[0.75rem] font-bold px-5 py-2 rounded transition-colors hover:bg-[#C39F68]">
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 3: Executive Essentials */}
-          <div className="rounded-lg overflow-hidden bg-[#f5f5f5] shadow-[0_4px_14px_rgba(0,0,0,0.05)] transition-transform duration-300 hover:-translate-y-1">
-            <div className="relative w-full aspect-[1.1] max-h-[130px] sm:aspect-[1.15] sm:max-h-[180px] lg:aspect-[0.92] lg:max-h-none overflow-hidden">
-              <img src="/bundle - combo offer/3.png" alt="Executive Essentials" className="w-full h-full object-cover block" />
-              <div className="absolute top-6 left-6 right-6 z-10 flex flex-col items-start gap-2">
-                <Link href="/shop?bundle=executive" className="mt-1 bg-black text-white text-[0.75rem] font-bold px-5 py-2 rounded transition-colors hover:bg-[#C39F68]">
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 3 Mini Offer Cards below */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4 lg:gap-6">
-          {/* Offer Card 1 */}
-          <div className="bg-transparent border-0 rounded-none pt-2.5 sm:pt-3.2 pb-2.5 sm:pb-0 border-b border-[#F0EDE8] sm:border-b-0 flex items-end justify-between">
-            <div className="flex flex-col gap-1.5">
-              <h4 className="text-[0.82rem] sm:text-[0.88rem] lg:text-[1.05rem] font-bold text-black">Luxury Scent Box</h4>
-              <span className="inline-block text-[0.62rem] font-bold px-[0.45rem] py-[0.15rem] rounded-[3px] tracking-wide self-start border-[1.5px] border-[#10B981] text-[#10B981] bg-transparent">LUXURY SCENTS</span>
-              <span className="text-[0.82rem] sm:text-[0.88rem] lg:text-[1.05rem] font-extrabold text-black">₹1,099</span>
-            </div>
-            <button className="bg-[#27272A] text-white border-none text-[0.68rem] sm:text-[0.7rem] lg:text-[0.76rem] font-bold px-3 sm:px-3.5 lg:px-4.5 py-1.5 sm:py-2 rounded-md cursor-pointer transition-colors hover:bg-black">Build Box</button>
-          </div>
-
-          {/* Offer Card 2 */}
-          <div className="bg-transparent border-0 rounded-none pt-2.5 sm:pt-3.2 pb-2.5 sm:pb-0 border-b border-[#F0EDE8] sm:border-b-0 flex items-end justify-between">
-            <div className="flex flex-col gap-1.5">
-              <h4 className="text-[0.82rem] sm:text-[0.88rem] lg:text-[1.05rem] font-bold text-black">Mini Perfume Box</h4>
-              <span className="inline-block text-[0.62rem] font-bold px-[0.45rem] py-[0.15rem] rounded-[3px] tracking-wide self-start bg-[#FEF08A] text-[#854D0E]">BESTSELLER</span>
-              <span className="text-[0.82rem] sm:text-[0.88rem] lg:text-[1.05rem] font-extrabold text-black">
-                ₹599 <del className="text-[0.82rem] text-[#9CA3AF] ml-1 font-normal line-through">₹4,497</del>
-              </span>
-            </div>
-            <button className="bg-[#27272A] text-white border-none text-[0.68rem] sm:text-[0.7rem] lg:text-[0.76rem] font-bold px-3 sm:px-3.5 lg:px-4.5 py-1.5 sm:py-2 rounded-md cursor-pointer transition-colors hover:bg-black">Build Box</button>
-          </div>
-
-          {/* Offer Card 3 */}
-          <div className="bg-transparent border-0 rounded-none pt-2.5 sm:pt-3.2 pb-2.5 sm:pb-0 flex items-end justify-between">
-            <div className="flex flex-col gap-1.5">
-              <h4 className="text-[0.82rem] sm:text-[0.88rem] lg:text-[1.05rem] font-bold text-black">Self Grooming Kit</h4>
-              <span className="inline-block text-[0.62rem] font-bold px-[0.45rem] py-[0.15rem] rounded-[3px] tracking-wide self-start border-[1.5px] border-[#06B6D4] text-[#06B6D4] bg-transparent">VALUE DEAL</span>
-              <span className="text-[0.82rem] sm:text-[0.88rem] lg:text-[1.05rem] font-extrabold text-black">₹599</span>
-            </div>
-            <button className="bg-[#27272A] text-white border-none text-[0.68rem] sm:text-[0.7rem] lg:text-[0.76rem] font-bold px-3 sm:px-3.5 lg:px-4.5 py-1.5 sm:py-2 rounded-md cursor-pointer transition-colors hover:bg-black">Build Box</button>
-          </div>
+          ))}
         </div>
       </div>
     </section>

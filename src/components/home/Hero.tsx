@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { productAPI } from '@/api/services/productAPI';
-import { getImageUrl } from '@/utils/imageHelper';
+import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 
 interface SlideItem {
   id: number;
@@ -13,45 +10,15 @@ interface SlideItem {
 
 const DEFAULT_SLIDES: SlideItem[] = [
   { id: 1, img: '/banners/banner1.png', link: '/shop', title: 'SK Organic Hair Oil & Botanical Care' },
-  { id: 2, img: '/banners/banner2.png', link: '/shop', title: 'SK Noir Luxury Eau De Parfum' },
-  { id: 3, img: '/banners/banner3.png', link: '/shop', title: 'SK Vitamin C Brightening Serum' }
+  { id: 2, img: '/banners/banner2.png', link: '/shop', title: 'SK Noir Luxury Eau De Parfum' }
 ];
 
 export default function Hero() {
-  const [slides, setSlides] = useState<SlideItem[]>(DEFAULT_SLIDES);
+  const [slides] = useState<SlideItem[]>(DEFAULT_SLIDES);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    productAPI.getSlides()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const mapped = data.map((item: any, idx: number) => {
-            const rawImg = item.image || item.img || item.banner || item.file || item.icon;
-            const validImg = rawImg ? getImageUrl(rawImg, DEFAULT_SLIDES[idx % DEFAULT_SLIDES.length].img) : DEFAULT_SLIDES[idx % DEFAULT_SLIDES.length].img;
-            return {
-              id: item.id || idx + 1,
-              img: validImg,
-              link: item.link || item.url || '/shop',
-              title: item.title || item.name || `Banner ${idx + 1}`
-            };
-          });
-          setSlides(mapped);
-        } else {
-          setSlides(DEFAULT_SLIDES);
-        }
-      })
-      .catch((err) => {
-        console.warn('Hero slides API fallback:', err);
-        setSlides(DEFAULT_SLIDES);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const heroRef = useRef<HTMLDivElement | null>(null);
 
   // Auto-slide effect (4.5s) with hover pause
   useEffect(() => {
@@ -74,15 +41,21 @@ export default function Hero() {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
 
-  if (loading) {
-    return (
-      <section className="w-full min-h-[720px] bg-gray-100">
-        <div className="w-full min-h-[720px] flex items-center justify-center">
-          <div className="w-full h-[720px] bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse" />
-        </div>
-      </section>
-    );
-  }
+  const scrollToNextSection = () => {
+    if (heroRef.current) {
+      const heroRect = heroRef.current.getBoundingClientRect();
+      const nextTarget = window.scrollY + heroRect.bottom;
+      window.scrollTo({
+        top: nextTarget,
+        behavior: 'smooth'
+      });
+    } else {
+      window.scrollTo({
+        top: window.innerHeight,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   if (slides.length === 0) {
     return null;
@@ -92,38 +65,73 @@ export default function Hero() {
 
   return (
     <section
+      ref={heroRef}
       className="w-screen relative bg-[#111111] overflow-hidden pt-[54px] md:pt-[60px] lg:pt-[72px] xl:pt-[96px]"
       style={{ marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="w-full h-[280px] md:h-[380px] lg:h-[480px] xl:h-[720px] relative flex items-center justify-center overflow-hidden">
-        <Link href={slide.link} className="block w-full h-full">
+      <div className="w-full h-[340px] md:h-[460px] lg:h-[600px] xl:h-[850px] relative flex items-center justify-center overflow-hidden">
+        {/* Background Image Slide */}
+        <div className="absolute inset-0 w-full h-full">
           <img
             src={slide.img}
-            alt={slide.title || "SK Banner"}
-            className="w-full h-full object-cover object-center block"
+            alt={slide.title || 'SK Banner'}
+            className="w-full h-full object-cover object-center transition-all duration-700 ease-out scale-100"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = '/banners/banner1.png';
+            }}
           />
-        </Link>
+          {/* Subtle overlay gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
+        </div>
 
+        {/* Carousel Navigation Arrows */}
         {slides.length > 1 && (
           <>
             <button
               onClick={handlePrev}
-              className="absolute top-1/2 -translate-y-1/2 left-2 md:left-4 lg:left-8 w-8 h-8 md:w-9 md:h-9 lg:w-12 lg:h-12 rounded-full bg-white border-0 shadow-[0_4px_14px_rgba(0,0,0,0.2)] flex items-center justify-center cursor-pointer z-10 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[#C5A059] hover:scale-105 group focus-visible:outline-2 focus-visible:outline-[#C5A059] focus-visible:outline-offset-2"
+              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/30 backdrop-blur-md border border-white/20 text-white flex items-center justify-center cursor-pointer z-20 transition-all duration-300 hover:bg-black/70 hover:scale-110"
               aria-label="Previous Slide"
             >
-              <ChevronLeft size={18} className="text-[#121316] group-hover:text-white transition-colors" />
+              <ChevronLeft size={24} />
             </button>
             <button
               onClick={handleNext}
-              className="absolute top-1/2 -translate-y-1/2 right-2 md:right-4 lg:right-8 w-8 h-8 md:w-9 md:h-9 lg:w-12 lg:h-12 rounded-full bg-white border-0 shadow-[0_4px_14px_rgba(0,0,0,0.2)] flex items-center justify-center cursor-pointer z-10 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[#C5A059] hover:scale-105 group focus-visible:outline-2 focus-visible:outline-[#C5A059] focus-visible:outline-offset-2"
+              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/30 backdrop-blur-md border border-white/20 text-white flex items-center justify-center cursor-pointer z-20 transition-all duration-300 hover:bg-black/70 hover:scale-110"
               aria-label="Next Slide"
             >
-              <ChevronRight size={18} className="text-[#121316] group-hover:text-white transition-colors" />
+              <ChevronRight size={24} />
             </button>
           </>
         )}
+
+        {/* Carousel Indicator Dots */}
+        {slides.length > 1 && (
+          <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+            {slides.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentSlide(idx)}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  currentSlide === idx ? 'w-8 bg-[#C39F68]' : 'w-2 bg-white/50 hover:bg-white/80'
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Scroll Down Arrow Button */}
+        <button
+          type="button"
+          onClick={scrollToNextSection}
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md border border-white/30 text-white flex items-center justify-center cursor-pointer z-30 transition-all duration-300 hover:bg-[#C39F68] hover:border-[#C39F68] hover:scale-110 animate-bounce shadow-lg"
+          aria-label="Scroll to next section"
+          title="Scroll Down"
+        >
+          <ChevronDown size={22} className="text-white" />
+        </button>
       </div>
     </section>
   );
