@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Search, ShoppingBag, ChevronDown, Menu, X, ArrowRight } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { productAPI } from '@/api/services/productAPI';
 import { IProduct } from '@/types/product';
-import { getProductSlug } from '@/utils/slugHelper';
+import { getProductSlug, formatProductTitle } from '@/utils/slugHelper';
 
 interface NavCategory {
   id: number;
@@ -19,15 +19,39 @@ interface NavProduct {
   price: string;
 }
 
+const DEFAULT_LUXURY_NAV_CATEGORIES: NavCategory[] = [
+  { id: 1, name: 'Hair Care', slug: 'haircare' },
+  { id: 2, name: 'Perfumes', slug: 'perfumes' },
+  { id: 3, name: 'Accessories', slug: 'accessories' }
+];
+
+const DEFAULT_CATEGORY_PRODUCTS: Record<string, NavProduct[]> = {
+  haircare: [
+    { id: 2, title: 'SK Herbal Hair Oil 200ml', slug: 'sk-hair-oil-200ml', price: '₹335' },
+    { id: 3, title: 'Vitamin C Brightening Face Wash', slug: 'vitamin-c-face-wash', price: '₹199' },
+    { id: 6, title: '0.25mm Hair & Beard Derma Roller', slug: 'derma-roller', price: '₹335' }
+  ],
+  perfumes: [
+    { id: 1, title: 'Noir Premium Fragrance - 50ml', slug: 'noir-premium-fragrance', price: '₹499' },
+    { id: 5, title: 'Eau De Parfum | Amber Oud', slug: 'eau-de-parfum-amber', price: '₹899' }
+  ],
+  accessories: [
+    { id: 3, title: 'Classic Full-Grain Leather Belt', slug: 'classic-leather-belt', price: '₹699' },
+    { id: 8, title: 'Executive Leather Briefcase Bag', slug: 'executive-leather-briefcase', price: '₹2,999' },
+    { id: 105, title: 'Minimalist Leather Wallet', slug: 'leather-wallet', price: '₹599' }
+  ]
+};
+
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [navCategories, setNavCategories] = useState<NavCategory[]>([]);
+  const [navCategories, setNavCategories] = useState<NavCategory[]>(DEFAULT_LUXURY_NAV_CATEGORIES);
   const [categoryProducts, setCategoryProducts] = useState<Record<number, NavProduct[]>>({});
   const [isScrolled, setIsScrolled] = useState(false);
 
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { cartCount, setIsCartDrawerOpen } = useCart();
 
   useEffect(() => {
@@ -42,35 +66,59 @@ export default function Header() {
     productAPI.getCategories()
       .then((data: any[]) => {
         if (Array.isArray(data) && data.length > 0) {
-          const mapped: NavCategory[] = data.map((cat: any, idx: number) => ({
-            id: cat.id || idx + 1,
-            name: cat.name || `Category ${idx + 1}`,
-            slug: cat.slug || cat.name?.toLowerCase().replace(/\s+/g, '-') || 'all',
-          }));
-          setNavCategories(mapped);
+          const filtered = data.filter((c: any) => {
+            const name = (c.name || '').toLowerCase();
+            return !name.includes('fiction') && !name.includes('novel');
+          });
+          if (filtered.length > 0) {
+            const mapped: NavCategory[] = filtered.map((cat: any, idx: number) => ({
+              id: cat.id || idx + 1,
+              name: cat.name || `Category ${idx + 1}`,
+              slug: cat.slug || cat.name?.toLowerCase().replace(/\s+/g, '-') || 'all',
+            }));
+            setNavCategories(mapped);
+            return;
+          }
         }
+        setNavCategories(DEFAULT_LUXURY_NAV_CATEGORIES);
       })
-      .catch(() => { });
+      .catch(() => {
+        setNavCategories(DEFAULT_LUXURY_NAV_CATEGORIES);
+      });
   }, []);
 
-  const loadCategoryProducts = async (catId: number) => {
-    if (categoryProducts[catId]) return;
+  const loadCategoryProducts = async (cat: NavCategory) => {
+    if (categoryProducts[cat.id]) return;
     try {
-      const data = await productAPI.getCategoryProducts(catId);
+      const data = await productAPI.getCategoryProducts(cat.id);
       if (Array.isArray(data) && data.length > 0) {
         const mapped: NavProduct[] = data.slice(0, 6).map((p: IProduct) => ({
           id: p.id,
-          title: p.alias || p.slug || 'SK Product',
+          title: formatProductTitle(p.alias || p.slug || 'SK Product'),
           slug: getProductSlug(p),
           price: `₹${typeof p.selling_price === 'number' && p.selling_price > 0 ? p.selling_price : parseFloat(p.price) || 0}`,
         }));
-        setCategoryProducts(prev => ({ ...prev, [catId]: mapped }));
+        setCategoryProducts(prev => ({ ...prev, [cat.id]: mapped }));
       } else {
-        setCategoryProducts(prev => ({ ...prev, [catId]: [] }));
+        const fallback = DEFAULT_CATEGORY_PRODUCTS[cat.slug] || DEFAULT_CATEGORY_PRODUCTS['haircare'];
+        setCategoryProducts(prev => ({ ...prev, [cat.id]: fallback }));
       }
     } catch {
-      setCategoryProducts(prev => ({ ...prev, [catId]: [] }));
+      const fallback = DEFAULT_CATEGORY_PRODUCTS[cat.slug] || DEFAULT_CATEGORY_PRODUCTS['haircare'];
+      setCategoryProducts(prev => ({ ...prev, [cat.id]: fallback }));
     }
+  };
+
+  const handleMouseEnterNav = (cat: NavCategory) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setActiveDropdown(String(cat.id));
+    loadCategoryProducts(cat);
+  };
+
+  const handleMouseLeaveNav = () => {
+    timeoutRef.current = setTimeout(() => {
+      setActiveDropdown(null);
+    }, 200);
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -81,24 +129,29 @@ export default function Header() {
   };
 
   return (
-    <header className={`w-screen fixed top-0 left-0 z-[1000] bg-[#121316] transition-all duration-300 ${
-      isScrolled ? 'bg-[#121316]/95 backdrop-blur-[14px] shadow-[0_4px_25px_rgba(0,0,0,0.25)]' : ''
-    }`} style={{ marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}>
+    <header
+      className={`w-screen fixed top-0 left-0 z-[1000] bg-[#121316] transition-all duration-300 ${
+        isScrolled ? 'bg-[#121316]/95 backdrop-blur-[14px] shadow-[0_4px_25px_rgba(0,0,0,0.25)]' : ''
+      }`}
+      style={{ marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}
+    >
       {/* Main Header Row */}
-      <div className={`w-full flex items-center justify-between transition-all duration-300 bg-[#121316] ${
-        isScrolled ? 'bg-transparent py-2.5 px-6 lg:px-14' : 'py-3.5 px-6 lg:px-14'
-      }`}>
+      <div
+        className={`w-full flex items-center justify-between transition-all duration-300 bg-[#121316] ${
+          isScrolled ? 'bg-transparent py-2.5 px-6 lg:px-14' : 'py-3.5 px-6 lg:px-14'
+        }`}
+      >
         {/* Mobile Toggle Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="flex lg:hidden bg-none border-none cursor-pointer p-2 min-w-[44px] min-h-[44px] items-center justify-center rounded focus-visible:outline-2 focus-visible:outline-[#C5A059] focus-visible:outline-offset-2"
+          className="flex lg:hidden bg-none border-none cursor-pointer p-2 min-w-[44px] min-h-[44px] items-center justify-center rounded focus-visible:outline-2 focus-visible:outline-[#C39F68] focus-visible:outline-offset-2"
           aria-label="Toggle menu"
         >
           {mobileMenuOpen ? <X size={22} color="#ffffff" /> : <Menu size={22} color="#ffffff" />}
         </button>
 
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center no-underline focus-visible:outline-2 focus-visible:outline-[#C5A059] focus-visible:outline-offset-2">
+        <Link href="/" className="flex items-center no-underline focus-visible:outline-2 focus-visible:outline-[#C39F68] focus-visible:outline-offset-2">
           <div className="flex items-center justify-center">
             <img src="/SK Logo.svg" alt="SK Logo" className="h-10 lg:h-[46px] w-auto object-contain transition-all duration-300" />
           </div>
@@ -106,75 +159,75 @@ export default function Header() {
 
         {/* Desktop Navigation Links */}
         <nav className="hidden lg:flex items-center gap-7">
-          <Link href="/" className="text-[0.88rem] font-semibold text-white no-underline transition-colors hover:text-[#C5A059]">Home</Link>
-          <Link href="/about" className="text-[0.88rem] font-semibold text-white no-underline transition-colors hover:text-[#C5A059]">About</Link>
-          <Link href="/best-sellers" className="text-[0.88rem] font-semibold text-white no-underline transition-colors hover:text-[#C5A059]">Best Sellers</Link>
-          <Link href="/products" className="text-[0.88rem] font-semibold text-white no-underline transition-colors hover:text-[#C5A059]">All Products</Link>
+          <Link href="/" className="text-[0.88rem] font-semibold text-white no-underline transition-colors hover:text-[#C39F68]">Home</Link>
+          <Link href="/shop" className="text-[0.88rem] font-semibold text-white no-underline transition-colors hover:text-[#C39F68]">Shop</Link>
 
           {/* Dynamic Category Dropdowns */}
           {navCategories.map((cat) => (
             <div
               key={cat.id}
-              className="relative"
-              onMouseEnter={() => {
-                setActiveDropdown(String(cat.id));
-                loadCategoryProducts(cat.id);
-              }}
-              onMouseLeave={() => setActiveDropdown(null)}
+              className="relative py-2"
+              onMouseEnter={() => handleMouseEnterNav(cat)}
+              onMouseLeave={handleMouseLeaveNav}
             >
               <button
                 onClick={() => {
                   const next = activeDropdown === String(cat.id) ? null : String(cat.id);
                   setActiveDropdown(next);
-                  if (next) loadCategoryProducts(cat.id);
+                  if (next) loadCategoryProducts(cat);
                 }}
-                className="text-[0.88rem] font-semibold text-white bg-transparent border-none cursor-pointer flex items-center gap-1.5 transition-colors hover:text-[#C5A059]"
+                className="text-[0.88rem] font-semibold text-white bg-transparent border-none cursor-pointer flex items-center gap-1.5 transition-colors hover:text-[#C39F68]"
                 type="button"
               >
                 <span>{cat.name}</span>
-                <ChevronDown size={13} className={`transition-transform duration-200 ${activeDropdown === String(cat.id) ? 'rotate-180 text-[#C5A059]' : ''}`} />
+                <ChevronDown size={13} className={`transition-transform duration-200 ${activeDropdown === String(cat.id) ? 'rotate-180 text-[#C39F68]' : ''}`} />
               </button>
 
               {activeDropdown === String(cat.id) && (
-                <div className="absolute top-full left-0 mt-2 w-[280px] bg-[#18191C] border border-[#2D2F36] rounded-lg shadow-[0_12px_35px_rgba(0,0,0,0.4)] p-4 z-50 animate-fade-in">
-                  <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#2D2F36]">
-                    <span className="text-[0.82rem] font-bold text-white uppercase tracking-wider">{cat.name}</span>
-                    <Link
-                      href={`/shop?category=${cat.slug}`}
-                      onClick={() => setActiveDropdown(null)}
-                      className="flex items-center gap-1 text-[0.72rem] font-semibold text-[#C5A059] hover:underline"
-                    >
-                      <span>View all</span>
-                      <ArrowRight size={13} />
-                    </Link>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    {!categoryProducts[cat.id] ? (
-                      <div className="flex items-center justify-center py-4 gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059] animate-ping" />
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059] animate-ping delay-100" />
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059] animate-ping delay-200" />
-                      </div>
-                    ) : categoryProducts[cat.id].length === 0 ? (
-                      <span className="text-[0.78rem] text-gray-400 py-2">No products found</span>
-                    ) : (
-                      categoryProducts[cat.id].map((prod) => (
-                        <Link
-                          key={prod.id}
-                          href={`/product/${prod.slug}`}
-                          onClick={() => setActiveDropdown(null)}
-                          className="flex items-center justify-between py-1.5 px-2 rounded hover:bg-[#25272D] transition-colors"
-                        >
-                          <span className="text-[0.8rem] text-gray-200 font-medium line-clamp-1">{prod.title}</span>
-                          <span className="text-[0.78rem] text-[#C5A059] font-bold shrink-0 ml-2">{prod.price}</span>
-                        </Link>
-                      ))
-                    )}
+                <div className="absolute top-full left-0 pt-2 z-50 animate-fade-in">
+                  <div className="w-[300px] bg-[#18191C]/98 backdrop-blur-md border border-[#2D2F36] rounded-xl shadow-[0_16px_40px_rgba(0,0,0,0.5)] p-4">
+                    <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-[#2D2F36]">
+                      <span className="text-[0.8rem] font-extrabold text-white uppercase tracking-wider">{cat.name}</span>
+                      <Link
+                        href={`/shop?category=${cat.slug}`}
+                        onClick={() => setActiveDropdown(null)}
+                        className="flex items-center gap-1 text-[0.72rem] font-bold text-[#C39F68] hover:underline"
+                      >
+                        <span>View all</span>
+                        <ArrowRight size={13} />
+                      </Link>
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      {!(categoryProducts[cat.id] || DEFAULT_CATEGORY_PRODUCTS[cat.slug]) ? (
+                        <div className="flex items-center justify-center py-4 gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#C39F68] animate-ping" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#C39F68] animate-ping delay-100" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#C39F68] animate-ping delay-200" />
+                        </div>
+                      ) : (
+                        (categoryProducts[cat.id] || DEFAULT_CATEGORY_PRODUCTS[cat.slug] || DEFAULT_CATEGORY_PRODUCTS['haircare']).map((prod) => (
+                          <Link
+                            key={prod.id}
+                            href={`/product/${prod.slug}`}
+                            onClick={() => setActiveDropdown(null)}
+                            className="flex items-center justify-between py-2 px-2.5 rounded-lg hover:bg-[#25272D] transition-colors group/item"
+                          >
+                            <span className="text-[0.82rem] text-gray-200 font-medium line-clamp-1 group-hover/item:text-[#C39F68] transition-colors">{prod.title}</span>
+                            <span className="text-[0.78rem] text-[#C39F68] font-bold shrink-0 ml-2">{prod.price}</span>
+                          </Link>
+                        ))
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
             </div>
           ))}
+
+          <Link href="/best-sellers" className="text-[0.88rem] font-semibold text-white no-underline transition-colors hover:text-[#C39F68]">Best Sellers</Link>
+          <Link href="/products" className="text-[0.88rem] font-semibold text-white no-underline transition-colors hover:text-[#C39F68]">All Products</Link>
+          <Link href="/about" className="text-[0.88rem] font-semibold text-white no-underline transition-colors hover:text-[#C39F68]">About</Link>
         </nav>
 
         {/* Right Action Icons */}
@@ -194,15 +247,20 @@ export default function Header() {
               </button>
             </form>
           ) : (
-            <button onClick={() => setSearchOpen(true)} className="relative bg-transparent border-none cursor-pointer p-2 text-white hover:text-[#C5A059] transition-colors" aria-label="Search">
+            <button onClick={() => setSearchOpen(true)} className="relative bg-transparent border-none cursor-pointer p-2 text-white hover:text-[#C39F68] transition-colors" aria-label="Search">
               <Search size={19} color="#ffffff" />
             </button>
           )}
 
-          <button onClick={() => setIsCartDrawerOpen(true)} className="relative bg-transparent border-none cursor-pointer p-2 text-white hover:text-[#C5A059] transition-colors" aria-label="Cart">
-            <ShoppingBag size={19} color="#ffffff" />
+          {/* Cart Icon Button */}
+          <button
+            onClick={() => setIsCartDrawerOpen(true)}
+            className="relative bg-transparent border-none cursor-pointer p-2 text-white hover:text-[#C39F68] transition-colors"
+            aria-label="Shopping Cart"
+          >
+            <ShoppingBag size={20} color="#ffffff" />
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#C5A059] text-white text-[0.62rem] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow">
+              <span className="absolute top-1 right-1 bg-[#C39F68] text-white text-[0.65rem] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                 {cartCount}
               </span>
             )}
@@ -210,24 +268,25 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <nav className="lg:hidden bg-[#18191C] border-t border-[#2B2D34] flex flex-col p-5 gap-3 animate-fade-in">
-          <Link href="/" onClick={() => setMobileMenuOpen(false)} className="text-[0.9rem] font-medium text-white py-1">Home</Link>
-          <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="text-[0.9rem] font-medium text-white py-1">About</Link>
-          <Link href="/best-sellers" onClick={() => setMobileMenuOpen(false)} className="text-[0.9rem] font-medium text-white py-1">Best Sellers</Link>
-          <Link href="/products" onClick={() => setMobileMenuOpen(false)} className="text-[0.9rem] font-medium text-white py-1">All Products</Link>
+        <div className="lg:hidden bg-[#18191C] border-b border-[#2B2D33] px-6 py-5 flex flex-col gap-4 animate-fade-in">
+          <Link href="/" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">Home</Link>
+          <Link href="/shop" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">Shop Catalogue</Link>
           {navCategories.map((cat) => (
             <Link
               key={cat.id}
               href={`/shop?category=${cat.slug}`}
               onClick={() => setMobileMenuOpen(false)}
-              className="text-[0.9rem] font-medium text-gray-300 py-1 pl-2 border-l border-[#C5A059]"
+              className="text-[0.95rem] font-semibold text-gray-300 no-underline pl-2 border-l-2 border-[#C39F68]"
             >
               {cat.name}
             </Link>
           ))}
-        </nav>
+          <Link href="/best-sellers" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">Best Sellers</Link>
+          <Link href="/products" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">All Products</Link>
+          <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">About Us</Link>
+        </div>
       )}
     </header>
   );
