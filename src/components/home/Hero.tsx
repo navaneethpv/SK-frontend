@@ -76,16 +76,10 @@ export default function Hero() {
 
   if (loading) {
     return (
-      <section className="hero-section">
-        <div className="hero-banner-container loading-skeleton">
-          <div className="skeleton-pulse"></div>
+      <section className="w-full min-h-[720px] bg-gray-100">
+        <div className="w-full min-h-[720px] flex items-center justify-center">
+          <div className="w-full h-[720px] bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse" />
         </div>
-        <style jsx>{`
-          .hero-section { width: 100%; min-height: 420px; background-color: #f3f4f6; }
-          .hero-banner-container { width: 100%; min-height: 420px; display: flex; align-items: center; justify-content: center; }
-          .skeleton-pulse { width: 100%; height: 420px; background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%); background-size: 200% 100%; animation: pulse 1.5s infinite; }
-          @keyframes pulse { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-        `}</style>
       </section>
     );
   }
@@ -98,146 +92,39 @@ export default function Hero() {
 
   return (
     <section
-      className="hero-section"
+      className="w-screen relative bg-[#111111] overflow-hidden pt-[54px] md:pt-[60px] lg:pt-[72px] xl:pt-[96px]"
+      style={{ marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="hero-banner-container">
-        <Link href={slide.link} className="hero-banner-link">
+      <div className="w-full h-[280px] md:h-[380px] lg:h-[480px] xl:h-[720px] relative flex items-center justify-center overflow-hidden">
+        <Link href={slide.link} className="block w-full h-full">
           <img
             src={slide.img}
             alt={slide.title || "SK Banner"}
-            className="hero-banner-img"
+            className="w-full h-full object-cover object-center block"
           />
         </Link>
 
         {slides.length > 1 && (
           <>
-            <button onClick={handlePrev} className="carousel-arrow left-arrow" aria-label="Previous Slide">
-              <ChevronLeft size={18} color="#121316" />
+            <button
+              onClick={handlePrev}
+              className="absolute top-1/2 -translate-y-1/2 left-2 md:left-4 lg:left-8 w-8 h-8 md:w-9 md:h-9 lg:w-12 lg:h-12 rounded-full bg-white border-0 shadow-[0_4px_14px_rgba(0,0,0,0.2)] flex items-center justify-center cursor-pointer z-10 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[#C5A059] hover:scale-105 group focus-visible:outline-2 focus-visible:outline-[#C5A059] focus-visible:outline-offset-2"
+              aria-label="Previous Slide"
+            >
+              <ChevronLeft size={18} className="text-[#121316] group-hover:text-white transition-colors" />
             </button>
-            <button onClick={handleNext} className="carousel-arrow right-arrow" aria-label="Next Slide">
-              <ChevronRight size={18} color="#121316" />
+            <button
+              onClick={handleNext}
+              className="absolute top-1/2 -translate-y-1/2 right-2 md:right-4 lg:right-8 w-8 h-8 md:w-9 md:h-9 lg:w-12 lg:h-12 rounded-full bg-white border-0 shadow-[0_4px_14px_rgba(0,0,0,0.2)] flex items-center justify-center cursor-pointer z-10 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[#C5A059] hover:scale-105 group focus-visible:outline-2 focus-visible:outline-[#C5A059] focus-visible:outline-offset-2"
+              aria-label="Next Slide"
+            >
+              <ChevronRight size={18} className="text-[#121316] group-hover:text-white transition-colors" />
             </button>
           </>
         )}
       </div>
-
-      <style jsx>{`
-        .hero-section {
-          width: 100vw;
-          margin-left: calc(-50vw + 50%);
-          margin-right: calc(-50vw + 50%);
-          position: relative;
-          background-color: #111111;
-          padding-top: 96px;
-          overflow: hidden;
-        }
-
-        .hero-banner-container {
-          width: 100%;
-          height: 520px;
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-        }
-
-        .hero-banner-link {
-          display: block;
-          width: 100%;
-          height: 100%;
-        }
-
-        .hero-banner-img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-          display: block;
-        }
-
-        .carousel-arrow {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          background: #ffffff;
-          border: none;
-          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          z-index: 10;
-          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .carousel-arrow:focus-visible {
-          outline: 2px solid #C5A059;
-          outline-offset: 2px;
-        }
-
-        .carousel-arrow:hover {
-          background: #C5A059;
-          transform: translateY(-50%) scale(1.05);
-        }
-
-        .carousel-arrow:hover :global(svg) {
-          color: #ffffff !important;
-          stroke: #ffffff !important;
-        }
-
-        .left-arrow {
-          left: 2rem;
-        }
-
-        .right-arrow {
-          right: 2rem;
-        }
-
-        @media (max-width: 1024px) {
-          .hero-section {
-            padding-top: 72px;
-          }
-          .hero-banner-container {
-            height: 280px;
-          }
-          .left-arrow, .right-arrow {
-            width: 36px;
-            height: 36px;
-          }
-          .left-arrow { left: 1rem; }
-          .right-arrow { right: 1rem; }
-        }
-
-        @media (max-width: 768px) {
-          .hero-section {
-            padding-top: 60px;
-          }
-          .hero-banner-container {
-            height: 220px;
-          }
-          .left-arrow, .right-arrow {
-            width: 32px;
-            height: 32px;
-          }
-          .left-arrow { left: 0.5rem; }
-          .right-arrow { right: 0.5rem; }
-        }
-
-        @media (max-width: 480px) {
-          .hero-section {
-            padding-top: 54px;
-          }
-          .hero-banner-container {
-            height: 160px;
-          }
-        }
-      `}</style>
     </section>
   );
 }
