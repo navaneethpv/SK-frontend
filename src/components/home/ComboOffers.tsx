@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ShoppingBag, Sparkles, ArrowRight } from 'lucide-react';
+import { ShoppingBag, ArrowRight } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 
 interface BundleCard {
@@ -74,8 +74,8 @@ export default function ComboOffers() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 lg:mb-12 gap-4">
           <div>
-            <span className="text-[0.72rem] font-extrabold tracking-[0.15em] text-[#C39F68] block mb-1 uppercase flex items-center gap-1.5">
-              <Sparkles size={14} /> SPECIAL VALUE BUNDLES
+            <span className="text-[0.72rem] font-extrabold tracking-[0.15em] text-[#C39F68] block mb-1 uppercase">
+              SPECIAL VALUE BUNDLES
             </span>
             <h2 className="text-[1.5rem] sm:text-[1.8rem] lg:text-[2.2rem] font-bold text-[#121316] tracking-tight">
               Build Your Bundle

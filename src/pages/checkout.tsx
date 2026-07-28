@@ -14,7 +14,7 @@ import {
   FileText,
   CheckCircle,
   Truck,
-  Sparkles,
+  Award,
   Trash2,
   CheckSquare,
   Square
@@ -472,7 +472,7 @@ export default function CheckoutOrderPage() {
                       <span>Fast Express Dispatch</span>
                     </div>
                     <div className="flex items-center gap-3 text-[0.85rem] text-[#475569] font-medium">
-                      <Sparkles size={18} className="text-[#EAB308]" />
+                      <Award size={18} className="text-[#EAB308]" />
                       <span>100% Genuine Quality Guarantee</span>
                     </div>
                   </div>

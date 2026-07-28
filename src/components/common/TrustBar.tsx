@@ -1,5 +1,5 @@
 import React from 'react';
-import { Truck, ShieldCheck, Sparkles, RefreshCw } from 'lucide-react';
+import { Truck, ShieldCheck, Award, RefreshCw } from 'lucide-react';
 
 export default function TrustBar() {
   return (
@@ -18,7 +18,7 @@ export default function TrustBar() {
 
           <div className="flex items-center gap-[0.8rem]">
             <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-[42px] lg:h-[42px] rounded-full bg-white border border-[#EAE6DF] flex items-center justify-center shrink-0 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
-              <Sparkles size={20} color="#C5A059" />
+              <Award size={20} color="#C5A059" />
             </div>
             <div className="flex flex-col">
               <span className="text-[0.72rem] sm:text-[0.76rem] lg:text-[0.82rem] font-bold text-[#121316] leading-tight">100% Organic Formulations</span>

@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface CategoryTile {
   id: number;
@@ -26,8 +26,8 @@ export default function CategoryList() {
         {/* Header */}
         <div className="flex items-end justify-between mb-8 lg:mb-12">
           <div className="flex flex-col gap-1">
-            <span className="text-[0.72rem] font-extrabold tracking-[0.15em] text-[#C39F68] uppercase flex items-center gap-1.5">
-              <Sparkles size={14} /> DISCOVER
+            <span className="text-[0.72rem] font-extrabold tracking-[0.15em] text-[#C39F68] uppercase">
+              DISCOVER
             </span>
             <h2 className="text-[1.5rem] lg:text-[2rem] font-bold tracking-tight text-[#121316]">
               Curated Collections
