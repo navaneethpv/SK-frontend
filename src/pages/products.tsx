@@ -6,6 +6,7 @@ import ProductCard from '@/components/product/ProductCard';
 import { productAPI } from '@/api/services/productAPI';
 import { IProduct } from '@/types/product';
 import { getImageUrl } from '@/utils/imageHelper';
+import { formatProductTitle } from '@/utils/slugHelper';
 
 interface ProductItem {
   id: number;
@@ -44,7 +45,7 @@ function mapProductToItem(prod: IProduct, fallbackImg: string): ProductItem {
 
   return {
     id: prod.id,
-    title: prod.alias || prod.slug || 'SK Product',
+    title: formatProductTitle(prod.alias || prod.slug || 'SK Product'),
     price: numericPrice,
     originalPrice: originalPriceNum > numericPrice ? originalPriceNum : undefined,
     rating: prod.rating ? prod.rating.toFixed(1) : '4.8',

@@ -16,3 +16,15 @@ export function getProductSlug(item: any): string {
   if (slugified) return slugified;
   return `product-${item.id || 1}`;
 }
+
+export function formatProductTitle(text?: string | null): string {
+  if (!text || typeof text !== 'string') return 'SK Selection';
+  if (text.includes('-') && !text.includes(' ')) {
+    return text
+      .replace(/-book$/i, '')
+      .split('-')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(' ');
+  }
+  return text;
+}

@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 :root {
   --font-serif: 'Playfair Display', Georgia, serif;
@@ -47,8 +47,8 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background-color: #ffffff;
+  color: #121316;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
@@ -71,10 +71,8 @@ html.lenis, html.lenis body {
   overflow: hidden;
 }
 
-h1, h2, h3, h4, .serif-font {
+.serif-font {
   font-family: var(--font-serif);
-  font-weight: 500;
-  letter-spacing: -0.01em;
 }
 
 a {
@@ -86,63 +84,4 @@ button, input, select, textarea {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
-}
-
-.container {
-  width: 100%;
-  max-width: 1440px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 3rem;
-  padding-right: 3rem;
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-}
-
-/* Luxury transitions and interactive scales */
-.hover-scale {
-  transition: var(--transition-smooth);
-}
-.hover-scale:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
-}
-
-.hover-glow {
-  transition: var(--transition-smooth);
-}
-.hover-glow:hover {
-  border-color: hsl(var(--primary) / 0.5);
-  box-shadow: 0 10px 30px hsla(var(--primary), 0.08);
-}
-
-.star-rating {
-  color: hsl(var(--primary));
-}
-
-.badge-gold {
-  background-color: hsla(var(--primary), 0.1);
-  color: hsl(var(--primary));
-  font-weight: 600;
-  font-size: 0.7rem;
-  padding: 0.3rem 0.7rem;
-  border-radius: var(--radius-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.badge-green {
-  background-color: hsla(var(--success), 0.08);
-  color: hsl(var(--success));
-  font-weight: 600;
-  font-size: 0.75rem;
-  padding: 0.25rem 0.6rem;
-  border-radius: var(--radius-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }

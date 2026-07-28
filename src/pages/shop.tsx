@@ -7,7 +7,7 @@ import ProductCard from '@/components/product/ProductCard';
 import { productAPI } from '@/api/services/productAPI';
 import { IProduct } from '@/types/product';
 import { getImageUrl } from '@/utils/imageHelper';
-import { getProductSlug } from '@/utils/slugHelper';
+import { getProductSlug, formatProductTitle } from '@/utils/slugHelper';
 
 interface ShopProduct {
   id: number;
@@ -51,7 +51,7 @@ function mapProductToShopItem(prod: IProduct, fallbackImg: string): ShopProduct 
 
   return {
     id: prod.id,
-    title: prod.alias || prod.slug || 'SK Luxury Item',
+    title: formatProductTitle(prod.alias || prod.slug || 'SK Luxury Item'),
     slug: getProductSlug(prod),
     category: (prod as any).category?.slug || (prod as any).category_name || 'all',
     price: numericPrice,
@@ -124,7 +124,7 @@ export default function ShopPage() {
           <div className="max-w-[1440px] mx-auto px-6 lg:px-8">
             {/* Header Title */}
             <div className="text-center mb-10">
-              <span className="text-[0.72rem] font-bold tracking-[0.14em] text-[#C5A059] block mb-1.5 uppercase">CATALOGUE</span>
+              <span className="text-[0.72rem] font-bold tracking-[0.14em] text-[#C39F68] block mb-1.5 uppercase">CATALOGUE</span>
               <h1 className="text-[2.2rem] font-extrabold text-[#111111] tracking-wide mb-2">
                 {filter
                   ? `${(filter as string).replace('-', ' ').toUpperCase()} COLLECTION`
