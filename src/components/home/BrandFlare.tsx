@@ -4,67 +4,66 @@ import { ArrowRight } from 'lucide-react';
 import { motion, Variants } from 'framer-motion';
 
 const contentVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 25 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: 'easeOut' }
+    transition: { duration: 0.7, ease: 'easeOut' }
   }
 };
 
 export default function BrandFlare() {
   return (
     <motion.section
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       transition={{ duration: 0.8, ease: 'easeOut' }}
       viewport={{ once: true, margin: '-50px' }}
-      className="w-full py-8 lg:py-14 bg-white"
+      className="w-screen relative bg-[#111111] overflow-hidden my-0"
+      style={{ marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}
     >
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative w-full h-[380px] sm:h-[480px] md:h-[580px] lg:h-[650px] rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-[#EAE5DC] group">
-          {/* Background Image */}
-          <img
-            src="/banners/flare_banner.png"
-            alt="SK Luxury Collection Showcase"
-            className="w-full h-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-105"
-          />
+      <div className="relative w-full h-[340px] md:h-[460px] lg:h-[600px] xl:h-[700px] overflow-hidden group">
+        {/* Background Image */}
+        <img
+          src="/banners/flare_banner.png"
+          alt="SK Collection Showcase"
+          className="w-full h-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-103"
+        />
 
-          {/* Dark Gradient Overlay for Readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-black/20 md:to-transparent" />
+        {/* Dark Gradient Overlay for Readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
 
-          {/* Hero-Style Content Overlay */}
-          <div className="absolute inset-0 flex items-center p-6 sm:p-10 md:p-16 lg:p-20">
-            <motion.div
-              variants={contentVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="max-w-xl flex flex-col items-start gap-3 sm:gap-4 md:gap-5 text-white z-10"
-            >
-              <span className="text-[0.68rem] sm:text-[0.78rem] font-extrabold tracking-[0.2em] text-[#C39F68] uppercase bg-[#121316]/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[#C39F68]/30">
-                THE ART OF LUXURY
-              </span>
+        {/* Minimalist Overlay Content */}
+        <div className="absolute inset-0 flex items-center max-w-[1440px] mx-auto px-6 sm:px-10 md:px-16 lg:px-20">
+          <motion.div
+            variants={contentVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="max-w-lg flex flex-col items-start gap-3 sm:gap-4 text-white z-10"
+          >
+            <span className="text-[0.72rem] sm:text-[0.8rem] font-bold tracking-[0.2em] text-[#C39F68] uppercase">
+              SK SIGNATURE COLLECTION
+            </span>
 
-              <h2 className="text-[1.8rem] sm:text-[2.6rem] md:text-[3.2rem] lg:text-[3.6rem] font-bold text-white leading-[1.1] tracking-tight drop-shadow-md">
-                Purity Meets Unrivaled Craftsmanship
-              </h2>
+            <h2 className="text-[2rem] sm:text-[2.8rem] md:text-[3.5rem] font-bold text-white leading-[1.15] tracking-tight">
+              Crafted Without Compromise
+            </h2>
 
-              <p className="text-[0.88rem] sm:text-[1rem] md:text-[1.1rem] text-gray-200 leading-relaxed font-medium drop-shadow-sm max-w-lg">
-                Explore our signature organic hair care, fine fragrances & handcrafted leather accessories engineered for timeless elegance.
-              </p>
+            <p className="text-[0.9rem] sm:text-[1.05rem] text-gray-200 leading-relaxed font-normal">
+              Pure organic formulations and handcrafted leather essentials designed for daily elegance.
+            </p>
 
-              <div className="pt-2">
-                <Link
-                  href="/shop"
-                  className="inline-flex items-center gap-2.5 bg-[#C39F68] text-white text-[0.8rem] sm:text-[0.88rem] font-extrabold px-6 sm:px-8 py-3 sm:py-4 rounded-xl tracking-wider uppercase no-underline transition-all duration-300 hover:bg-white hover:text-[#121316] hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:-translate-y-0.5"
-                >
-                  <span>Explore Collection</span>
-                  <ArrowRight size={18} />
-                </Link>
-              </div>
-            </motion.div>
-          </div>
+            <div className="pt-2">
+              <Link
+                href="/shop"
+                className="inline-flex items-center gap-2.5 bg-[#121316] text-white border border-[#C39F68]/50 text-[0.82rem] font-bold px-7 py-3.5 rounded-xl tracking-wider uppercase no-underline transition-all duration-300 hover:bg-[#C39F68] hover:border-[#C39F68] hover:shadow-lg"
+              >
+                <span>Shop Collection</span>
+                <ArrowRight size={16} />
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </div>
     </motion.section>
