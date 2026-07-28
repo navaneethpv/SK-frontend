@@ -91,49 +91,9 @@ export default function ReviewsSection() {
             </span>
           </div>
 
-          <h2 className="text-[1.8rem] sm:text-[2.2rem] lg:text-[2.6rem] font-bold text-[#121316] tracking-tight mb-4">
+          <h2 className="text-[1.8rem] sm:text-[2.2rem] lg:text-[2.6rem] font-bold text-[#121316] tracking-tight">
             Loved By Thousands
           </h2>
-
-          {/* Aggregate Rating Badge Bar */}
-          <div className="flex items-center gap-4 flex-wrap justify-center bg-white border border-[#EAE5DC] px-6 py-3 rounded-2xl shadow-sm">
-            <div className="flex items-center gap-1 text-[#C39F68]">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={18} className="fill-[#C39F68] text-[#C39F68]" />
-              ))}
-            </div>
-
-            <span className="text-[1.1rem] font-extrabold text-[#121316]">4.9 / 5.0</span>
-            <span className="text-[#D1D5DB]">•</span>
-
-            {/* Overlapping Avatars Stack */}
-            <div className="flex items-center -space-x-2.5">
-              <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
-                alt="Customer"
-                className="w-7 h-7 rounded-full border-2 border-white object-cover"
-              />
-              <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80"
-                alt="Customer"
-                className="w-7 h-7 rounded-full border-2 border-white object-cover"
-              />
-              <img
-                src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80"
-                alt="Customer"
-                className="w-7 h-7 rounded-full border-2 border-white object-cover"
-              />
-              <img
-                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80"
-                alt="Customer"
-                className="w-7 h-7 rounded-full border-2 border-white object-cover"
-              />
-            </div>
-
-            <span className="text-[0.85rem] font-semibold text-[#4B5563]">
-              Based on <strong className="text-[#121316]">2,450+</strong> verified reviews
-            </span>
-          </div>
         </motion.div>
 
         {/* 3 Testimonial Cards */}
@@ -178,20 +138,9 @@ export default function ReviewsSection() {
                 <h4 className="text-[1.02rem] font-bold text-[#121316] leading-snug mb-2">
                   "{rev.headline}"
                 </h4>
-                <p className="text-[0.88rem] text-[#4B5563] leading-relaxed italic mb-6">
+                <p className="text-[0.88rem] text-[#4B5563] leading-relaxed italic">
                   {rev.comment}
                 </p>
-              </div>
-
-              {/* Purchased Item Footer Badge */}
-              <div className="flex items-center gap-3 pt-4 border-t border-[#F1F5F9] bg-[#FAF8F5] p-3 rounded-xl">
-                <div className="w-10 h-10 rounded-lg overflow-hidden bg-white shrink-0 p-1 border border-[#EAE5DC]">
-                  <img src={rev.productImg} alt={rev.productName} className="w-full h-full object-contain" />
-                </div>
-                <div className="flex flex-col overflow-hidden">
-                  <span className="text-[0.68rem] font-bold text-[#9CA3AF] uppercase">PURCHASED ITEM</span>
-                  <span className="text-[0.82rem] font-bold text-[#121316] truncate">{rev.productName}</span>
-                </div>
               </div>
             </motion.div>
           ))}
