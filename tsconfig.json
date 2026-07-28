@@ -16,8 +16,7 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@/SK/*": ["./SK/*"]
+      "@/*": ["./src/*"]
     },
     "plugins": [
       {
