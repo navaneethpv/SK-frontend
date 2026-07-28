@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 interface CategoryTile {
   id: number;
@@ -21,42 +21,55 @@ const CURATED_CATEGORY_TILES: CategoryTile[] = [
 
 export default function CategoryList() {
   return (
-    <section className="w-full bg-white py-12 lg:py-[4.5rem] border-b border-[#EEEEEE]">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
-        <div className="flex items-end justify-between mb-8">
-          <div className="flex flex-col gap-[0.3rem]">
-            <span className="text-[0.65rem] lg:text-[0.72rem] font-bold tracking-[0.14em] text-[#C5A059]">DISCOVER</span>
-            <h2 className="text-[1.25rem] lg:text-[1.5rem] font-extrabold tracking-[0.04em] text-[#111111]">CURATED COLLECTIONS</h2>
+    <section className="w-full bg-white py-12 lg:py-20 border-b border-[#EEEEEE]">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="flex items-end justify-between mb-8 lg:mb-12">
+          <div className="flex flex-col gap-1">
+            <span className="text-[0.72rem] font-extrabold tracking-[0.15em] text-[#C39F68] uppercase flex items-center gap-1.5">
+              <Sparkles size={14} /> DISCOVER
+            </span>
+            <h2 className="text-[1.5rem] lg:text-[2rem] font-bold tracking-tight text-[#121316]">
+              Curated Collections
+            </h2>
           </div>
-          <Link href="/shop" className="flex items-center gap-[0.4rem] text-[0.76rem] lg:text-[0.82rem] font-bold tracking-[0.04em] text-[#111111] no-underline transition-colors hover:text-[#C5A059]">
+
+          <Link
+            href="/shop"
+            className="flex items-center gap-2 text-[0.85rem] font-bold text-[#121316] no-underline transition-colors hover:text-[#C39F68]"
+          >
             <span>Explore All Categories</span>
             <ArrowRight size={16} />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-[1.2rem]">
+        {/* 6 Category Tiles Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
           {CURATED_CATEGORY_TILES.map((cat) => (
             <Link
               key={cat.id}
               href={`/shop?category=${cat.slug}`}
-              className="group block rounded-lg overflow-hidden shadow-[0_4px_14px_rgba(0,0,0,0.05)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] bg-[#F7F7F7] border border-[#EAEAEA] no-underline hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.1)] hover:border-[#C5A059] focus-visible:outline-2 focus-visible:outline-[#C5A059] focus-visible:outline-offset-2"
+              className="group block rounded-2xl overflow-hidden bg-[#FAF8F5] border border-[#EAE5DC] no-underline transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:border-[#C39F68]"
             >
-              <div className="w-full aspect-[0.82] overflow-hidden relative">
+              <div className="w-full aspect-[0.85] overflow-hidden relative">
                 {cat.isComingSoon && (
-                  <span className="absolute top-[0.6rem] right-[0.6rem] bg-[#111111]/90 backdrop-blur-[4px] text-[#C5A059] border border-[#C5A059]/40 text-[0.58rem] font-extrabold px-2 py-0.8 rounded tracking-[0.08em] z-10 uppercase">
+                  <span className="absolute top-2.5 right-2.5 bg-[#121316]/90 backdrop-blur-md text-[#C39F68] border border-[#C39F68]/40 text-[0.58rem] font-extrabold px-2 py-0.5 rounded tracking-wider z-10 uppercase shadow-sm">
                     COMING SOON
                   </span>
                 )}
+
                 <img
                   src={cat.img}
                   alt={cat.name}
-                  className="w-full h-full object-cover transition-transform duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-108"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/hero cards/4.png';
                   }}
                 />
-                <div className="absolute bottom-0 left-0 right-0 p-3 pt-[1.2rem] bg-gradient-to-t from-black/75 to-transparent flex items-end justify-center">
-                  <span className="text-white text-[0.8rem] lg:text-[0.88rem] font-bold tracking-[0.04em] drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)] text-center">
+
+                {/* Bottom Overlay Category Name */}
+                <div className="absolute bottom-0 left-0 right-0 p-3.5 pt-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end justify-center">
+                  <span className="text-white text-[0.9rem] font-bold tracking-wide text-center drop-shadow-md group-hover:text-[#C39F68] transition-colors">
                     {cat.name}
                   </span>
                 </div>
