@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from './ProductCard';
+import { ProductGridSkeleton } from '@/components/common/Skeletons';
 
 export interface ItemCard {
   id: number;
@@ -43,12 +44,14 @@ export default function ProductCarousel({
   items,
   title,
   subtag,
-  viewAllLink
+  viewAllLink,
+  loading = false
 }: {
   items: ItemCard[];
   title?: string;
   subtag?: string;
   viewAllLink?: string;
+  loading?: boolean;
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(4);
@@ -69,6 +72,21 @@ export default function ProductCarousel({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  if (loading) {
+    return (
+      <div className="w-full relative my-8">
+        {(title || subtag) && (
+          <div className="mb-6">
+            <div className="w-48 h-7 rounded animate-shimmer" />
+          </div>
+        )}
+        <ProductGridSkeleton count={itemsPerPage} />
+      </div>
+    );
+  }
+
+  if (!items || items.length === 0) return null;
+
   const maxIndex = Math.max(0, items.length - Math.floor(itemsPerPage));
 
   const handlePrev = () => {
@@ -79,18 +97,16 @@ export default function ProductCarousel({
     setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
   };
 
-  if (!items || items.length === 0) return null;
-
   return (
-    <div className="w-full relative my-6">
+    <div className="w-full relative my-8 animate-fade-in-up">
       {(title || subtag || viewAllLink) && (
         <div className="flex items-end justify-between mb-6">
           <div>
-            {subtag && <span className="text-[0.72rem] font-bold tracking-[0.14em] text-[#C39F68] block mb-1 uppercase">{subtag}</span>}
-            {title && <h2 className="text-[1.35rem] lg:text-[1.5rem] font-extrabold tracking-[0.04em] text-[#111111]">{title}</h2>}
+            {subtag && <span className="text-[0.72rem] font-bold tracking-[0.15em] text-[#C39F68] block mb-1 uppercase">{subtag}</span>}
+            {title && <h2 className="text-[1.35rem] lg:text-[1.8rem] font-bold tracking-tight text-[#121316]">{title}</h2>}
           </div>
           {viewAllLink && (
-            <Link href={viewAllLink} className="text-[0.82rem] font-bold text-[#111111] hover:text-[#C39F68] transition-colors no-underline">
+            <Link href={viewAllLink} className="text-[0.85rem] font-bold text-[#121316] hover:text-[#C39F68] transition-colors no-underline">
               View All →
             </Link>
           )}
@@ -101,7 +117,7 @@ export default function ProductCarousel({
         {currentIndex > 0 && (
           <button
             onClick={handlePrev}
-            className="absolute top-1/2 -translate-y-1/2 -left-4 sm:-left-5 w-10 h-10 rounded-full bg-white border border-[#E4E4E7] flex items-center justify-center cursor-pointer z-30 shadow-[0_4px_14px_rgba(0,0,0,0.12)] transition-all duration-200 hover:bg-[#121316] hover:border-[#121316] hover:scale-105 group"
+            className="absolute top-1/2 -translate-y-1/2 -left-4 sm:-left-5 w-10 h-10 rounded-full bg-white border border-[#EAE5DC] flex items-center justify-center cursor-pointer z-30 shadow-[0_4px_14px_rgba(0,0,0,0.12)] transition-all duration-200 hover:bg-[#121316] hover:border-[#121316] hover:scale-105 group"
             aria-label="Previous"
           >
             <ChevronLeft size={18} className="text-[#71717A] group-hover:text-white transition-colors" />
@@ -127,7 +143,7 @@ export default function ProductCarousel({
         {items.length > itemsPerPage && currentIndex < maxIndex && (
           <button
             onClick={handleNext}
-            className="absolute top-1/2 -translate-y-1/2 -right-4 sm:-right-5 w-10 h-10 rounded-full bg-white border border-[#E4E4E7] flex items-center justify-center cursor-pointer z-30 shadow-[0_4px_14px_rgba(0,0,0,0.12)] transition-all duration-200 hover:bg-[#121316] hover:border-[#121316] hover:scale-105 group"
+            className="absolute top-1/2 -translate-y-1/2 -right-4 sm:-right-5 w-10 h-10 rounded-full bg-white border border-[#EAE5DC] flex items-center justify-center cursor-pointer z-30 shadow-[0_4px_14px_rgba(0,0,0,0.12)] transition-all duration-200 hover:bg-[#121316] hover:border-[#121316] hover:scale-105 group"
             aria-label="Next"
           >
             <ChevronRight size={18} className="text-[#71717A] group-hover:text-white transition-colors" />

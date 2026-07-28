@@ -69,7 +69,7 @@ export default function ComboOffers() {
   };
 
   return (
-    <section className="w-full py-12 lg:py-20 bg-[#FAF8F5] border-t border-b border-[#F0EDE8]">
+    <section className="w-full py-12 lg:py-20 bg-[#FAF8F5] border-t border-b border-[#F0EDE8] animate-fade-in-up">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 lg:mb-12 gap-4">

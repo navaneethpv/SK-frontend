@@ -4,8 +4,8 @@ import { ArrowRight } from 'lucide-react';
 import { productAPI } from '@/api/services/productAPI';
 import { getImageUrl } from '@/utils/imageHelper';
 import { getProductSlug, formatProductTitle } from '@/utils/slugHelper';
-import { useCart } from '@/context/CartContext';
 import ProductCard from '@/components/product/ProductCard';
+import { ProductGridSkeleton } from '@/components/common/Skeletons';
 
 interface CardItem {
   id: number;
@@ -69,16 +69,12 @@ export default function DealOfTheDay() {
 
   if (loading) {
     return (
-      <section className="w-full py-16 bg-[#FAFAFA] border-t border-b border-[#EEEEEE]">
+      <section className="w-full py-16 bg-[#FAF8F5] border-t border-b border-[#EEEEEE]">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
-          <div className="flex items-center justify-between">
-            <h2 className="text-[1.2rem] font-extrabold tracking-[0.1em] text-[#111111]">DEAL OF THE DAY</h2>
+          <div className="flex items-center justify-between mb-8">
+            <div className="w-48 h-8 rounded animate-shimmer" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-            {[1, 2, 3, 4].map((n) => (
-              <div key={n} className="h-[360px] bg-[#EAEAEA] rounded-2xl animate-pulse" />
-            ))}
-          </div>
+          <ProductGridSkeleton count={4} />
         </div>
       </section>
     );
@@ -87,14 +83,14 @@ export default function DealOfTheDay() {
   if (items.length === 0) return null;
 
   return (
-    <section className="w-full py-12 lg:py-[4.5rem] bg-[#FAFAFA] border-t border-b border-[#EEEEEE]">
+    <section className="w-full py-12 lg:py-20 bg-[#FAF8F5] border-t border-b border-[#EEEEEE] animate-fade-in-up">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
         <div className="flex items-end justify-between mb-8">
-          <div className="flex flex-col gap-[0.3rem]">
-            <span className="text-[0.72rem] font-bold tracking-[0.14em] text-[#C39F68]">EXCLUSIVE OFFERS</span>
-            <h2 className="text-[1.25rem] lg:text-[1.5rem] font-extrabold tracking-[0.04em] text-[#111111]">DEAL OF THE DAY</h2>
+          <div className="flex flex-col gap-1">
+            <span className="text-[0.72rem] font-bold tracking-[0.15em] text-[#C39F68] uppercase">EXCLUSIVE OFFERS</span>
+            <h2 className="text-[1.5rem] lg:text-[2rem] font-bold tracking-tight text-[#121316]">DEAL OF THE DAY</h2>
           </div>
-          <Link href="/shop" className="flex items-center gap-[0.4rem] text-[0.82rem] font-bold text-[#111111] no-underline hover:text-[#C39F68] transition-colors">
+          <Link href="/shop" className="flex items-center gap-2 text-[0.85rem] font-bold text-[#121316] no-underline hover:text-[#C39F68] transition-colors">
             <span>Explore All Deals</span>
             <ArrowRight size={16} />
           </Link>
@@ -136,17 +132,28 @@ export function PopularProductsHome() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading || items.length === 0) return null;
+  if (loading) {
+    return (
+      <section className="w-full py-16 bg-white border-b border-[#EEEEEE]">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
+          <div className="w-48 h-8 rounded animate-shimmer mb-8" />
+          <ProductGridSkeleton count={4} />
+        </div>
+      </section>
+    );
+  }
+
+  if (items.length === 0) return null;
 
   return (
-    <section className="w-full py-16 bg-white">
+    <section className="w-full py-16 bg-white border-b border-[#EEEEEE] animate-fade-in-up">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
         <div className="flex items-end justify-between mb-8">
-          <div className="flex flex-col gap-[0.3rem]">
-            <span className="text-[0.72rem] font-bold tracking-[0.14em] text-[#C39F68]">TRENDING SELECTIONS</span>
-            <h2 className="text-[1.25rem] lg:text-[1.5rem] font-extrabold tracking-[0.04em] text-[#111111]">POPULAR PRODUCTS</h2>
+          <div className="flex flex-col gap-1">
+            <span className="text-[0.72rem] font-bold tracking-[0.15em] text-[#C39F68] uppercase">TRENDING SELECTIONS</span>
+            <h2 className="text-[1.5rem] lg:text-[2rem] font-bold tracking-tight text-[#121316]">POPULAR PRODUCTS</h2>
           </div>
-          <Link href="/shop" className="flex items-center gap-[0.4rem] text-[0.82rem] font-bold text-[#111111] no-underline hover:text-[#C39F68] transition-colors">
+          <Link href="/shop" className="flex items-center gap-2 text-[0.85rem] font-bold text-[#121316] no-underline hover:text-[#C39F68] transition-colors">
             <span>Explore All</span>
             <ArrowRight size={16} />
           </Link>
@@ -188,17 +195,18 @@ export function Evergreen() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading || items.length === 0) return null;
+  if (loading) return null;
+  if (items.length === 0) return null;
 
   return (
-    <section className="w-full py-16 bg-[#FAFAFA] border-t border-[#EEEEEE]">
+    <section className="w-full py-16 bg-[#FAF8F5] border-t border-[#EEEEEE] animate-fade-in-up">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
         <div className="flex items-end justify-between mb-8">
-          <div className="flex flex-col gap-[0.3rem]">
-            <span className="text-[0.72rem] font-bold tracking-[0.14em] text-[#C39F68]">TIMELESS FAVORITES</span>
-            <h2 className="text-[1.25rem] lg:text-[1.5rem] font-extrabold tracking-[0.04em] text-[#111111]">EVERGREEN COLLECTION</h2>
+          <div className="flex flex-col gap-1">
+            <span className="text-[0.72rem] font-bold tracking-[0.15em] text-[#C39F68] uppercase">TIMELESS FAVORITES</span>
+            <h2 className="text-[1.5rem] lg:text-[2rem] font-bold tracking-tight text-[#121316]">EVERGREEN COLLECTION</h2>
           </div>
-          <Link href="/shop" className="flex items-center gap-[0.4rem] text-[0.82rem] font-bold text-[#111111] no-underline hover:text-[#C39F68] transition-colors">
+          <Link href="/shop" className="flex items-center gap-2 text-[0.85rem] font-bold text-[#121316] no-underline hover:text-[#C39F68] transition-colors">
             <span>View All</span>
             <ArrowRight size={16} />
           </Link>

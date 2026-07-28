@@ -21,7 +21,7 @@ const CURATED_CATEGORY_TILES: CategoryTile[] = [
 
 export default function CategoryList() {
   return (
-    <section className="w-full bg-white py-12 lg:py-20 border-b border-[#EEEEEE]">
+    <section className="w-full bg-white py-12 lg:py-20 border-b border-[#EEEEEE] animate-fade-in-up">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex items-end justify-between mb-8 lg:mb-12">
