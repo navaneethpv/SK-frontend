@@ -13,6 +13,8 @@ interface CategoryTile {
   img: string;
 }
 
+// Mock DEFAULT_CATEGORIES commented out to rely on real API data
+/*
 const DEFAULT_CATEGORIES: CategoryTile[] = [
   { id: 1, name: 'Bags & Luggage', slug: 'bags', img: '/images/category_tile_1.png' },
   { id: 2, name: 'Luxury Watches', slug: 'watches', img: '/images/category_tile_2.png' },
@@ -21,9 +23,10 @@ const DEFAULT_CATEGORIES: CategoryTile[] = [
   { id: 5, name: 'Wallet & Belt Collection', slug: 'wallet-belt', img: '/images/category_tile_5.png' },
   { id: 6, name: 'Hair Care & Nourishment', slug: 'haircare', img: '/images/category_tile_6.png' }
 ];
+*/
 
 export default function CategoriesPage() {
-  const [categories, setCategories] = useState<CategoryTile[]>(DEFAULT_CATEGORIES);
+  const [categories, setCategories] = useState<CategoryTile[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -31,7 +34,7 @@ export default function CategoriesPage() {
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           const mapped = data.map((cat: any, idx: number) => {
-            const fallback = DEFAULT_CATEGORIES[idx % DEFAULT_CATEGORIES.length].img;
+            const fallback = `/images/category_tile_${(idx % 6) + 1}.png`;
             return {
               id: cat.id || idx + 1,
               name: cat.name || `Category ${idx + 1}`,
@@ -86,7 +89,7 @@ export default function CategoriesPage() {
                       alt={cat.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = DEFAULT_CATEGORIES[idx % DEFAULT_CATEGORIES.length].img;
+                        (e.target as HTMLImageElement).src = `/images/category_tile_${(idx % 6) + 1}.png`;
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />

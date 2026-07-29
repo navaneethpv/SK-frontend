@@ -1,10 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Facebook, Instagram, Youtube } from 'lucide-react';
+import { Facebook, Instagram, Youtube, Twitter, Share2 } from 'lucide-react';
+import { productAPI } from '@/api/services/productAPI';
+import { getImageUrl } from '@/utils/imageHelper';
+import { ISocialMedia, IPolicy } from '@/types/home';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [socials, setSocials] = useState<ISocialMedia[]>([]);
+  const [policies, setPolicies] = useState<IPolicy[]>([]);
+
+  useEffect(() => {
+    // Fetch Social Medias from API
+    productAPI.getSocialMedias()
+      .then((data: ISocialMedia[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSocials(data);
+        }
+      })
+      .catch((err) => {
+        console.warn('Social media API notice:', err);
+      });
+
+    // Fetch Site Policies from API
+    productAPI.getPolicies()
+      .then((data: IPolicy[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setPolicies(data);
+        }
+      })
+      .catch((err) => {
+        console.warn('Policies API notice:', err);
+      });
+  }, []);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -13,6 +42,34 @@ export default function Footer() {
       setEmail('');
       setTimeout(() => setSubscribed(false), 4000);
     }
+  };
+
+  const renderSocialIcon = (soc: ISocialMedia) => {
+    const titleLower = (soc.title || soc.name || '').toLowerCase();
+    const linkUrl = soc.link || soc.url || '#';
+
+    let IconComp = Share2;
+    if (titleLower.includes('facebook')) IconComp = Facebook;
+    else if (titleLower.includes('instagram')) IconComp = Instagram;
+    else if (titleLower.includes('youtube')) IconComp = Youtube;
+    else if (titleLower.includes('twitter') || titleLower.includes('x')) IconComp = Twitter;
+
+    return (
+      <a 
+        key={soc.id} 
+        href={linkUrl} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" 
+        aria-label={soc.title || 'Social Link'}
+      >
+        {soc.icon && typeof soc.icon === 'string' && soc.icon.startsWith('http') ? (
+          <img src={getImageUrl(soc.icon)} alt={soc.title || 'icon'} className="w-4 h-4 object-contain" />
+        ) : (
+          <IconComp size={16} />
+        )}
+      </a>
+    );
   };
 
   return (
@@ -27,16 +84,24 @@ export default function Footer() {
             <p className="text-[0.85rem] text-[#A3A3A3] leading-[1.6]">
               SK is a luxury grooming and lifestyle brand crafting high-performance organic hair oils, artisanal fragrances, and lifestyle accessories designed for uncompromising quality.
             </p>
+            
+            {/* Dynamic or Default Social Links */}
             <div className="flex gap-[0.8rem] mt-2">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Facebook">
-                <Facebook size={16} />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Instagram">
-                <Instagram size={16} />
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Youtube">
-                <Youtube size={16} />
-              </a>
+              {socials.length > 0 ? (
+                socials.map((soc) => renderSocialIcon(soc))
+              ) : (
+                <>
+                  <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Facebook">
+                    <Facebook size={16} />
+                  </a>
+                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Instagram">
+                    <Instagram size={16} />
+                  </a>
+                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Youtube">
+                    <Youtube size={16} />
+                  </a>
+                </>
+              )}
             </div>
           </div>
 

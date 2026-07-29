@@ -1,37 +1,81 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
+import { productAPI } from '@/api/services/productAPI';
+import { getImageUrl } from '@/utils/imageHelper';
+import { ISlide } from '@/types/home';
 
 interface SlideItem {
   id: number;
   img: string;
   link: string;
   title?: string;
+  subtitle?: string;
+  visibleTime?: number;
 }
 
+// Mock DEFAULT_SLIDES commented out to rely on real API data
+/*
 const DEFAULT_SLIDES: SlideItem[] = [
   { id: 1, img: '/banners/banner1.png', link: '/shop', title: 'SK Organic Hair Oil & Botanical Care' },
   { id: 2, img: '/banners/banner2.png', link: '/shop', title: 'SK Noir Luxury Eau De Parfum' }
 ];
+*/
 
 export default function Hero() {
-  const [slides] = useState<SlideItem[]>(DEFAULT_SLIDES);
+  const [slides, setSlides] = useState<SlideItem[]>([]);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const heroRef = useRef<HTMLDivElement | null>(null);
 
-  // Auto-slide effect (4.5s) with hover pause
+  // Fetch API slides on mount
+  useEffect(() => {
+    productAPI.getSlides()
+      .then((data: ISlide[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          // Sort slides by priority if present
+          const sorted = [...data].sort((a, b) => (a.priority || 0) - (b.priority || 0));
+          
+          const mapped: SlideItem[] = sorted.map((item, idx) => {
+            const rawImg = item.file || item.image || item.img || item.popup;
+            const targetLink = item.link1 || item.link2 || item.link || item.url || '/shop';
+            const slideTitle = item.title || item.sub_title || item.desc || `SK Banner ${idx + 1}`;
+            
+            return {
+              id: item.id || idx + 1,
+              img: getImageUrl(rawImg, '/banners/banner1.png'),
+              link: targetLink,
+              title: slideTitle,
+              subtitle: item.sub_title || item.subtitle || item.desc,
+              visibleTime: item.visible_time
+            };
+          });
+
+          if (mapped.length > 0) {
+            setSlides(mapped);
+          }
+        }
+      })
+      .catch((err) => {
+        console.warn('Hero slides API notice:', err);
+      });
+  }, []);
+
+  // Auto-slide effect with hover pause
   useEffect(() => {
     if (slides.length <= 1 || isHovered) return;
 
+    const currentItem = slides[currentSlide];
+    const duration = currentItem?.visibleTime ? currentItem.visibleTime * 1000 : 4500;
+
     timerRef.current = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 4500);
+    }, duration);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [slides.length, isHovered]);
+  }, [slides, currentSlide, isHovered]);
 
   const handlePrev = () => {
     setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
@@ -73,7 +117,7 @@ export default function Hero() {
     >
       <div className="w-full h-[340px] md:h-[460px] lg:h-[600px] xl:h-[850px] relative flex items-center justify-center overflow-hidden">
         {/* Background Image Slide */}
-        <div className="absolute inset-0 w-full h-full">
+        <a href={slide.link} className="absolute inset-0 w-full h-full block">
           <img
             src={slide.img}
             alt={slide.title || 'SK Banner'}
@@ -84,7 +128,7 @@ export default function Hero() {
           />
           {/* Subtle overlay gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
-        </div>
+        </a>
 
         {/* Carousel Navigation Arrows */}
         {slides.length > 1 && (

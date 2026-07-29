@@ -23,6 +23,8 @@ interface ShopProduct {
   img: string;
 }
 
+// Mock DEFAULT_PRODUCTS commented out to rely on real API data
+/*
 const DEFAULT_PRODUCTS: ShopProduct[] = [
   { id: 1, title: 'Noir Premium Fragrance - 50ml', category: 'perfumes', price: 499, originalPrice: 2499, rating: '4.8', reviewsCount: 49, badgeText: '80% OFF', badgeType: 'green', img: '/hero cards/4.png' },
   { id: 2, title: 'SK Hair Oil - 200ml', category: 'haircare', price: 335, originalPrice: 399, rating: '4.8', reviewsCount: 131, badgeText: 'Best Seller', badgeType: 'gold', img: '/bundle - combo offer/1.png' },
@@ -33,8 +35,9 @@ const DEFAULT_PRODUCTS: ShopProduct[] = [
   { id: 7, title: 'Vitamin C Brightening Body Wash', category: 'bodycare', price: 299, originalPrice: 399, rating: '4.8', reviewsCount: 95, badgeText: 'New Launch', badgeType: 'green', img: '/hero cards/3.png' },
   { id: 8, title: 'Executive Leather Briefcase Bag', category: 'accessories', price: 2999, originalPrice: 3499, rating: '4.9', reviewsCount: 42, badgeText: 'Best Seller', badgeType: 'gold', img: '/bundle - combo offer/3.png' }
 ];
+*/
 
-function mapProductToShopItem(prod: IProduct, fallbackImg: string): ShopProduct {
+function mapProductToShopItem(prod: IProduct, fallbackImg: string = '/hero cards/4.png'): ShopProduct {
   const numericPrice = typeof prod.selling_price === 'number' && prod.selling_price > 0
     ? prod.selling_price
     : parseFloat(prod.price) || 499;
@@ -51,14 +54,14 @@ function mapProductToShopItem(prod: IProduct, fallbackImg: string): ShopProduct 
 
   return {
     id: prod.id,
-    title: formatProductTitle(prod.alias || prod.slug || 'SK Luxury Item'),
+    title: formatProductTitle(prod.alias || prod.slug || 'SK Product'),
     slug: getProductSlug(prod),
-    category: (prod as any).category?.slug || (prod as any).category_name || 'all',
+    category: (typeof prod.product_group === 'object' && prod.product_group ? ((prod.product_group as any).slug || (prod.product_group as any).alias || 'all') : 'all').toLowerCase(),
     price: numericPrice,
     originalPrice: originalPriceNum > numericPrice ? originalPriceNum : undefined,
     rating: prod.rating ? prod.rating.toFixed(1) : '4.8',
     reviewsCount: prod.review_count || 45,
-    badgeText: discountBadge || 'Best Seller',
+    badgeText: discountBadge || (prod.is_active ? 'Best Seller' : undefined),
     badgeType: discountBadge ? 'green' : 'gold',
     img: getImageUrl(rawImg, fallbackImg)
   };
@@ -68,7 +71,7 @@ export default function ShopPage() {
   const router = useRouter();
   const { category, filter, search } = router.query;
 
-  const [products, setProducts] = useState<ShopProduct[]>(DEFAULT_PRODUCTS);
+  const [products, setProducts] = useState<ShopProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
@@ -77,7 +80,7 @@ export default function ShopPage() {
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           const mapped = data.map((prod: IProduct, idx: number) =>
-            mapProductToShopItem(prod, DEFAULT_PRODUCTS[idx % DEFAULT_PRODUCTS.length].img)
+            mapProductToShopItem(prod, `/hero cards/${(idx % 6) + 1}.png`)
           );
           setProducts(mapped);
         }

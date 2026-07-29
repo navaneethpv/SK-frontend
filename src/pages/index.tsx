@@ -17,7 +17,8 @@ import { IProduct } from '@/types/product';
 import { getImageUrl } from '@/utils/imageHelper';
 import { getProductSlug } from '@/utils/slugHelper';
 
-// Bestseller Products default fallback
+// Mock DEFAULT_BESTSELLER_ITEMS commented out to rely on real API data
+/*
 const DEFAULT_BESTSELLER_ITEMS: ItemCard[] = [
   { id: 1, title: 'Noir Premium Fragrance - 50ml', rating: '4.8', reviewsCount: 49, discountBadge: '80% OFF', price: '₹499', originalPrice: '₹2,499', img: '/hero cards/4.png', actionText: 'Add To Cart' },
   { id: 2, title: 'SK Hair Oil - 100ml', rating: '4.8', reviewsCount: 131, discountBadge: '16% OFF', price: '₹335', originalPrice: '₹399', img: '/bundle - combo offer/1.png', actionText: 'Choose Options' },
@@ -26,14 +27,15 @@ const DEFAULT_BESTSELLER_ITEMS: ItemCard[] = [
   { id: 5, title: 'Eau De Parfum | Amber', discountBadge: '40% OFF', price: '₹899', originalPrice: '₹1,499', img: '/hero cards/1.png', actionText: 'Add To Cart' }
 ];
 
-// New Arrivals default fallback
+// Mock DEFAULT_NEW_ARRIVALS_ITEMS commented out to rely on real API data
 const DEFAULT_NEW_ARRIVALS_ITEMS: ItemCard[] = [
   { id: 101, title: '0.25mm Derma Roller | Face, Beard & Hair Care', rating: '4.8', reviewsCount: 131, discountBadge: '16% OFF', price: '₹335', originalPrice: '₹399', badgeText: 'New Launches', badgeType: 'green', img: '/hero cards/6.png', actionText: 'Add To Cart' },
   { id: 103, title: 'Premium Fragrance - 50ml', discountBadge: '18% OFF', price: '₹324', originalPrice: '₹399', badgeText: 'New Launches', badgeType: 'green', img: '/hero cards/4.png', actionText: 'Add To Cart' },
   { id: 105, title: 'Leather Wallet | Premium Quality Material', discountBadge: '23% OFF', price: '₹699', originalPrice: '₹259', badgeText: 'New Launches', badgeType: 'green', img: '/hero cards/5.png', actionText: 'Add To Cart' }
 ];
+*/
 
-function mapProductToCard(prod: IProduct, fallbackImg: string): ItemCard {
+function mapProductToCard(prod: IProduct, fallbackImg: string = '/hero cards/4.png'): ItemCard {
   const numericPrice = typeof prod.selling_price === 'number' && prod.selling_price > 0
     ? prod.selling_price
     : parseFloat(prod.price) || 499;
@@ -66,8 +68,8 @@ function mapProductToCard(prod: IProduct, fallbackImg: string): ItemCard {
 
 export default function Home() {
   const [activeMainTab, setActiveMainTab] = useState<'bestsellers' | 'newarrivals'>('bestsellers');
-  const [bestsellerItems, setBestsellerItems] = useState<ItemCard[]>(DEFAULT_BESTSELLER_ITEMS);
-  const [newArrivalItems, setNewArrivalItems] = useState<ItemCard[]>(DEFAULT_NEW_ARRIVALS_ITEMS);
+  const [bestsellerItems, setBestsellerItems] = useState<ItemCard[]>([]);
+  const [newArrivalItems, setNewArrivalItems] = useState<ItemCard[]>([]);
   const [categoryItems, setCategoryItems] = useState<{ id: number; name: string; slug: string; img: string }[]>([]);
   const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
   const [activeCategoryProducts, setActiveCategoryProducts] = useState<ItemCard[]>([]);
@@ -78,11 +80,11 @@ export default function Home() {
     productAPI.getBestSellersHome()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setBestsellerItems(data.map((p, idx) => mapProductToCard(p, DEFAULT_BESTSELLER_ITEMS[idx % DEFAULT_BESTSELLER_ITEMS.length].img)));
+          setBestsellerItems(data.map((p, idx) => mapProductToCard(p, `/hero cards/${(idx % 6) + 1}.png`)));
         } else {
           productAPI.getBestSellers().then((fallback) => {
             if (Array.isArray(fallback) && fallback.length > 0) {
-              setBestsellerItems(fallback.map((p, idx) => mapProductToCard(p, DEFAULT_BESTSELLER_ITEMS[idx % DEFAULT_BESTSELLER_ITEMS.length].img)));
+              setBestsellerItems(fallback.map((p, idx) => mapProductToCard(p, `/hero cards/${(idx % 6) + 1}.png`)));
             }
           });
         }
@@ -91,7 +93,7 @@ export default function Home() {
         productAPI.getBestSellers()
           .then((fallback) => {
             if (Array.isArray(fallback) && fallback.length > 0) {
-              setBestsellerItems(fallback.map((p, idx) => mapProductToCard(p, DEFAULT_BESTSELLER_ITEMS[idx % DEFAULT_BESTSELLER_ITEMS.length].img)));
+              setBestsellerItems(fallback.map((p, idx) => mapProductToCard(p, `/hero cards/${(idx % 6) + 1}.png`)));
             }
           })
           .catch((err) => console.warn('Best sellers API warning:', err));
@@ -101,7 +103,7 @@ export default function Home() {
     productAPI.getNewArrivals()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setNewArrivalItems(data.map((p, idx) => mapProductToCard(p, DEFAULT_NEW_ARRIVALS_ITEMS[idx % DEFAULT_NEW_ARRIVALS_ITEMS.length].img)));
+          setNewArrivalItems(data.map((p, idx) => mapProductToCard(p, `/hero cards/${(idx % 6) + 1}.png`)));
         }
       })
       .catch((err) => console.warn('New arrivals API warning:', err));
@@ -124,11 +126,11 @@ export default function Home() {
           try {
             const products = await productAPI.getProducts({ category_id: String(first.id) });
             if (Array.isArray(products) && products.length > 0) {
-              setActiveCategoryProducts(products.map((p, i) => mapProductToCard(p, DEFAULT_BESTSELLER_ITEMS[i % DEFAULT_BESTSELLER_ITEMS.length].img)));
+              setActiveCategoryProducts(products.map((p, i) => mapProductToCard(p, `/hero cards/${(i % 6) + 1}.png`)));
             } else {
               const all = await productAPI.getProducts();
               if (Array.isArray(all) && all.length > 0) {
-                setActiveCategoryProducts(all.slice(0, 8).map((p, i) => mapProductToCard(p, DEFAULT_BESTSELLER_ITEMS[i % DEFAULT_BESTSELLER_ITEMS.length].img)));
+                setActiveCategoryProducts(all.slice(0, 8).map((p, i) => mapProductToCard(p, `/hero cards/${(i % 6) + 1}.png`)));
               }
             }
           } catch {
@@ -149,11 +151,11 @@ export default function Home() {
     try {
       const products = await productAPI.getProducts({ category_id: String(cat.id) });
       if (Array.isArray(products) && products.length > 0) {
-        setActiveCategoryProducts(products.map((p, i) => mapProductToCard(p, DEFAULT_BESTSELLER_ITEMS[i % DEFAULT_BESTSELLER_ITEMS.length].img)));
+        setActiveCategoryProducts(products.map((p, i) => mapProductToCard(p, `/hero cards/${(i % 6) + 1}.png`)));
       } else {
         const all = await productAPI.getProducts();
         if (Array.isArray(all) && all.length > 0) {
-          setActiveCategoryProducts(all.slice(0, 8).map((p, i) => mapProductToCard(p, DEFAULT_BESTSELLER_ITEMS[i % DEFAULT_BESTSELLER_ITEMS.length].img)));
+          setActiveCategoryProducts(all.slice(0, 8).map((p, i) => mapProductToCard(p, `/hero cards/${(i % 6) + 1}.png`)));
         }
       }
     } catch {
@@ -168,11 +170,11 @@ export default function Home() {
     productAPI.getBestSellersHome()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setBestsellerItems(data.map((p, idx) => mapProductToCard(p, DEFAULT_BESTSELLER_ITEMS[idx % DEFAULT_BESTSELLER_ITEMS.length].img)));
+          setBestsellerItems(data.map((p, idx) => mapProductToCard(p, `/hero cards/${(idx % 6) + 1}.png`)));
         } else {
           productAPI.getBestSellers().then((fallback) => {
             if (Array.isArray(fallback) && fallback.length > 0) {
-              setBestsellerItems(fallback.map((p, idx) => mapProductToCard(p, DEFAULT_BESTSELLER_ITEMS[idx % DEFAULT_BESTSELLER_ITEMS.length].img)));
+              setBestsellerItems(fallback.map((p, idx) => mapProductToCard(p, `/hero cards/${(idx % 6) + 1}.png`)));
             }
           });
         }
@@ -180,7 +182,7 @@ export default function Home() {
       .catch(() => {
         productAPI.getBestSellers().then((fallback) => {
           if (Array.isArray(fallback) && fallback.length > 0) {
-            setBestsellerItems(fallback.map((p, idx) => mapProductToCard(p, DEFAULT_BESTSELLER_ITEMS[idx % DEFAULT_BESTSELLER_ITEMS.length].img)));
+            setBestsellerItems(fallback.map((p, idx) => mapProductToCard(p, `/hero cards/${(idx % 6) + 1}.png`)));
           }
         });
       });
@@ -191,7 +193,7 @@ export default function Home() {
     productAPI.getNewArrivals()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setNewArrivalItems(data.map((p, idx) => mapProductToCard(p, DEFAULT_NEW_ARRIVALS_ITEMS[idx % DEFAULT_NEW_ARRIVALS_ITEMS.length].img)));
+          setNewArrivalItems(data.map((p, idx) => mapProductToCard(p, `/hero cards/${(idx % 6) + 1}.png`)));
         }
       })
       .catch((err) => console.warn('New arrivals API warning:', err));

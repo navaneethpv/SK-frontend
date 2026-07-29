@@ -21,14 +21,17 @@ interface ProductItem {
   img: string;
 }
 
+// Mock DEFAULT_PRODUCTS commented out to rely on real API data
+/*
 const DEFAULT_PRODUCTS: ProductItem[] = [
   { id: 1, title: 'Noir Premium Fragrance - 50ml', price: 499, originalPrice: 2499, rating: '4.8', reviewsCount: 49, discountBadge: '80% OFF', badgeText: 'Best Seller', badgeType: 'gold', img: '/hero cards/1.png' },
   { id: 2, title: 'SK Herbal Hair Oil - 100ml', price: 335, originalPrice: 399, rating: '4.8', reviewsCount: 131, discountBadge: '16% OFF', badgeText: 'Best Seller', badgeType: 'gold', img: '/hero cards/2.png' },
   { id: 3, title: 'Vitamin C Brightening Face Wash', price: 199, originalPrice: 259, rating: '4.9', reviewsCount: 160, discountBadge: '23% OFF', badgeText: 'Best Seller', badgeType: 'gold', img: '/hero cards/3.png' },
   { id: 4, title: 'Eau De Parfum | Amber Oud', price: 899, originalPrice: 1499, rating: '4.7', reviewsCount: 88, discountBadge: '40% OFF', badgeText: 'Best Seller', badgeType: 'gold', img: '/hero cards/4.png' }
 ];
+*/
 
-function mapProductToItem(prod: IProduct, fallbackImg: string): ProductItem {
+function mapProductToItem(prod: IProduct, fallbackImg: string = '/hero cards/1.png'): ProductItem {
   const numericPrice = typeof prod.selling_price === 'number' && prod.selling_price > 0
     ? prod.selling_price
     : parseFloat(prod.price) || 499;
@@ -51,14 +54,14 @@ function mapProductToItem(prod: IProduct, fallbackImg: string): ProductItem {
     rating: prod.rating ? prod.rating.toFixed(1) : '4.8',
     reviewsCount: prod.review_count || 45,
     discountBadge: discountBadge || undefined,
-    badgeText: 'Best Seller',
+    badgeText: prod.is_active ? 'Best Seller' : undefined,
     badgeType: 'gold',
     img: getImageUrl(rawImg, fallbackImg)
   };
 }
 
-export default function AllProductsPage() {
-  const [products, setProducts] = useState<ProductItem[]>(DEFAULT_PRODUCTS);
+export default function ProductsPage() {
+  const [products, setProducts] = useState<ProductItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -66,7 +69,7 @@ export default function AllProductsPage() {
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           const mapped = data.map((prod: IProduct, idx: number) =>
-            mapProductToItem(prod, DEFAULT_PRODUCTS[idx % DEFAULT_PRODUCTS.length].img)
+            mapProductToItem(prod, `/hero cards/${(idx % 6) + 1}.png`)
           );
           setProducts(mapped);
         }
