@@ -4,7 +4,11 @@ import { ICartItem } from '@/types/cart';
 export const cartAPI = {
   // Get all items in the user's cart
   getCartItems: async (): Promise<ICartItem[]> => {
-    return apiFetch<ICartItem[]>('carts');
+    try {
+      return await apiFetch<ICartItem[]>('carts');
+    } catch {
+      return [];
+    }
   },
 
   // Add a product to the cart or update its quantity
@@ -13,35 +17,51 @@ export const cartAPI = {
     quantity: number;
     unit?: number;
     price: string;
-  }): Promise<ICartItem> => {
-    return apiFetch<ICartItem>('carts', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    });
+  }): Promise<ICartItem | null> => {
+    try {
+      return await apiFetch<ICartItem>('carts', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+    } catch {
+      return null;
+    }
   },
 
   // Update cart item quantity
   updateCartItem: async (
     id: number,
     payload: { quantity: number; price: string }
-  ): Promise<ICartItem> => {
-    return apiFetch<ICartItem>(`carts/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(payload),
-    });
+  ): Promise<ICartItem | null> => {
+    try {
+      return await apiFetch<ICartItem>(`carts/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(payload),
+      });
+    } catch {
+      return null;
+    }
   },
 
   // Delete specific item from cart
   removeFromCart: async (id: number): Promise<void> => {
-    return apiFetch<void>(`carts/${id}`, {
-      method: 'DELETE',
-    });
+    try {
+      await apiFetch<void>(`carts/${id}`, {
+        method: 'DELETE',
+      });
+    } catch {
+      // Graceful fallback for offline mode
+    }
   },
 
   // Clear all items in the cart
   clearCart: async (): Promise<void> => {
-    return apiFetch<void>('carts/clear-cart', {
-      method: 'DELETE',
-    });
+    try {
+      await apiFetch<void>('carts/clear-cart', {
+        method: 'DELETE',
+      });
+    } catch {
+      // Graceful fallback for offline mode
+    }
   }
 };
