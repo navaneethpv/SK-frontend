@@ -1,4 +1,9 @@
 export function getImageUrl(url?: string | null, fallback: string = '/hero cards/4.png'): string {
+  // Uses environment variable or defaults to empty string for Live Domain hosting
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH !== undefined 
+    ? process.env.NEXT_PUBLIC_BASE_PATH 
+    : '';
+
   const target = (url && typeof url === 'string' && url.trim()) ? url.trim() : fallback;
 
   // 1. External absolute URLs or Data URIs
@@ -14,12 +19,10 @@ export function getImageUrl(url?: string | null, fallback: string = '/hero cards
     return `${backendBase.replace(/\/$/, '')}${cleanPath}`;
   }
 
-  // 3. Local public assets in Next.js public/ folder (e.g. /images/..., /banners/..., /SK Logo.svg)
-  // Ensures /SK is prepended for XAMPP subfolder hosting
-  const basePath = '/SK';
-  if (cleanPath.startsWith(basePath)) {
-    return cleanPath;
+  // 3. Local public assets in Next.js public/ folder
+  if (basePath && !cleanPath.startsWith(basePath)) {
+    return `${basePath}${cleanPath}`;
   }
 
-  return `${basePath}${cleanPath}`;
+  return cleanPath;
 }

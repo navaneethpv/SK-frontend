@@ -6,6 +6,7 @@ import TrustBar from '@/components/common/TrustBar';
 import { productAPI } from '@/api/services/productAPI';
 import { IAbout } from '@/types/home';
 import { getImageUrl } from '@/utils/imageHelper';
+import { Building2, MapPin, Phone, MessageCircle, Mail, Globe } from 'lucide-react';
 
 export default function AboutPage() {
   const [aboutData, setAboutData] = useState<IAbout | null>(null);
@@ -40,19 +41,19 @@ export default function AboutPage() {
   return (
     <>
       <Head>
-        <title>{aboutData?.title ? `${aboutData.title} | SK Store` : 'About Us | SK Store'}</title>
+        <title>{aboutData?.title ? `${aboutData.title} | SK EURO LIFESTYLE` : 'About Us | SK EURO LIFESTYLE'}</title>
         <meta 
           name="description" 
-          content={aboutData?.para1 || aboutData?.description || 'Learn more about SK Store.'} 
+          content={aboutData?.para1 || aboutData?.description || 'Learn more about SK EURO LIFESTYLE.'} 
         />
       </Head>
 
       <Header />
 
       <main className="min-h-[70vh] bg-[#FAF8F5] pt-24 sm:pt-32 pb-20 text-[#121316]">
-        <div className="max-w-[880px] mx-auto px-4 sm:px-6">
+        <div className="max-w-[880px] mx-auto px-4 sm:px-6 space-y-8">
           {/* Header */}
-          <div className="text-center mb-10">
+          <div className="text-center mb-6">
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#121316]">
               {aboutData?.title || 'About Us'}
             </h1>
@@ -143,6 +144,70 @@ export default function AboutPage() {
               <p className="text-gray-600">No about information available at the moment.</p>
             </div>
           )}
+
+          {/* Company Details & Customer Care Card */}
+          <div className="bg-white rounded-2xl p-6 sm:p-10 border border-[#EAE6DF] shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-6">
+            <div className="flex items-center gap-3.5 border-b border-[#F0EDE8] pb-5">
+              <div className="w-11 h-11 rounded-xl bg-[#FDF8F0] border border-[#F5E6CD] flex items-center justify-center text-[#C5A059] shrink-0">
+                <Building2 size={22} />
+              </div>
+              <div>
+                <span className="text-[0.7rem] font-bold tracking-[0.14em] text-[#C5A059] uppercase block mb-0.5">
+                  MANUFACTURED & MARKETED BY
+                </span>
+                <h2 className="text-xl sm:text-2xl font-bold text-[#121316]">
+                  SK EURO LIFESTYLE
+                </h2>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-[#333333]">
+              {/* Address */}
+              <div className="bg-[#FAF8F5] p-5 rounded-xl border border-[#F0EDE8] flex items-start gap-3.5">
+                <MapPin className="text-[#C5A059] shrink-0 mt-0.5" size={20} />
+                <div>
+                  <h3 className="text-xs font-bold text-[#888888] uppercase tracking-wider mb-1">Office & Manufacturing Address</h3>
+                  <p className="text-sm font-medium text-gray-800 leading-relaxed">
+                    Choorakode - 679336 Palakkad Dt,<br />
+                    Kerala, India
+                  </p>
+                </div>
+              </div>
+
+              {/* Customer Care Contacts */}
+              <div className="bg-[#FAF8F5] p-5 rounded-xl border border-[#F0EDE8] space-y-3">
+                <h3 className="text-xs font-bold text-[#888888] uppercase tracking-wider mb-2">Customer Care & Support</h3>
+                
+                <div className="flex items-center gap-3 text-sm">
+                  <Phone className="text-[#C5A059] shrink-0" size={17} />
+                  <a href="tel:+914662236207" className="text-gray-800 hover:text-[#C5A059] font-semibold transition-colors">
+                    +91 466 2236 207
+                  </a>
+                </div>
+
+                <div className="flex items-center gap-3 text-sm">
+                  <MessageCircle className="text-[#25D366] shrink-0" size={17} />
+                  <a href="https://wa.me/919072171712" target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:text-[#C5A059] font-semibold transition-colors">
+                    +91 9072 17 17 12
+                  </a>
+                </div>
+
+                <div className="flex items-center gap-3 text-sm">
+                  <Mail className="text-[#C5A059] shrink-0" size={17} />
+                  <a href="mailto:support@skeurolifestyle.com" className="text-gray-800 hover:text-[#C5A059] font-semibold transition-colors">
+                    support@skeurolifestyle.com
+                  </a>
+                </div>
+
+                <div className="flex items-center gap-3 text-sm">
+                  <Globe className="text-[#C5A059] shrink-0" size={17} />
+                  <a href="https://www.skeurolifestyle.com" target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:text-[#C5A059] font-semibold transition-colors">
+                    www.skeurolifestyle.com
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Store Trust Features */}
@@ -155,3 +220,4 @@ export default function AboutPage() {
     </>
   );
 }
+

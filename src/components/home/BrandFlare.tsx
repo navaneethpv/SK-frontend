@@ -73,7 +73,7 @@ export default function BrandFlare() {
       className="w-screen relative bg-[#111111] overflow-hidden my-0"
       style={{ marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}
     >
-      <div className="relative w-full h-[340px] md:h-[460px] lg:h-[600px] xl:h-[700px] overflow-hidden group">
+      <div className="relative w-full h-[300px] sm:h-[380px] md:h-[450px] lg:h-[550px] xl:h-[650px] [@media(min-width:960px)_and_(max-height:750px)]:h-[65vh] [@media(max-height:680px)]:h-[65vh] overflow-hidden group">
         {/* Background Image */}
         <img
           src={getImageUrl(flair.media)}

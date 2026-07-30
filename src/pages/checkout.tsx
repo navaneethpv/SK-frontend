@@ -24,7 +24,7 @@ import Footer from '@/components/common/Footer';
 import { useCart } from '@/context/CartContext';
 import { orderAPI } from '@/api/services/orderAPI';
 
-const DEFAULT_STORE_WHATSAPP = '918137058308';
+const DEFAULT_STORE_WHATSAPP = '919072171712';
 
 export default function CheckoutOrderPage() {
   const router = useRouter();

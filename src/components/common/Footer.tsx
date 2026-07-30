@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Facebook, Instagram, Youtube, Twitter, Share2 } from 'lucide-react';
+import { Facebook, Instagram, Youtube, Twitter, Share2, Phone, Mail, MapPin, Globe, MessageCircle, ArrowRight } from 'lucide-react';
 import { productAPI } from '@/api/services/productAPI';
 import { getImageUrl } from '@/utils/imageHelper';
-import { ISocialMedia, IPolicy } from '@/types/home';
+import { ISocialMedia } from '@/types/home';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [socials, setSocials] = useState<ISocialMedia[]>([]);
-  const [policies, setPolicies] = useState<IPolicy[]>([]);
 
   useEffect(() => {
-    // Fetch Social Medias from API
     productAPI.getSocialMedias()
       .then((data: ISocialMedia[]) => {
         if (Array.isArray(data) && data.length > 0) {
@@ -21,17 +19,6 @@ export default function Footer() {
       })
       .catch((err) => {
         console.warn('Social media API notice:', err);
-      });
-
-    // Fetch Site Policies from API
-    productAPI.getPolicies()
-      .then((data: IPolicy[]) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setPolicies(data);
-        }
-      })
-      .catch((err) => {
-        console.warn('Policies API notice:', err);
       });
   }, []);
 
@@ -60,7 +47,7 @@ export default function Footer() {
         href={linkUrl} 
         target="_blank" 
         rel="noopener noreferrer" 
-        className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" 
+        className="w-9 h-9 rounded-full bg-[#1E1F24] text-[#A1A1AA] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" 
         aria-label={soc.title || 'Social Link'}
       >
         {soc.icon && typeof soc.icon === 'string' && soc.icon.startsWith('http') ? (
@@ -73,31 +60,31 @@ export default function Footer() {
   };
 
   return (
-    <footer className="w-full bg-[#111111] text-white">
-      <div className="pt-16">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 pb-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-[2.5rem] lg:gap-[3rem]">
-          {/* Brand Column */}
-          <div className="flex flex-col gap-[1.2rem]">
+    <footer className="w-full bg-[#0D0E11] text-white border-t border-[#1F2026]">
+      {/* Main Footer Container */}
+      <div className="max-w-[1440px] mx-auto px-6 sm:px-10 pt-16 pb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+          
+          {/* Column 1: Brand Info */}
+          <div className="flex flex-col gap-4">
             <Link href="/" className="inline-block">
-              <img src={getImageUrl('/SK Logo.svg')} alt="SK Logo" className="h-[52px] w-auto object-contain" />
+              <img src={getImageUrl('/SK Logo.svg')} alt="SK Logo" className="h-[46px] w-auto object-contain" />
             </Link>
-            <p className="text-[0.85rem] text-[#A3A3A3] leading-[1.6]">
-              SK is a luxury grooming and lifestyle brand crafting high-performance organic hair oils, artisanal fragrances, and lifestyle accessories designed for uncompromising quality.
+            <p className="text-[0.85rem] text-[#9CA3AF] leading-relaxed">
+              SK EURO LIFESTYLE crafts premium organic hair care, luxury fragrances, and lifestyle products with uncompromising quality.
             </p>
-            
-            {/* Dynamic or Default Social Links */}
-            <div className="flex gap-[0.8rem] mt-2">
+            <div className="flex gap-2.5 mt-2">
               {socials.length > 0 ? (
                 socials.map((soc) => renderSocialIcon(soc))
               ) : (
                 <>
-                  <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Facebook">
+                  <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-[#1E1F24] text-[#A1A1AA] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Facebook">
                     <Facebook size={16} />
                   </a>
-                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Instagram">
+                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-[#1E1F24] text-[#A1A1AA] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Instagram">
                     <Instagram size={16} />
                   </a>
-                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-[#222222] text-[#CCCCCC] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Youtube">
+                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-[#1E1F24] text-[#A1A1AA] flex items-center justify-center transition-all duration-200 hover:bg-[#C5A059] hover:text-white hover:-translate-y-0.5" aria-label="Youtube">
                     <Youtube size={16} />
                   </a>
                 </>
@@ -105,69 +92,94 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Collections */}
-          <div className="flex flex-col gap-[1.2rem]">
-            <h3 className="text-[0.8rem] font-bold tracking-[0.12em] text-[#C5A059] uppercase">COLLECTIONS</h3>
-            <ul className="list-none p-0 m-0 flex flex-col gap-[0.8rem]">
-              <li><Link href="/best-sellers" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Best Sellers</Link></li>
-              <li><Link href="/products" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">All Products</Link></li>
-              <li><Link href="/shop?category=haircare" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Hair Care Solutions</Link></li>
-              <li><Link href="/shop?category=fragrances" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Eau De Parfum</Link></li>
-              <li><Link href="/shop?category=grooming" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Face & Body Serums</Link></li>
+          {/* Column 2: Quick Links */}
+          <div className="flex flex-col gap-4">
+            <h3 className="text-[0.82rem] font-bold tracking-[0.12em] text-[#C5A059] uppercase">QUICK LINKS</h3>
+            <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
+              <li><Link href="/" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">Home</Link></li>
+              <li><Link href="/shop" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">Shop</Link></li>
+              <li><Link href="/categories" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">Categories</Link></li>
+              <li><Link href="/best-sellers" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">Best Sellers</Link></li>
+              <li><Link href="/products" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">All Products</Link></li>
+              <li><Link href="/about" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">About Us</Link></li>
+              <li><Link href="/cart" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">My Cart</Link></li>
             </ul>
           </div>
 
-          {/* Column 3: Customer Care */}
-          <div className="flex flex-col gap-[1.2rem]">
-            <h3 className="text-[0.8rem] font-bold tracking-[0.12em] text-[#C5A059] uppercase">CUSTOMER CARE</h3>
-            <ul className="list-none p-0 m-0 flex flex-col gap-[0.8rem]">
-              <li><Link href="/about" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">About SK</Link></li>
-              <li><Link href="/checkout" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Track Order</Link></li>
-              <li><Link href="/privacy-policy" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Privacy Policy</Link></li>
-              <li><Link href="/terms-of-service" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Terms of Service</Link></li>
-              <li><Link href="/refund-policy" className="text-[0.85rem] text-[#A3A3A3] no-underline transition-colors hover:text-white">Refund & Return Policy</Link></li>
-            </ul>
+          {/* Column 3: Contact & Company Details */}
+          <div className="flex flex-col gap-4">
+            <h3 className="text-[0.82rem] font-bold tracking-[0.12em] text-[#C5A059] uppercase">COMPANY & CONTACT</h3>
+            
+            <div className="flex flex-col gap-2 text-[0.85rem] text-[#9CA3AF]">
+              <div className="font-bold text-white text-[0.92rem]">SK EURO LIFESTYLE</div>
+              <div className="flex items-start gap-2 text-[0.82rem] text-[#9CA3AF] leading-snug">
+                <MapPin size={16} className="text-[#C5A059] shrink-0 mt-0.5" />
+                <span>Choorakode - 679336 Palakkad Dt, Kerala, India</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2.5 text-[0.85rem] text-[#9CA3AF] pt-1">
+              <a href="tel:+914662236207" className="flex items-center gap-2.5 hover:text-white transition-colors">
+                <Phone size={15} className="text-[#C5A059] shrink-0" />
+                <span>+91 466 2236 207</span>
+              </a>
+              <a href="https://wa.me/919072171712" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 hover:text-white transition-colors">
+                <MessageCircle size={15} className="text-[#25D366] shrink-0" />
+                <span>+91 9072 17 17 12</span>
+              </a>
+              <a href="mailto:support@skeurolifestyle.com" className="flex items-center gap-2.5 hover:text-white transition-colors">
+                <Mail size={15} className="text-[#C5A059] shrink-0" />
+                <span>support@skeurolifestyle.com</span>
+              </a>
+              <a href="https://www.skeurolifestyle.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 hover:text-white transition-colors">
+                <Globe size={15} className="text-[#C5A059] shrink-0" />
+                <span>www.skeurolifestyle.com</span>
+              </a>
+            </div>
           </div>
 
           {/* Column 4: Newsletter */}
           <div className="flex flex-col gap-4">
-            <h3 className="text-[0.8rem] font-bold tracking-[0.12em] text-[#C5A059] uppercase">JOIN THE CLUB</h3>
-            <p className="text-[0.85rem] text-[#A3A3A3] leading-[1.5]">
-              Subscribe to receive private sale invitations, luxury gift launches, and grooming advice.
+            <h3 className="text-[0.82rem] font-bold tracking-[0.12em] text-[#C5A059] uppercase">JOIN THE CLUB</h3>
+            <p className="text-[0.85rem] text-[#9CA3AF] leading-relaxed">
+              Subscribe for exclusive updates, product launches, and luxury lifestyle offers.
             </p>
-            <form onSubmit={handleSubscribe} className="flex gap-2 mt-1.5">
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 h-[42px] px-4 bg-[#1A1A1A] border border-[#333333] rounded-md text-white text-[0.82rem] outline-none transition-colors focus:border-[#C5A059]"
-                required
-              />
-              <button type="submit" className="h-[42px] px-[1.2rem] bg-[#C5A059] text-white border-none rounded-md text-[0.78rem] font-bold tracking-[0.08em] cursor-pointer transition-colors hover:bg-[#B08D46]">
-                JOIN
-              </button>
+            <form onSubmit={handleSubscribe} className="flex flex-col gap-2.5 mt-1">
+              <div className="relative flex items-center">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full h-11 pl-4 pr-12 bg-[#1A1B20] border border-[#2B2C33] rounded-lg text-white text-[0.85rem] outline-none transition-colors focus:border-[#C5A059]"
+                  required
+                />
+                <button 
+                  type="submit" 
+                  className="absolute right-1 w-9 h-9 bg-[#C5A059] text-white border-none rounded-md cursor-pointer flex items-center justify-center transition-colors hover:bg-[#B08D46]"
+                  aria-label="Subscribe"
+                >
+                  <ArrowRight size={16} />
+                </button>
+              </div>
             </form>
             {subscribed && (
               <p className="text-[0.78rem] text-[#10B981] font-semibold">Thank you for subscribing to SK!</p>
             )}
           </div>
-        </div>
 
-        {/* Bottom Legal Bar */}
-        <div className="border-t border-[#222222] py-6 bg-[#0A0A0A]">
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-            <p className="text-[0.78rem] text-[#737373]">
-              © {new Date().getFullYear()} SK Luxury Grooming & Lifestyle. All Rights Reserved.
-            </p>
-            <div className="flex items-center gap-[0.8rem]">
-              <Link href="/privacy-policy" className="text-[0.78rem] text-[#737373] no-underline transition-colors hover:text-white">Privacy Policy</Link>
-              <span className="text-[#404040] text-[0.7rem]">•</span>
-              <Link href="/terms-of-service" className="text-[0.78rem] text-[#737373] no-underline transition-colors hover:text-white">Terms of Service</Link>
-              <span className="text-[#404040] text-[0.7rem]">•</span>
-              <Link href="/refund-policy" className="text-[0.78rem] text-[#737373] no-underline transition-colors hover:text-white">Refund Policy</Link>
-            </div>
-          </div>
+        </div>
+      </div>
+
+      {/* Bottom Legal / Copyright Bar */}
+      <div className="border-t border-[#1E1F24] py-6 bg-[#08090B]">
+        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <p className="text-[0.8rem] text-[#6B7280]">
+            © {new Date().getFullYear()} SK EURO LIFESTYLE. All Rights Reserved.
+          </p>
+          <p className="text-[0.8rem] text-[#6B7280]">
+            Manufactured & Marketed by <span className="text-white font-medium">SK EURO LIFESTYLE</span>
+          </p>
         </div>
       </div>
     </footer>

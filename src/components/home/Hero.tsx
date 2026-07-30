@@ -115,7 +115,7 @@ export default function Hero() {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="w-full h-[340px] md:h-[460px] lg:h-[600px] xl:h-[850px] relative flex items-center justify-center overflow-hidden">
+      <div className="w-full h-[300px] sm:h-[380px] md:h-[460px] lg:h-[580px] xl:h-[750px] [@media(min-width:960px)_and_(max-height:750px)]:h-[70vh] [@media(max-height:680px)]:h-[70vh] relative flex items-center justify-center overflow-hidden">
         {/* Background Image Slide */}
         <a href={slide.link} className="absolute inset-0 w-full h-full block">
           <img
