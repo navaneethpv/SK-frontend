@@ -119,7 +119,7 @@ export const productAPI = {
 
   // 20. Best Selling Categories
   getBestSellingCategories: async (count: number = 6): Promise<ICategory[]> => {
-    return apiFetch<ICategory[]>(`best-selling-categories/${count}`);
+    return apiFetch<ICategory[]>(`Home/best-selling-categories/${count}`);
   },
 
   // 21. New Arrivals
@@ -212,9 +212,9 @@ export const productAPI = {
     return apiFetch<any>(`feedbacks/sale-order/${saleOrderId}`);
   },
 
-  // 38. Categories List
+  // 38. All Categories List (Home/categories)
   getCategories: async (): Promise<ICategory[]> => {
-    return apiFetch<ICategory[]>('categories');
+    return apiFetch<ICategory[]>('Home/categories');
   },
 
   // 39. Category Products by Category PK

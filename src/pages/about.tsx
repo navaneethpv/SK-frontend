@@ -1,158 +1,122 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Head from 'next/head';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 import TrustBar from '@/components/common/TrustBar';
-import { productAPI } from '@/api/services/productAPI';
-import { IAbout } from '@/types/home';
 import { getImageUrl } from '@/utils/imageHelper';
-import { Building2, MapPin, Phone, MessageCircle, Mail, Globe } from 'lucide-react';
+import { Building2, MapPin, Phone, MessageCircle, Mail, Globe, Sparkles } from 'lucide-react';
 
 export default function AboutPage() {
-  const [aboutData, setAboutData] = useState<IAbout | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    productAPI.getAbouts()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setAboutData(data[0]);
-        }
-      })
-      .catch((err) => {
-        console.error('Error fetching about data:', err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
-  // Collect images returned by the API
-  const mainLogo = aboutData?.logo;
-  const galleryImages = [aboutData?.img1, aboutData?.img2, aboutData?.img3].filter(
-    (img): img is string => Boolean(img && typeof img === 'string')
-  );
-
-  // Collect paragraph items returned by the API
-  const paragraphs = [aboutData?.para1, aboutData?.para2, aboutData?.para3].filter(
-    (p): p is string => Boolean(p && typeof p === 'string' && p.trim())
-  );
-
   return (
     <>
       <Head>
-        <title>{aboutData?.title ? `${aboutData.title} | SK EURO LIFESTYLE` : 'About Us | SK EURO LIFESTYLE'}</title>
+        <title>About Us | SK EURO LIFESTYLE</title>
         <meta 
           name="description" 
-          content={aboutData?.para1 || aboutData?.description || 'Learn more about SK EURO LIFESTYLE.'} 
+          content="Discover SK EURO LIFESTYLE - Luxury organic hair care, artisanal fragrances, and lifestyle essentials crafted in Kerala, India." 
         />
       </Head>
 
       <Header />
 
-      <main className="min-h-[70vh] bg-[#FAF8F5] pt-24 sm:pt-32 pb-20 text-[#121316]">
-        <div className="max-w-[880px] mx-auto px-4 sm:px-6 space-y-8">
-          {/* Header */}
-          <div className="text-center mb-6">
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#121316]">
-              {aboutData?.title || 'About Us'}
+      <main className="min-h-screen bg-[#FAF8F5] pt-20 pb-20 text-[#121316]">
+        
+        {/* Luxury Hero Banner */}
+        <section className="w-full bg-[#121316] text-white pt-16 pb-20 px-6 sm:px-12 text-center relative overflow-hidden">
+          <div className="max-w-[840px] mx-auto relative z-10 space-y-4">
+            <span className="inline-flex items-center gap-2 text-[0.75rem] font-bold tracking-[0.2em] text-[#C5A059] uppercase bg-[#1E1F24] px-4 py-1.5 rounded-full border border-[#2E3038]">
+              <Sparkles size={14} className="text-[#C5A059]" />
+              LUXURY GROOMING & LIFESTYLE
+            </span>
+            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight text-white">
+              The Story of SK EURO LIFESTYLE
             </h1>
-            <div className="w-12 h-0.5 bg-[#C5A059] mx-auto mt-4 rounded-full" />
+            <p className="text-base sm:text-lg text-[#9CA3AF] max-w-2xl mx-auto leading-relaxed font-light">
+              Crafting high-performance organic hair oils, artisanal Eau De Parfum fragrances, and lifestyle accessories designed for uncompromising quality.
+            </p>
+          </div>
+          {/* Background glow effect */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#C5A059]/10 blur-[100px] rounded-full pointer-events-none" />
+        </section>
+
+        {/* Main Content Layout */}
+        <div className="max-w-[960px] mx-auto px-4 sm:px-8 -mt-10 relative z-20 space-y-10">
+          
+          {/* Main Story Container */}
+          <div className="bg-white rounded-2xl overflow-hidden border border-[#EAE6DF] shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+            
+            {/* Feature Image Header (Replacing the Logo) */}
+            <div className="relative w-full h-[280px] sm:h-[400px] overflow-hidden bg-[#18191C]">
+              <img 
+                src={getImageUrl('/banners/banner1.png')} 
+                alt="SK EURO LIFESTYLE Products" 
+                className="w-full h-full object-cover object-center"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = getImageUrl('/images/category_tile_6.png');
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6 text-white">
+                <span className="text-[0.72rem] font-bold tracking-[0.16em] text-[#C5A059] uppercase block mb-1">
+                  ESTABLISHED IN KERALA, INDIA
+                </span>
+                <h2 className="text-xl sm:text-2xl font-bold">
+                  Pure Ingredients • Master Craftsmanship
+                </h2>
+              </div>
+            </div>
+
+            {/* Editorial Article Body */}
+            <div className="p-6 sm:p-12 space-y-8">
+              
+              {/* Introduction */}
+              <div className="space-y-4">
+                <h3 className="text-2xl font-bold text-[#121316] tracking-tight">
+                  Our Origins & Heritage
+                </h3>
+                <p className="text-gray-700 text-base sm:text-[1.05rem] leading-relaxed font-normal">
+                  <strong className="text-[#121316] font-semibold">SK EURO LIFESTYLE</strong> was established with a singular vision: to create authentic, organic grooming products that combine traditional herbal wisdom with modern aesthetic elegance. Rooted in Palakkad, Kerala—a land celebrated for its rich botanical heritage—our formulations represent the perfect harmony of nature and science.
+                </p>
+              </div>
+
+              {/* Quote Highlight */}
+              <div className="my-8 p-6 sm:p-8 bg-[#FAF8F5] border-l-4 border-[#C5A059] rounded-r-xl space-y-2">
+                <p className="text-lg sm:text-xl font-medium text-[#121316] italic leading-relaxed">
+                  "True luxury is not defined by excess, but by purity of intent, raw quality, and real efficacy."
+                </p>
+                <span className="text-xs font-bold tracking-widest text-[#C5A059] uppercase block">
+                  — SK EURO LIFESTYLE Brand Philosophy
+                </span>
+              </div>
+
+              {/* Detailed Breakdown */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-[#F0EDE8]">
+                <div className="space-y-3">
+                  <h4 className="text-lg font-bold text-[#121316]">Organic Hair & Beard Care</h4>
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                    Our flagship organic hair oils and beard serums are prepared using cold-pressed botanical oils and natural extracts. Free from harsh chemicals, synthetic fillers, or artificial parabens, each batch is crafted to nourish from root to tip.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="text-lg font-bold text-[#121316]">Artisanal Fragrances</h4>
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                    Our Eau De Parfum collection is designed for individuals who appreciate distinct olfactory signatures. Blending rich amber, oud, citrus, and floral notes, our scents offer lasting elegance and depth.
+                  </p>
+                </div>
+              </div>
+
+            </div>
           </div>
 
-          {/* Content Card */}
-          {loading ? (
-            <div className="bg-white rounded-2xl p-12 border border-[#EAE6DF] text-center shadow-sm">
-              <div className="w-8 h-8 border-3 border-[#C5A059] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-sm text-gray-500 font-medium">Loading details...</p>
-            </div>
-          ) : aboutData ? (
-            <div className="bg-white rounded-2xl p-6 sm:p-10 md:p-12 border border-[#EAE6DF] shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-8">
-              
-              {/* Brand Logo if present */}
-              {mainLogo && (
-                <div className="flex justify-center pb-6 border-b border-[#F0EDE8]">
-                  <img 
-                    src={getImageUrl(mainLogo)} 
-                    alt={aboutData.title || 'SK Store'} 
-                    className="max-h-20 sm:max-h-24 object-contain"
-                  />
-                </div>
-              )}
-
-              {/* Description lead text */}
-              {aboutData.description && (
-                <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-normal text-center max-w-2xl mx-auto">
-                  {aboutData.description}
-                </p>
-              )}
-
-              {/* API Paragraphs (para1, para2, para3) */}
-              {paragraphs.length > 0 && (
-                <div className="space-y-4 text-gray-700 text-base leading-relaxed">
-                  {paragraphs.map((para, idx) => (
-                    <p key={idx} className="leading-relaxed">
-                      {para}
-                    </p>
-                  ))}
-                </div>
-              )}
-
-              {/* Rich HTML Content if available */}
-              {aboutData.content && (
-                <div 
-                  className="text-gray-800 text-base leading-relaxed space-y-4 pt-2
-                    [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:text-[#121316] [&_h1]:mt-6 [&_h1]:mb-3
-                    [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-[#121316] [&_h2]:mt-6 [&_h2]:mb-3
-                    [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-[#121316] [&_h3]:mt-4 [&_h3]:mb-2
-                    [&_p]:leading-relaxed [&_p]:mb-4
-                    [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ul]:mb-4
-                    [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_ol]:mb-4
-                    [&_strong]:font-semibold [&_strong]:text-[#121316]"
-                  dangerouslySetInnerHTML={{ __html: aboutData.content }} 
-                />
-              )}
-
-              {/* Gallery Images (img1, img2, img3) */}
-              {galleryImages.length > 0 && (
-                <div className="pt-6 border-t border-[#F0EDE8]">
-                  <div className={`grid gap-4 ${
-                    galleryImages.length === 1 
-                      ? 'grid-cols-1 max-w-md mx-auto' 
-                      : galleryImages.length === 2 
-                      ? 'grid-cols-1 sm:grid-cols-2' 
-                      : 'grid-cols-1 sm:grid-cols-3'
-                  }`}>
-                    {galleryImages.map((img, idx) => (
-                      <div 
-                        key={idx} 
-                        className="overflow-hidden rounded-xl border border-[#EAE6DF] bg-[#FAF8F5] aspect-video sm:aspect-square flex items-center justify-center p-2"
-                      >
-                        <img 
-                          src={getImageUrl(img)} 
-                          alt={`About Image ${idx + 1}`} 
-                          className="w-full h-full object-cover rounded-lg"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="bg-white rounded-2xl p-12 border border-[#EAE6DF] text-center shadow-sm">
-              <p className="text-gray-600">No about information available at the moment.</p>
-            </div>
-          )}
-
-          {/* Company Details & Customer Care Card */}
-          <div className="bg-white rounded-2xl p-6 sm:p-10 border border-[#EAE6DF] shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-6">
-            <div className="flex items-center gap-3.5 border-b border-[#F0EDE8] pb-5">
-              <div className="w-11 h-11 rounded-xl bg-[#FDF8F0] border border-[#F5E6CD] flex items-center justify-center text-[#C5A059] shrink-0">
-                <Building2 size={22} />
+          {/* Official Manufactured & Marketed By Card */}
+          <div className="bg-white rounded-2xl p-6 sm:p-10 border border-[#EAE6DF] shadow-[0_4px_20px_rgba(0,0,0,0.04)] space-y-6">
+            <div className="flex items-center gap-4 border-b border-[#F0EDE8] pb-5">
+              <div className="w-12 h-12 rounded-xl bg-[#FDF8F0] border border-[#F5E6CD] flex items-center justify-center text-[#C5A059] shrink-0">
+                <Building2 size={24} />
               </div>
               <div>
-                <span className="text-[0.7rem] font-bold tracking-[0.14em] text-[#C5A059] uppercase block mb-0.5">
+                <span className="text-[0.72rem] font-bold tracking-[0.16em] text-[#C5A059] uppercase block mb-0.5">
                   MANUFACTURED & MARKETED BY
                 </span>
                 <h2 className="text-xl sm:text-2xl font-bold text-[#121316]">
@@ -166,7 +130,7 @@ export default function AboutPage() {
               <div className="bg-[#FAF8F5] p-5 rounded-xl border border-[#F0EDE8] flex items-start gap-3.5">
                 <MapPin className="text-[#C5A059] shrink-0 mt-0.5" size={20} />
                 <div>
-                  <h3 className="text-xs font-bold text-[#888888] uppercase tracking-wider mb-1">Office & Manufacturing Address</h3>
+                  <h3 className="text-xs font-bold text-[#888888] uppercase tracking-wider mb-1">Registered Address</h3>
                   <p className="text-sm font-medium text-gray-800 leading-relaxed">
                     Choorakode - 679336 Palakkad Dt,<br />
                     Kerala, India
@@ -208,10 +172,11 @@ export default function AboutPage() {
               </div>
             </div>
           </div>
+
         </div>
 
         {/* Store Trust Features */}
-        <div className="mt-16">
+        <div className="mt-20">
           <TrustBar />
         </div>
       </main>
@@ -220,4 +185,3 @@ export default function AboutPage() {
     </>
   );
 }
-

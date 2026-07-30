@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Facebook, Instagram, Youtube, Twitter, Share2, Phone, Mail, MapPin, Globe, MessageCircle, ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/router';
+import { Facebook, Instagram, Youtube, Twitter, Share2, Phone, Mail, MapPin, Globe, MessageCircle } from 'lucide-react';
 import { productAPI } from '@/api/services/productAPI';
 import { getImageUrl } from '@/utils/imageHelper';
 import { ISocialMedia } from '@/types/home';
 
 export default function Footer() {
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
+  const router = useRouter();
+  const currentPath = router.pathname;
   const [socials, setSocials] = useState<ISocialMedia[]>([]);
+
+  const isActive = (path: string) => {
+    if (path === '/') return currentPath === '/';
+    return currentPath.startsWith(path);
+  };
 
   useEffect(() => {
     productAPI.getSocialMedias()
@@ -21,15 +27,6 @@ export default function Footer() {
         console.warn('Social media API notice:', err);
       });
   }, []);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
-      setEmail('');
-      setTimeout(() => setSubscribed(false), 4000);
-    }
-  };
 
   const renderSocialIcon = (soc: ISocialMedia) => {
     const titleLower = (soc.title || soc.name || '').toLowerCase();
@@ -63,7 +60,7 @@ export default function Footer() {
     <footer className="w-full bg-[#0D0E11] text-white border-t border-[#1F2026]">
       {/* Main Footer Container */}
       <div className="max-w-[1440px] mx-auto px-6 sm:px-10 pt-16 pb-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1.5fr_1.3fr] gap-10 lg:gap-16">
           
           {/* Column 1: Brand Info */}
           <div className="flex flex-col gap-4">
@@ -92,18 +89,23 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Quick Links */}
+          {/* Column 2: Quick Links (2 Columns Layout) */}
           <div className="flex flex-col gap-4">
             <h3 className="text-[0.82rem] font-bold tracking-[0.12em] text-[#C5A059] uppercase">QUICK LINKS</h3>
-            <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
-              <li><Link href="/" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">Home</Link></li>
-              <li><Link href="/shop" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">Shop</Link></li>
-              <li><Link href="/categories" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">Categories</Link></li>
-              <li><Link href="/best-sellers" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">Best Sellers</Link></li>
-              <li><Link href="/products" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">All Products</Link></li>
-              <li><Link href="/about" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">About Us</Link></li>
-              <li><Link href="/cart" className="text-[0.88rem] text-[#9CA3AF] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block">My Cart</Link></li>
-            </ul>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2.5">
+              <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
+                <li><Link href="/" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>Home</Link></li>
+                <li><Link href="/shop" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/shop') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>Shop</Link></li>
+                <li><Link href="/categories" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/categories') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>Categories</Link></li>
+                <li><Link href="/best-sellers" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/best-sellers') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>Best Sellers</Link></li>
+              </ul>
+              <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
+                <li><Link href="/products" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/products') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>All Products</Link></li>
+                <li><Link href="/about" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/about') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>About Us</Link></li>
+                <li><Link href="/cart" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/cart') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>My Cart</Link></li>
+                <li><Link href="/checkout" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/checkout') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>Checkout</Link></li>
+              </ul>
+            </div>
           </div>
 
           {/* Column 3: Contact & Company Details */}
@@ -136,36 +138,6 @@ export default function Footer() {
                 <span>www.skeurolifestyle.com</span>
               </a>
             </div>
-          </div>
-
-          {/* Column 4: Newsletter */}
-          <div className="flex flex-col gap-4">
-            <h3 className="text-[0.82rem] font-bold tracking-[0.12em] text-[#C5A059] uppercase">JOIN THE CLUB</h3>
-            <p className="text-[0.85rem] text-[#9CA3AF] leading-relaxed">
-              Subscribe for exclusive updates, product launches, and luxury lifestyle offers.
-            </p>
-            <form onSubmit={handleSubscribe} className="flex flex-col gap-2.5 mt-1">
-              <div className="relative flex items-center">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-11 pl-4 pr-12 bg-[#1A1B20] border border-[#2B2C33] rounded-lg text-white text-[0.85rem] outline-none transition-colors focus:border-[#C5A059]"
-                  required
-                />
-                <button 
-                  type="submit" 
-                  className="absolute right-1 w-9 h-9 bg-[#C5A059] text-white border-none rounded-md cursor-pointer flex items-center justify-center transition-colors hover:bg-[#B08D46]"
-                  aria-label="Subscribe"
-                >
-                  <ArrowRight size={16} />
-                </button>
-              </div>
-            </form>
-            {subscribed && (
-              <p className="text-[0.78rem] text-[#10B981] font-semibold">Thank you for subscribing to SK!</p>
-            )}
           </div>
 
         </div>
