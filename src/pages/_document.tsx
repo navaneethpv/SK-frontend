@@ -4,6 +4,8 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        <meta charSet="utf-8" />
+        <meta name="description" content="SK | Nourish. Strengthen. Shine. Premium organic hair care, luxury fragrances, leather accessories, and lifestyle essentials." />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/SK Logo.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/SK Logo.svg" />
