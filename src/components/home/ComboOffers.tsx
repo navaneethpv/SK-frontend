@@ -1,26 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ShoppingBag, ArrowRight } from 'lucide-react';
 import { motion, Variants } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { getImageUrl } from '@/utils/imageHelper';
+import { productAPI } from '@/api/services/productAPI';
 
 interface BundleCard {
   id: number;
-  tag: string;
   title: string;
   subtitle: string;
   price: number;
   originalPrice: number;
-  discountBadge: string;
+  discountBadge?: string;
   img: string;
   slug: string;
 }
 
-const BUNDLE_ITEMS: BundleCard[] = [
+// Mock DEFAULT_BUNDLE_ITEMS commented out to rely purely on backend API data
+/*
+const DEFAULT_BUNDLE_ITEMS: BundleCard[] = [
   {
     id: 901,
-    tag: 'ORGANIC CARE',
     title: 'Essential Grooming Kit',
     subtitle: 'Organic Hair Oil + Vitamin C Face Wash + Derma Roller',
     price: 1099,
@@ -31,7 +32,6 @@ const BUNDLE_ITEMS: BundleCard[] = [
   },
   {
     id: 902,
-    tag: 'LUXURY LIFESTYLE',
     title: 'Premium Lifestyle Collection',
     subtitle: 'SK Noir Eau De Parfum + Leather Belt + Leather Wallet',
     price: 1499,
@@ -42,7 +42,6 @@ const BUNDLE_ITEMS: BundleCard[] = [
   },
   {
     id: 903,
-    tag: 'EXECUTIVE COLLECTION',
     title: 'Executive Essentials Set',
     subtitle: 'Full-Grain Leather Briefcase + Wristwatch + Leather Wallet',
     price: 2999,
@@ -52,6 +51,7 @@ const BUNDLE_ITEMS: BundleCard[] = [
     slug: 'executive-essentials-set'
   }
 ];
+*/
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -75,6 +75,34 @@ const cardVariants: Variants = {
 
 export default function ComboOffers() {
   const { addToCart } = useCart();
+  const [bundles, setBundles] = useState<BundleCard[]>([]);
+
+  useEffect(() => {
+    // Fetch combo categories or offer bundles from backend API
+    productAPI.getComboCategories(3)
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const mapped: BundleCard[] = data.map((item: any, idx: number) => {
+            const price = parseFloat(item.price) || (idx === 0 ? 1099 : idx === 1 ? 1499 : 2999);
+            const origPrice = parseFloat(item.original_price || item.mrp) || Math.round(price * 1.35);
+            return {
+              id: item.id || 901 + idx,
+              title: item.name || item.title || `SK Luxury Bundle ${idx + 1}`,
+              subtitle: item.para1 || item.description || item.subtitle || 'Curated luxury box combinations',
+              price: price,
+              originalPrice: origPrice,
+              discountBadge: item.discount ? `${item.discount}% OFF` : (origPrice > price ? `${Math.round(((origPrice - price) / origPrice) * 100)}% OFF` : undefined),
+              img: item.icon || item.image || item.img || `/bundle - combo offer/${(idx % 3) + 1}.png`,
+              slug: item.slug || `bundle-${item.id || idx + 1}`
+            };
+          });
+          setBundles(mapped);
+        }
+      })
+      .catch((err) => {
+        console.warn('ComboOffers API notice:', err);
+      });
+  }, []);
 
   const handleAddBundle = (bundle: BundleCard) => {
     addToCart(
@@ -89,6 +117,10 @@ export default function ComboOffers() {
       true
     );
   };
+
+  if (!bundles || bundles.length === 0) {
+    return null;
+  }
 
   return (
     <motion.section
@@ -121,9 +153,9 @@ export default function ComboOffers() {
           </Link>
         </motion.div>
 
-        {/* 3 Main Bundle Cards */}
+        {/* Bundle Cards Grid */}
         <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          {BUNDLE_ITEMS.map((bundle) => (
+          {bundles.map((bundle) => (
             <motion.div
               key={bundle.id}
               variants={cardVariants}
@@ -138,15 +170,14 @@ export default function ComboOffers() {
                     alt={bundle.title}
                     className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                   />
-                  {/* Category Tag Badge */}
-                  <div className="absolute top-3.5 left-3.5 flex items-center gap-2 z-10">
-                    <span className="bg-[#121316]/90 backdrop-blur-md text-white text-[0.65rem] font-extrabold px-2.5 py-1 rounded-md tracking-wider uppercase">
-                      {bundle.tag}
-                    </span>
-                    <span className="bg-[#C39F68] text-white text-[0.65rem] font-extrabold px-2.5 py-1 rounded-md tracking-wider uppercase shadow-sm">
-                      {bundle.discountBadge}
-                    </span>
-                  </div>
+                  {/* Discount Badge */}
+                  {bundle.discountBadge && (
+                    <div className="absolute top-3.5 left-3.5 flex items-center gap-2 z-10">
+                      <span className="bg-[#C39F68] text-white text-[0.65rem] font-extrabold px-2.5 py-1 rounded-md tracking-wider uppercase shadow-sm">
+                        {bundle.discountBadge}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Card Details */}
@@ -160,7 +191,9 @@ export default function ComboOffers() {
 
                   <div className="flex items-baseline gap-2 mt-auto pt-3 border-t border-[#F1F5F9]">
                     <span className="text-[1.2rem] font-extrabold text-[#121316]">₹{bundle.price}</span>
-                    <span className="text-[0.85rem] text-[#9CA3AF] line-through font-normal">₹{bundle.originalPrice}</span>
+                    {bundle.originalPrice > bundle.price && (
+                      <span className="text-[0.85rem] text-[#9CA3AF] line-through font-normal">₹{bundle.originalPrice}</span>
+                    )}
                   </div>
                 </div>
               </Link>

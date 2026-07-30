@@ -52,15 +52,12 @@ export default function DealOfTheDay() {
         if (Array.isArray(data) && data.length > 0) {
           setItems(data.map(mapProduct));
         } else {
-          productAPI.getProducts({ count: '4' })
-            .then((fallback: any) => {
-              if (Array.isArray(fallback)) setItems(fallback.slice(0, 4).map(mapProduct));
-            })
-            .catch(() => {});
+          setItems([]);
         }
       })
       .catch((err: any) => {
         console.warn('Deal of the day API warning:', err);
+        setItems([]);
       })
       .finally(() => {
         setLoading(false);

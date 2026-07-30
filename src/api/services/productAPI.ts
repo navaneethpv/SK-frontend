@@ -119,7 +119,20 @@ export const productAPI = {
 
   // 20. Best Selling Categories
   getBestSellingCategories: async (count: number = 6): Promise<ICategory[]> => {
-    return apiFetch<ICategory[]>(`Home/best-selling-categories/${count}`);
+    const res = await apiFetch<any>(`Home/best-selling-categories/${count}`);
+    return ensureArray<ICategory>(res);
+  },
+
+  // 20b. Combo Categories for Home Page Bundle Section
+  getComboCategories: async (count: number = 3): Promise<ICategory[]> => {
+    const res = await apiFetch<any>(`Home/combo-categories/${count}`);
+    return ensureArray<ICategory>(res);
+  },
+
+  // 20c. Combo Products for Home Page Bundle Section
+  getComboProducts: async (): Promise<IProduct[]> => {
+    const res = await apiFetch<any>('Home/combo-products');
+    return ensureArray<IProduct>(res);
   },
 
   // 21. New Arrivals
@@ -156,7 +169,8 @@ export const productAPI = {
 
   // 27. Related Products
   getRelatedProducts: async (productId: number, count: number = 4): Promise<IProduct[]> => {
-    return apiFetch<IProduct[]>(`related-products/${productId}/${count}`);
+    const res = await apiFetch<any>(`Home/related-products/${productId}/${count}`);
+    return ensureArray<IProduct>(res);
   },
 
   // 28. Authors
@@ -166,17 +180,20 @@ export const productAPI = {
 
   // 29. Evergreen Products
   getEvergreen: async (): Promise<IProduct[]> => {
-    return apiFetch<IProduct[]>('evergreen');
+    const res = await apiFetch<any>('evergreen');
+    return ensureArray<IProduct>(res);
   },
 
   // 30. Popular Products Home (Last 7 days)
   getPopularProductsHome: async (): Promise<IProduct[]> => {
-    return apiFetch<IProduct[]>('popular-products-home');
+    const res = await apiFetch<any>('popular-products-home');
+    return ensureArray<IProduct>(res);
   },
 
   // 31. Deal Of The Day Home
   getDealOfTheDayHome: async (): Promise<IProduct[]> => {
-    return apiFetch<IProduct[]>('deal-of-the-day-home');
+    const res = await apiFetch<any>('deal-of-the-day-home');
+    return ensureArray<IProduct>(res);
   },
 
   // 32. Best Sellers Home

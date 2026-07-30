@@ -6,6 +6,7 @@ import { ShieldCheck, ChevronDown, ChevronUp, ShoppingBag, Zap, Truck, RefreshCw
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 import DealOfTheDay from '@/components/home/DealOfTheDay';
+import RelatedProducts from './RelatedProducts';
 import { useCart } from '@/context/CartContext';
 import { productAPI } from '@/api/services/productAPI';
 import { getImageUrl } from '@/utils/imageHelper';
@@ -371,6 +372,9 @@ export default function ProductDetail() {
 
             {/* Deal of the Day Section */}
             <DealOfTheDay />
+
+            {/* Related Items Section */}
+            <RelatedProducts productId={productData.id} />
           </div>
         </main>
 
