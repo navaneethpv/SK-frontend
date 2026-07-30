@@ -14,6 +14,7 @@ interface ShopProduct {
   title: string;
   slug?: string;
   category: string;
+  groupId?: number;
   price: number;
   originalPrice?: number;
   rating: string;
@@ -23,19 +24,12 @@ interface ShopProduct {
   img: string;
 }
 
-// Mock DEFAULT_PRODUCTS commented out to rely on real API data
-/*
-const DEFAULT_PRODUCTS: ShopProduct[] = [
-  { id: 1, title: 'Noir Premium Fragrance - 50ml', category: 'perfumes', price: 499, originalPrice: 2499, rating: '4.8', reviewsCount: 49, badgeText: '80% OFF', badgeType: 'green', img: '/hero cards/4.png' },
-  { id: 2, title: 'SK Hair Oil - 200ml', category: 'haircare', price: 335, originalPrice: 399, rating: '4.8', reviewsCount: 131, badgeText: 'Best Seller', badgeType: 'gold', img: '/bundle - combo offer/1.png' },
-  { id: 3, title: 'Classic Full-Grain Leather Belt', category: 'accessories', price: 699, originalPrice: 899, rating: '4.9', reviewsCount: 160, badgeText: 'New Launch', badgeType: 'green', img: '/bundle - combo offer/2.png' },
-  { id: 4, title: 'Minimalist Black Mesh Watch', category: 'watches', price: 3499, originalPrice: 3999, rating: '4.7', reviewsCount: 83, badgeText: 'Best Seller', badgeType: 'gold', img: '/hero cards/2.png' },
-  { id: 5, title: 'Amber Gold Fragrance - 50ml', category: 'perfumes', price: 899, originalPrice: 1499, rating: '4.9', reviewsCount: 64, badgeText: '40% OFF', badgeType: 'green', img: '/hero cards/1.png' },
-  { id: 6, title: '0.25mm Hair & Beard Derma Roller', category: 'haircare', price: 335, originalPrice: 399, rating: '4.8', reviewsCount: 112, badgeText: 'Value Deal', badgeType: 'gold', img: '/hero cards/6.png' },
-  { id: 7, title: 'Vitamin C Brightening Body Wash', category: 'bodycare', price: 299, originalPrice: 399, rating: '4.8', reviewsCount: 95, badgeText: 'New Launch', badgeType: 'green', img: '/hero cards/3.png' },
-  { id: 8, title: 'Executive Leather Briefcase Bag', category: 'accessories', price: 2999, originalPrice: 3499, rating: '4.9', reviewsCount: 42, badgeText: 'Best Seller', badgeType: 'gold', img: '/bundle - combo offer/3.png' }
-];
-*/
+interface CategoryFilterItem {
+  id: string;
+  name: string;
+  slug: string;
+  numId?: number;
+}
 
 function mapProductToShopItem(prod: IProduct, fallbackImg: string = '/hero cards/4.png'): ShopProduct {
   const numericPrice = typeof prod.selling_price === 'number' && prod.selling_price > 0
@@ -57,6 +51,7 @@ function mapProductToShopItem(prod: IProduct, fallbackImg: string = '/hero cards
     title: formatProductTitle(prod.alias || prod.slug || 'SK Product'),
     slug: getProductSlug(prod),
     category: (typeof prod.product_group === 'object' && prod.product_group ? ((prod.product_group as any).slug || (prod.product_group as any).alias || 'all') : 'all').toLowerCase(),
+    groupId: typeof prod.product_group === 'number' ? prod.product_group : undefined,
     price: numericPrice,
     originalPrice: originalPriceNum > numericPrice ? originalPriceNum : undefined,
     rating: prod.rating ? prod.rating.toFixed(1) : '4.8',
@@ -72,10 +67,34 @@ export default function ShopPage() {
   const { category, filter, search } = router.query;
 
   const [products, setProducts] = useState<ShopProduct[]>([]);
+  const [categories, setCategories] = useState<CategoryFilterItem[]>([
+    { id: 'all', name: 'ALL PRODUCTS', slug: 'all' }
+  ]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeCategorySlug, setActiveCategorySlug] = useState<string>('all');
 
   useEffect(() => {
+    // 1. Fetch categories from backend API: GET /Home/categories [{id: 1, name: "Wallets"}, ...]
+    productAPI.getCategories()
+      .then((data: any[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const mapped: CategoryFilterItem[] = data.map((cat: any, idx: number) => {
+            const computedSlug = cat.slug || (cat.name ? cat.name.toLowerCase().trim().replace(/\s+/g, '-') : `cat-${cat.id || idx}`);
+            return {
+              id: computedSlug,
+              name: (cat.name || `Category ${idx + 1}`).toUpperCase(),
+              slug: computedSlug,
+              numId: cat.id
+            };
+          });
+          setCategories([{ id: 'all', name: 'ALL PRODUCTS', slug: 'all' }, ...mapped]);
+        }
+      })
+      .catch((err) => {
+        console.warn('Failed to load categories for shop page:', err);
+      });
+
+    // 2. Fetch products
     productAPI.getProducts()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
@@ -91,32 +110,61 @@ export default function ShopPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const categoriesList = [
-    { id: 'all', label: 'ALL PRODUCTS' },
-    { id: 'haircare', label: 'HAIR CARE' },
-    { id: 'perfumes', label: 'PERFUMES' },
-    { id: 'accessories', label: 'ACCESSORIES' },
-    { id: 'watches', label: 'WATCHES' }
-  ];
+  // Sync route query params with active filter tab
+  useEffect(() => {
+    if (category && typeof category === 'string') {
+      setActiveCategorySlug(category.toLowerCase().trim());
+    } else if (filter && typeof filter === 'string') {
+      setActiveCategorySlug(filter.toLowerCase().trim());
+    } else {
+      setActiveCategorySlug('all');
+    }
+  }, [category, filter]);
+
+  const handleCategorySelect = (tab: CategoryFilterItem) => {
+    setActiveCategorySlug(tab.slug);
+    if (tab.slug === 'all') {
+      router.push('/shop', undefined, { shallow: true });
+    } else {
+      router.push(`/shop?category=${encodeURIComponent(tab.slug)}`, undefined, { shallow: true });
+    }
+  };
+
+  const selectedCatObj = categories.find(c => c.slug === activeCategorySlug || c.id === activeCategorySlug);
 
   const filteredProducts = products.filter((product) => {
+    // Search Query Filter
     if (search && typeof search === 'string') {
       const q = search.toLowerCase();
       if (!product.title.toLowerCase().includes(q)) return false;
     }
-    if (activeCategory !== 'all') {
-      const catSlug = product.category.toLowerCase();
-      if (!catSlug.includes(activeCategory) && !product.title.toLowerCase().includes(activeCategory)) {
+
+    // Category Filter by Slug & ID & Name Keyword
+    if (activeCategorySlug !== 'all') {
+      const cleanSlug = activeCategorySlug.toLowerCase().replace(/-/g, ' ').replace(/s$/, '').trim();
+      const titleLower = product.title.toLowerCase();
+      const catLower = (product.category || '').toLowerCase();
+
+      const matchesGroupId = selectedCatObj?.numId && product.groupId === selectedCatObj.numId;
+      const matchesCategorySlug = catLower.includes(cleanSlug);
+      const matchesTitleKeyword = titleLower.includes(cleanSlug);
+
+      if (!matchesGroupId && !matchesCategorySlug && !matchesTitleKeyword) {
         return false;
       }
     }
+
     return true;
   });
 
   return (
     <>
       <Head>
-        <title>Shop Luxury Collection | SK</title>
+        <title>
+          {activeCategorySlug !== 'all'
+            ? `${activeCategorySlug.toUpperCase().replace(/-/g, ' ')} Collection | SK`
+            : 'Shop Luxury Collection | SK'}
+        </title>
         <meta name="description" content="Explore SK luxury fragrances, hair care oils, leather accessories, and body care products." />
       </Head>
 
@@ -129,28 +177,26 @@ export default function ShopPage() {
             <div className="text-center mb-10">
               <span className="text-[0.72rem] font-bold tracking-[0.14em] text-[#C39F68] block mb-1.5 uppercase">CATALOGUE</span>
               <h1 className="text-[2.2rem] font-extrabold text-[#111111] tracking-wide mb-2">
-                {filter
-                  ? `${(filter as string).replace('-', ' ').toUpperCase()} COLLECTION`
-                  : category
-                  ? `${(category as string).toUpperCase()} COLLECTION`
+                {activeCategorySlug !== 'all'
+                  ? `${activeCategorySlug.replace(/-/g, ' ').toUpperCase()} COLLECTION`
                   : 'CURATED CATALOGUE'}
               </h1>
               <p className="text-[0.95rem] text-[#666666]">Discover premium lifestyle, fragrance, and organic grooming essentials.</p>
             </div>
 
-            {/* Filter Tabs */}
-            <div className="flex items-center justify-center gap-3 mb-12 flex-wrap">
-              {categoriesList.map((tab) => (
+            {/* Dynamic Filter Tabs */}
+            <div className="flex items-center justify-center gap-2.5 mb-12 flex-wrap">
+              {categories.map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveCategory(tab.id)}
-                  className={`px-5 py-2.5 rounded-full text-[0.78rem] font-bold tracking-wider cursor-pointer transition-all duration-200 border ${
-                    activeCategory === tab.id
-                      ? 'bg-[#111111] text-white border-[#111111]'
+                  onClick={() => handleCategorySelect(tab)}
+                  className={`px-5 py-2.5 rounded-full text-[0.75rem] font-bold tracking-wider cursor-pointer transition-all duration-200 border ${
+                    activeCategorySlug === tab.slug || activeCategorySlug === tab.id
+                      ? 'bg-[#111111] text-white border-[#111111] shadow-sm'
                       : 'bg-white text-[#666666] border-[#EAEAEA] hover:border-[#111111] hover:text-[#111111]'
                   }`}
                 >
-                  {tab.label}
+                  {tab.name}
                 </button>
               ))}
             </div>
@@ -161,7 +207,7 @@ export default function ShopPage() {
                 <div className="w-10 h-10 border-3 border-[#E5E7EB] border-t-[#111111] rounded-full animate-spin mx-auto mb-4" />
                 <p>Loading shop collection...</p>
               </div>
-            ) : (
+            ) : filteredProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {filteredProducts.map((product) => (
                   <ProductCard
@@ -177,6 +223,10 @@ export default function ShopPage() {
                     badgeType={product.badgeType}
                   />
                 ))}
+              </div>
+            ) : (
+              <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
+                <p className="text-gray-500 font-medium text-sm">No products found for this category filter.</p>
               </div>
             )}
           </div>

@@ -62,12 +62,15 @@ export default function CategoryProductsFilter() {
     productAPI.getCategories()
       .then(async (data: any[]) => {
         if (Array.isArray(data) && data.length > 0) {
-          const mapped: CategoryItem[] = data.map((cat: any, idx: number) => ({
-            id: cat.id || idx + 1,
-            name: cat.name || `Category ${idx + 1}`,
-            slug: cat.slug || cat.name?.toLowerCase().replace(/\s+/g, '-') || 'all',
-            img: getImageUrl(cat.icon || cat.image, `/images/category_tile_${(idx % 6) + 1}.png`)
-          }));
+          const mapped: CategoryItem[] = data.map((cat: any, idx: number) => {
+            const computedSlug = cat.slug || (cat.name ? cat.name.toLowerCase().trim().replace(/\s+/g, '-') : 'all');
+            return {
+              id: cat.id || idx + 1,
+              name: cat.name || `Category ${idx + 1}`,
+              slug: computedSlug,
+              img: getImageUrl(cat.icon || cat.image, `/images/category_tile_${(idx % 6) + 1}.png`)
+            };
+          });
           setCategoryItems(mapped);
 
           // Auto-load first category's products
