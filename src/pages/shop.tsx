@@ -31,6 +31,15 @@ interface CategoryFilterItem {
   numId?: number;
 }
 
+function getInitialCategorySlug(): string {
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get('category') || params.get('filter');
+    if (cat && cat.trim()) return cat.toLowerCase().trim();
+  }
+  return 'all';
+}
+
 function mapProductToShopItem(prod: IProduct, fallbackImg: string = '/hero cards/4.png'): ShopProduct {
   const numericPrice = typeof prod.selling_price === 'number' && prod.selling_price > 0
     ? prod.selling_price
@@ -75,70 +84,67 @@ export default function ShopPage() {
     { id: 'all', name: 'ALL PRODUCTS', slug: 'all' }
   ]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [activeCategorySlug, setActiveCategorySlug] = useState<string>('all');
+  const [activeCategorySlug, setActiveCategorySlug] = useState<string>(getInitialCategorySlug);
 
-  // 1. Fetch categories list from GET Home/categories
+  // 1. Sync category from URL query when Next router updates query parameters
   useEffect(() => {
-    productAPI.getCategories()
-      .then((data: any[]) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const mapped: CategoryFilterItem[] = data.map((cat: any, idx: number) => {
-            const computedSlug = cat.slug || (cat.name ? cat.name.toLowerCase().trim().replace(/\s+/g, '-') : `cat-${cat.id || idx}`);
-            return {
-              id: computedSlug,
-              name: (cat.name || `Category ${idx + 1}`).toUpperCase(),
-              slug: computedSlug,
-              numId: cat.id
-            };
-          });
-          setCategories([{ id: 'all', name: 'ALL PRODUCTS', slug: 'all' }, ...mapped]);
-        }
-      })
-      .catch((err) => {
-        console.warn('Failed to load categories for shop page:', err);
-      });
-  }, []);
-
-  // 2. Sync route query params with active filter tab
-  useEffect(() => {
-    if (category && typeof category === 'string') {
-      setActiveCategorySlug(category.toLowerCase().trim());
-    } else if (filter && typeof filter === 'string') {
-      setActiveCategorySlug(filter.toLowerCase().trim());
-    } else {
-      setActiveCategorySlug('all');
+    const targetCategory = category || filter;
+    if (targetCategory && typeof targetCategory === 'string') {
+      const cleanSlug = targetCategory.toLowerCase().trim();
+      if (cleanSlug !== activeCategorySlug) {
+        setActiveCategorySlug(cleanSlug);
+      }
     }
   }, [category, filter]);
 
-  // 3. Fetch products dynamically based on selected activeCategorySlug
+  // 2. Fetch Categories AND Products in a single atomic flow to eliminate flickering
   useEffect(() => {
-    const selectedCat = categories.find(c => c.slug === activeCategorySlug || c.id === activeCategorySlug);
-    setLoading(true);
+    let isMounted = true;
 
-    const loadCategoryProducts = async () => {
+    const loadData = async () => {
+      setLoading(true);
       try {
-        let prods: IProduct[] = [];
+        // A. Load Categories List
+        let catList = categories;
+        if (catList.length <= 1) {
+          const rawCats = await productAPI.getCategories();
+          if (Array.isArray(rawCats) && rawCats.length > 0) {
+            const mapped: CategoryFilterItem[] = rawCats.map((cat: any, idx: number) => {
+              const computedSlug = cat.slug || (cat.name ? cat.name.toLowerCase().trim().replace(/\s+/g, '-') : `cat-${cat.id || idx}`);
+              return {
+                id: computedSlug,
+                name: (cat.name || `Category ${idx + 1}`).toUpperCase(),
+                slug: computedSlug,
+                numId: cat.id
+              };
+            });
+            catList = [{ id: 'all', name: 'ALL PRODUCTS', slug: 'all' }, ...mapped];
+            if (isMounted) setCategories(catList);
+          }
+        }
 
+        // B. Find Selected Category Object
+        const selectedCat = catList.find(c => c.slug === activeCategorySlug || c.id === activeCategorySlug);
+
+        // C. Fetch Target Category Products
+        let prods: IProduct[] = [];
         if (activeCategorySlug === 'all') {
           prods = await productAPI.getProducts();
         } else {
-          // A. Try categories/products/${numId} API endpoint first
+          // Priority 1: Exact category products by ID
           if (selectedCat && selectedCat.numId) {
             prods = await productAPI.getCategoryProducts(selectedCat.numId);
             if (!Array.isArray(prods) || prods.length === 0) {
               prods = await productAPI.getProducts({ category_id: String(selectedCat.numId) });
             }
-            if (!Array.isArray(prods) || prods.length === 0) {
-              prods = await productAPI.getProducts({ group_under: String(selectedCat.numId) });
-            }
           }
 
-          // B. Try query by category slug
+          // Priority 2: Query by category slug
           if (!Array.isArray(prods) || prods.length === 0) {
             prods = await productAPI.getProducts({ category: activeCategorySlug });
           }
 
-          // C. Fallback to client-side filtering matching category ID or keyword
+          // Priority 3: Fallback client-side filter
           if (!Array.isArray(prods) || prods.length === 0) {
             const allProds = await productAPI.getProducts();
             if (Array.isArray(allProds) && allProds.length > 0) {
@@ -159,26 +165,33 @@ export default function ShopPage() {
           }
         }
 
-        if (Array.isArray(prods)) {
-          const mapped = prods.map((prod: IProduct, idx: number) =>
-            mapProductToShopItem(prod, `/hero cards/${(idx % 6) + 1}.png`)
-          );
-          setProducts(mapped);
-        } else {
-          setProducts([]);
+        if (isMounted) {
+          if (Array.isArray(prods)) {
+            const mapped = prods.map((prod: IProduct, idx: number) =>
+              mapProductToShopItem(prod, `/hero cards/${(idx % 6) + 1}.png`)
+            );
+            setProducts(mapped);
+          } else {
+            setProducts([]);
+          }
         }
       } catch (err) {
-        console.warn('Error loading products for shop category:', err);
-        setProducts([]);
+        console.warn('Error loading shop category data:', err);
+        if (isMounted) setProducts([]);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
-    loadCategoryProducts();
-  }, [activeCategorySlug, categories]);
+    loadData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [activeCategorySlug]);
 
   const handleCategorySelect = (tab: CategoryFilterItem) => {
+    if (activeCategorySlug === tab.slug) return;
     setActiveCategorySlug(tab.slug);
     if (tab.slug === 'all') {
       router.push('/shop', undefined, { shallow: true });
@@ -264,7 +277,7 @@ export default function ShopPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
+              <div className="text-center py-16 bg-[#FAF8F5] rounded-2xl border border-gray-200">
                 <p className="text-gray-500 font-medium text-sm">No products found for this category filter.</p>
               </div>
             )}
