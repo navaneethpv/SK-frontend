@@ -1,12 +1,16 @@
-import { useEffect } from 'react';
-import type { AppProps } from 'next/app';
-import Lenis from 'lenis';
-import 'lenis/dist/lenis.css';
-import '@/styles/globals.css';
-import { CartProvider } from '@/context/CartContext';
-import CartDrawer from '@/components/cart/CartDrawer';
+import { useEffect, useState } from "react";
+import type { AppProps } from "next/app";
+import { useRouter } from "next/router";
+import Lenis from "lenis";
+import "lenis/dist/lenis.css";
+import "@/styles/globals.css";
+import { CartProvider } from "@/context/CartContext";
+import CartDrawer from "@/components/cart/CartDrawer";
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const [isRouteMatching, setIsRouteMatching] = useState(false);
+
   useEffect(() => {
     // Initialize Lenis smooth scroll
     const lenis = new Lenis({
@@ -31,6 +35,32 @@ export default function App({ Component, pageProps }: AppProps) {
       lenis.destroy();
     };
   }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const currentPath = window.location.pathname;
+
+      // If Nginx / Apache / serve served index.html or 404.html for a dynamic subpath, recover route via Next client router
+      if (
+        currentPath &&
+        currentPath !== "/" &&
+        currentPath !== "/index.html" &&
+        currentPath !== "/404" &&
+        (router.pathname === "/" || router.pathname === "/404")
+      ) {
+        router
+          .replace(currentPath)
+          .then(() => {
+            setIsRouteMatching(true);
+          })
+          .catch(() => {
+            setIsRouteMatching(true);
+          });
+      } else {
+        setIsRouteMatching(true);
+      }
+    }
+  }, [router]);
 
   return (
     <CartProvider>

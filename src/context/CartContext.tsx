@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { cartAPI } from '@/api/services/cartAPI';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 
 export interface CartItem {
   id: number;
@@ -25,62 +24,40 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const LOCAL_STORAGE_KEY = 'sk_cart_items';
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
+  const isLoadedRef = useRef(false);
 
-  // Initial load from localStorage & API
+  // Initial load from localStorage on client side mount
   useEffect(() => {
-    try {
-      const savedCart = localStorage.getItem('sk_cart_items');
-      if (savedCart) {
-        setCart(JSON.parse(savedCart));
-      } else {
-        // Fallback default mock items for demonstration
-        setCart([
-          {
-            id: 1,
-            title: 'Noir Premium Fragrance - 50ml',
-            price: 499,
-            originalPrice: 2499,
-            img: '/hero cards/4.png',
-            quantity: 1,
-            variant: '50ml'
-          }
-        ]);
-      }
-    } catch {
-      // LocalStorage error fallback
-    }
+    if (typeof window === 'undefined') return;
 
-    // Try fetching from backend cartAPI
-    cartAPI.getCartItems()
-      .then((items) => {
-        if (items && items.length > 0) {
-          const formatted: CartItem[] = items.map((i) => {
-            const pObj = typeof i.product === 'object' ? i.product : null;
-            return {
-              id: i.id,
-              title: pObj ? pObj.alias : 'SK Product',
-              price: parseFloat(i.price || '499'),
-              img: pObj && pObj.icon ? pObj.icon : '/hero cards/1.png',
-              quantity: i.quantity,
-            };
-          });
-          setCart(formatted);
+    try {
+      const savedCart = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (savedCart) {
+        const parsed = JSON.parse(savedCart);
+        if (Array.isArray(parsed)) {
+          setCart(parsed);
         }
-      })
-      .catch(() => {
-        // Offline / mock mode fallback
-      });
+      }
+    } catch (err) {
+      console.warn('Failed to load cart from localStorage:', err);
+    } finally {
+      isLoadedRef.current = true;
+    }
   }, []);
 
-  // Save to localStorage whenever cart changes
+  // Save to localStorage whenever cart state changes after initial load
   useEffect(() => {
+    if (typeof window === 'undefined' || !isLoadedRef.current) return;
+
     try {
-      localStorage.setItem('sk_cart_items', JSON.stringify(cart));
-    } catch {
-      // ignore
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cart));
+    } catch (err) {
+      console.warn('Failed to save cart to localStorage:', err);
     }
   }, [cart]);
 
@@ -92,21 +69,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const existingIndex = prevCart.findIndex((item) => item.id === newItem.id);
       if (existingIndex > -1) {
         const updated = [...prevCart];
-        updated[existingIndex].quantity += qty;
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: updated[existingIndex].quantity + qty,
+        };
         return updated;
       } else {
         return [...prevCart, { ...newItem, quantity: qty }];
       }
     });
 
-    // Also notify backend cartAPI asynchronously
-    cartAPI.addToCart({
-      product: newItem.id,
-      quantity: qty,
-      price: newItem.price.toString(),
-    }).catch(() => {});
-
-    // Open drawer only if openDrawer is true
     if (openDrawer) {
       setIsCartDrawerOpen(true);
     }
@@ -114,7 +86,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const removeFromCart = (id: number) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
-    cartAPI.removeFromCart(id).catch(() => {});
   };
 
   const updateQuantity = (id: number, delta: number) => {
@@ -127,13 +98,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           }
           return item;
         })
-        .filter(Boolean) as CartItem[];
+        .filter((item): item is CartItem => item !== null);
     });
   };
 
   const clearCart = () => {
     setCart([]);
-    cartAPI.clearCart().catch(() => {});
   };
 
   return (
