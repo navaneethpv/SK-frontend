@@ -46,12 +46,16 @@ function mapProductToShopItem(prod: IProduct, fallbackImg: string = '/hero cards
 
   const rawImg = prod.icon || (prod.img && prod.img[0]?.image);
 
+  const groupNum = typeof prod.product_group === 'number'
+    ? prod.product_group
+    : (prod.product_group as any)?.id || (prod as any).group_under || (prod as any).category;
+
   return {
     id: prod.id,
     title: formatProductTitle(prod.alias || prod.slug || 'SK Product'),
     slug: getProductSlug(prod),
     category: (typeof prod.product_group === 'object' && prod.product_group ? ((prod.product_group as any).slug || (prod.product_group as any).alias || 'all') : 'all').toLowerCase(),
-    groupId: typeof prod.product_group === 'number' ? prod.product_group : undefined,
+    groupId: typeof groupNum === 'number' ? groupNum : undefined,
     price: numericPrice,
     originalPrice: originalPriceNum > numericPrice ? originalPriceNum : undefined,
     rating: prod.rating ? prod.rating.toFixed(1) : '4.8',
@@ -73,8 +77,8 @@ export default function ShopPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [activeCategorySlug, setActiveCategorySlug] = useState<string>('all');
 
+  // 1. Fetch categories list from GET Home/categories
   useEffect(() => {
-    // 1. Fetch categories from backend API: GET /Home/categories [{id: 1, name: "Wallets"}, ...]
     productAPI.getCategories()
       .then((data: any[]) => {
         if (Array.isArray(data) && data.length > 0) {
@@ -93,24 +97,9 @@ export default function ShopPage() {
       .catch((err) => {
         console.warn('Failed to load categories for shop page:', err);
       });
-
-    // 2. Fetch products
-    productAPI.getProducts()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const mapped = data.map((prod: IProduct, idx: number) =>
-            mapProductToShopItem(prod, `/hero cards/${(idx % 6) + 1}.png`)
-          );
-          setProducts(mapped);
-        }
-      })
-      .catch((err) => {
-        console.warn('Failed to load shop products:', err);
-      })
-      .finally(() => setLoading(false));
   }, []);
 
-  // Sync route query params with active filter tab
+  // 2. Sync route query params with active filter tab
   useEffect(() => {
     if (category && typeof category === 'string') {
       setActiveCategorySlug(category.toLowerCase().trim());
@@ -121,6 +110,74 @@ export default function ShopPage() {
     }
   }, [category, filter]);
 
+  // 3. Fetch products dynamically based on selected activeCategorySlug
+  useEffect(() => {
+    const selectedCat = categories.find(c => c.slug === activeCategorySlug || c.id === activeCategorySlug);
+    setLoading(true);
+
+    const loadCategoryProducts = async () => {
+      try {
+        let prods: IProduct[] = [];
+
+        if (activeCategorySlug === 'all') {
+          prods = await productAPI.getProducts();
+        } else {
+          // A. Try categories/products/${numId} API endpoint first
+          if (selectedCat && selectedCat.numId) {
+            prods = await productAPI.getCategoryProducts(selectedCat.numId);
+            if (!Array.isArray(prods) || prods.length === 0) {
+              prods = await productAPI.getProducts({ category_id: String(selectedCat.numId) });
+            }
+            if (!Array.isArray(prods) || prods.length === 0) {
+              prods = await productAPI.getProducts({ group_under: String(selectedCat.numId) });
+            }
+          }
+
+          // B. Try query by category slug
+          if (!Array.isArray(prods) || prods.length === 0) {
+            prods = await productAPI.getProducts({ category: activeCategorySlug });
+          }
+
+          // C. Fallback to client-side filtering matching category ID or keyword
+          if (!Array.isArray(prods) || prods.length === 0) {
+            const allProds = await productAPI.getProducts();
+            if (Array.isArray(allProds) && allProds.length > 0) {
+              const cleanSlug = activeCategorySlug.toLowerCase().replace(/-/g, ' ').replace(/s$/, '').trim();
+              prods = allProds.filter((p: any) => {
+                const pGroup = typeof p.product_group === 'number'
+                  ? p.product_group
+                  : (p.product_group as any)?.id || p.group_under || p.category;
+
+                if (selectedCat?.numId && pGroup === selectedCat.numId) return true;
+
+                const titleLower = (p.alias || p.slug || '').toLowerCase();
+                const catLower = (p.category || '').toString().toLowerCase();
+
+                return titleLower.includes(cleanSlug) || catLower.includes(cleanSlug);
+              });
+            }
+          }
+        }
+
+        if (Array.isArray(prods)) {
+          const mapped = prods.map((prod: IProduct, idx: number) =>
+            mapProductToShopItem(prod, `/hero cards/${(idx % 6) + 1}.png`)
+          );
+          setProducts(mapped);
+        } else {
+          setProducts([]);
+        }
+      } catch (err) {
+        console.warn('Error loading products for shop category:', err);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCategoryProducts();
+  }, [activeCategorySlug, categories]);
+
   const handleCategorySelect = (tab: CategoryFilterItem) => {
     setActiveCategorySlug(tab.slug);
     if (tab.slug === 'all') {
@@ -130,30 +187,12 @@ export default function ShopPage() {
     }
   };
 
-  const selectedCatObj = categories.find(c => c.slug === activeCategorySlug || c.id === activeCategorySlug);
-
   const filteredProducts = products.filter((product) => {
     // Search Query Filter
-    if (search && typeof search === 'string') {
-      const q = search.toLowerCase();
+    if (search && typeof search === 'string' && search.trim()) {
+      const q = search.toLowerCase().trim();
       if (!product.title.toLowerCase().includes(q)) return false;
     }
-
-    // Category Filter by Slug & ID & Name Keyword
-    if (activeCategorySlug !== 'all') {
-      const cleanSlug = activeCategorySlug.toLowerCase().replace(/-/g, ' ').replace(/s$/, '').trim();
-      const titleLower = product.title.toLowerCase();
-      const catLower = (product.category || '').toLowerCase();
-
-      const matchesGroupId = selectedCatObj?.numId && product.groupId === selectedCatObj.numId;
-      const matchesCategorySlug = catLower.includes(cleanSlug);
-      const matchesTitleKeyword = titleLower.includes(cleanSlug);
-
-      if (!matchesGroupId && !matchesCategorySlug && !matchesTitleKeyword) {
-        return false;
-      }
-    }
-
     return true;
   });
 
