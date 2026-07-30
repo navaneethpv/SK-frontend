@@ -16,6 +16,18 @@ import {
   IAuthor
 } from '@/types/home';
 
+// Helper to safely extract an array from plain arrays or paginated DRF objects ({ results: [...] }, { data: [...] })
+function ensureArray<T>(res: any): T[] {
+  if (Array.isArray(res)) return res;
+  if (res && typeof res === 'object') {
+    if (Array.isArray(res.results)) return res.results;
+    if (Array.isArray(res.data)) return res.data;
+    if (Array.isArray(res.products)) return res.products;
+    if (Array.isArray(res.items)) return res.items;
+  }
+  return [];
+}
+
 export const productAPI = {
   // 1. Slides / Hero Banners
   getSlides: async (): Promise<ISlide[]> => {
@@ -119,20 +131,17 @@ export const productAPI = {
 
   // 20. Best Selling Categories
   getBestSellingCategories: async (count: number = 6): Promise<ICategory[]> => {
-    const res = await apiFetch<any>(`Home/best-selling-categories/${count}`);
-    return ensureArray<ICategory>(res);
+    return apiFetch<ICategory[]>(`Home/best-selling-categories/${count}`);
   },
 
   // 20b. Combo Categories for Home Page Bundle Section
   getComboCategories: async (count: number = 3): Promise<ICategory[]> => {
-    const res = await apiFetch<any>(`Home/combo-categories/${count}`);
-    return ensureArray<ICategory>(res);
+    return apiFetch<ICategory[]>(`Home/combo-categories/${count}`);
   },
 
   // 20c. Combo Products for Home Page Bundle Section
   getComboProducts: async (): Promise<IProduct[]> => {
-    const res = await apiFetch<any>('Home/combo-products');
-    return ensureArray<IProduct>(res);
+    return apiFetch<IProduct[]>('Home/combo-products');
   },
 
   // 21. New Arrivals
@@ -169,8 +178,7 @@ export const productAPI = {
 
   // 27. Related Products
   getRelatedProducts: async (productId: number, count: number = 4): Promise<IProduct[]> => {
-    const res = await apiFetch<any>(`Home/related-products/${productId}/${count}`);
-    return ensureArray<IProduct>(res);
+    return apiFetch<IProduct[]>(`Home/related-products/${productId}/${count}`);
   },
 
   // 28. Authors
@@ -180,20 +188,17 @@ export const productAPI = {
 
   // 29. Evergreen Products
   getEvergreen: async (): Promise<IProduct[]> => {
-    const res = await apiFetch<any>('evergreen');
-    return ensureArray<IProduct>(res);
+    return apiFetch<IProduct[]>('evergreen');
   },
 
   // 30. Popular Products Home (Last 7 days)
   getPopularProductsHome: async (): Promise<IProduct[]> => {
-    const res = await apiFetch<any>('popular-products-home');
-    return ensureArray<IProduct>(res);
+    return apiFetch<IProduct[]>('popular-products-home');
   },
 
   // 31. Deal Of The Day Home
   getDealOfTheDayHome: async (): Promise<IProduct[]> => {
-    const res = await apiFetch<any>('deal-of-the-day-home');
-    return ensureArray<IProduct>(res);
+    return apiFetch<IProduct[]>('deal-of-the-day-home');
   },
 
   // 32. Best Sellers Home
@@ -231,12 +236,14 @@ export const productAPI = {
 
   // 38. All Categories List (Home/categories)
   getCategories: async (): Promise<ICategory[]> => {
-    return apiFetch<ICategory[]>('Home/categories');
+    const res = await apiFetch<any>('Home/categories');
+    return ensureArray<ICategory>(res);
   },
 
   // 39. Category Products by Category PK
   getCategoryProducts: async (pk: number): Promise<IProduct[]> => {
-    return apiFetch<IProduct[]>(`categories/products/${pk}`);
+    const res = await apiFetch<any>(`categories/products/${pk}`);
+    return ensureArray<IProduct>(res);
   },
 
   // 40. Author Products

@@ -17,8 +17,6 @@ interface BundleCard {
   slug: string;
 }
 
-// Mock DEFAULT_BUNDLE_ITEMS commented out to rely purely on backend API data
-/*
 const DEFAULT_BUNDLE_ITEMS: BundleCard[] = [
   {
     id: 901,
@@ -51,7 +49,6 @@ const DEFAULT_BUNDLE_ITEMS: BundleCard[] = [
     slug: 'executive-essentials-set'
   }
 ];
-*/
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -75,33 +72,33 @@ const cardVariants: Variants = {
 
 export default function ComboOffers() {
   const { addToCart } = useCart();
-  const [bundles, setBundles] = useState<BundleCard[]>([]);
+  const [bundles, setBundles] = useState<BundleCard[]>(DEFAULT_BUNDLE_ITEMS);
 
   useEffect(() => {
-    // Fetch combo categories or offer bundles from backend API
-    productAPI.getComboCategories(3)
-      .then((data) => {
+    // Restored static bundle items; API call commented out as requested
+    setBundles(DEFAULT_BUNDLE_ITEMS);
+
+    /*
+    productAPI.getCategories()
+      .then((data: any[]) => {
         if (Array.isArray(data) && data.length > 0) {
-          const mapped: BundleCard[] = data.map((item: any, idx: number) => {
-            const price = parseFloat(item.price) || (idx === 0 ? 1099 : idx === 1 ? 1499 : 2999);
-            const origPrice = parseFloat(item.original_price || item.mrp) || Math.round(price * 1.35);
-            return {
-              id: item.id || 901 + idx,
-              title: item.name || item.title || `SK Luxury Bundle ${idx + 1}`,
-              subtitle: item.para1 || item.description || item.subtitle || 'Curated luxury box combinations',
-              price: price,
-              originalPrice: origPrice,
-              discountBadge: item.discount ? `${item.discount}% OFF` : (origPrice > price ? `${Math.round(((origPrice - price) / origPrice) * 100)}% OFF` : undefined),
-              img: item.icon || item.image || item.img || `/bundle - combo offer/${(idx % 3) + 1}.png`,
-              slug: item.slug || `bundle-${item.id || idx + 1}`
-            };
-          });
-          setBundles(mapped);
+          const mapped: BundleCard[] = data.map((item: any) => ({
+            id: item.id,
+            title: item.name || item.alias || item.title || '',
+            subtitle: item.para1 || item.sdescription || item.description || item.subtitle || '',
+            price: item.selling_price || parseFloat(item.price) || 0,
+            originalPrice: parseFloat(item.price) || 0,
+            discountBadge: item.discount ? `${item.discount}% OFF` : undefined,
+            img: item.icon || item.image || '',
+            slug: item.slug || `category-${item.id}`
+          }));
+          setBundles(mapped.filter(b => Boolean(b.title)));
         }
       })
       .catch((err) => {
         console.warn('ComboOffers API notice:', err);
       });
+    */
   }, []);
 
   const handleAddBundle = (bundle: BundleCard) => {
@@ -110,7 +107,7 @@ export default function ComboOffers() {
         id: bundle.id,
         title: bundle.title,
         price: bundle.price,
-        originalPrice: bundle.originalPrice,
+        originalPrice: bundle.originalPrice > 0 ? bundle.originalPrice : undefined,
         img: bundle.img
       },
       1,
@@ -185,16 +182,20 @@ export default function ComboOffers() {
                   <h3 className="text-[1.1rem] font-bold text-[#121316] leading-snug transition-colors group-hover:text-[#C39F68]">
                     {bundle.title}
                   </h3>
-                  <p className="text-[0.82rem] text-[#6B7280] leading-relaxed line-clamp-2">
-                    {bundle.subtitle}
-                  </p>
+                  {bundle.subtitle && (
+                    <p className="text-[0.82rem] text-[#6B7280] leading-relaxed line-clamp-2">
+                      {bundle.subtitle}
+                    </p>
+                  )}
 
-                  <div className="flex items-baseline gap-2 mt-auto pt-3 border-t border-[#F1F5F9]">
-                    <span className="text-[1.2rem] font-extrabold text-[#121316]">₹{bundle.price}</span>
-                    {bundle.originalPrice > bundle.price && (
-                      <span className="text-[0.85rem] text-[#9CA3AF] line-through font-normal">₹{bundle.originalPrice}</span>
-                    )}
-                  </div>
+                  {bundle.price > 0 && (
+                    <div className="flex items-baseline gap-2 mt-auto pt-3 border-t border-[#F1F5F9]">
+                      <span className="text-[1.2rem] font-extrabold text-[#121316]">₹{bundle.price}</span>
+                      {bundle.originalPrice > bundle.price && (
+                        <span className="text-[0.85rem] text-[#9CA3AF] line-through font-normal">₹{bundle.originalPrice}</span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </Link>
 
