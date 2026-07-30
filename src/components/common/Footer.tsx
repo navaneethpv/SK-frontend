@@ -79,7 +79,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="flex flex-col gap-[1.2rem]">
             <Link href="/" className="inline-block">
-              <img src="/SK Logo.svg" alt="SK Logo" className="h-[52px] w-auto object-contain" />
+              <img src={getImageUrl('/SK Logo.svg')} alt="SK Logo" className="h-[52px] w-auto object-contain" />
             </Link>
             <p className="text-[0.85rem] text-[#A3A3A3] leading-[1.6]">
               SK is a luxury grooming and lifestyle brand crafting high-performance organic hair oils, artisanal fragrances, and lifestyle accessories designed for uncompromising quality.

@@ -4,6 +4,7 @@ import { Star, ShoppingBag, CheckCircle2 } from 'lucide-react';
 import { IProduct } from '@/types/product';
 import { useCart } from '@/context/CartContext';
 import { formatProductTitle, getProductSlug } from '@/utils/slugHelper';
+import { getImageUrl } from '@/utils/imageHelper';
 
 interface ProductCardProps {
   id?: number;
@@ -85,11 +86,11 @@ export default function ProductCard({
             </span>
           )}
           <img
-            src={cardImg}
+            src={getImageUrl(cardImg)}
             alt={cardTitle}
             className="max-w-[82%] max-h-[82%] object-contain filter drop-shadow-md transition-transform duration-500 ease-out group-hover:scale-105"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = '/hero cards/4.png';
+              (e.target as HTMLImageElement).src = getImageUrl('/hero cards/4.png');
             }}
           />
         </div>

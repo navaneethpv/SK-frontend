@@ -5,6 +5,7 @@ import { useCart } from '@/context/CartContext';
 import { productAPI } from '@/api/services/productAPI';
 import { IProduct } from '@/types/product';
 import { getProductSlug, formatProductTitle } from '@/utils/slugHelper';
+import { getImageUrl } from '@/utils/imageHelper';
 
 interface NavCategory {
   id: number;
@@ -153,7 +154,7 @@ export default function Header() {
         {/* Brand Logo */}
         <Link href="/" className="flex items-center no-underline focus-visible:outline-2 focus-visible:outline-[#C39F68] focus-visible:outline-offset-2">
           <div className="flex items-center justify-center">
-            <img src="/SK Logo.svg" alt="SK Logo" className="h-10 lg:h-[46px] w-auto object-contain transition-all duration-300" />
+            <img src={getImageUrl('/SK Logo.svg')} alt="SK Logo" className="h-10 lg:h-[46px] w-auto object-contain transition-all duration-300" />
           </div>
         </Link>
 

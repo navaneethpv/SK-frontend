@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { motion, Variants } from 'framer-motion';
+import { getImageUrl } from '@/utils/imageHelper';
 
 interface CategoryTile {
   id: number;
@@ -85,11 +86,11 @@ export default function CategoryList() {
                   )}
 
                   <img
-                    src={cat.img}
+                    src={getImageUrl(cat.img)}
                     alt={cat.name}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/hero cards/4.png';
+                      (e.target as HTMLImageElement).src = getImageUrl('/hero cards/4.png');
                     }}
                   />
 

@@ -76,11 +76,11 @@ export default function BrandFlare() {
       <div className="relative w-full h-[340px] md:h-[460px] lg:h-[600px] xl:h-[700px] overflow-hidden group">
         {/* Background Image */}
         <img
-          src={flair.media}
+          src={getImageUrl(flair.media)}
           alt={flair.title}
           className="w-full h-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-103"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = '/banners/flare_banner.png';
+            (e.target as HTMLImageElement).src = getImageUrl('/banners/flare_banner.png');
           }}
         />
 

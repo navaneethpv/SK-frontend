@@ -123,7 +123,7 @@ export default function Hero() {
             alt={slide.title || 'SK Banner'}
             className="w-full h-full object-cover object-center transition-all duration-700 ease-out scale-100"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = '/banners/banner1.png';
+              (e.target as HTMLImageElement).src = getImageUrl('/banners/banner1.png');
             }}
           />
           {/* Subtle overlay gradient */}

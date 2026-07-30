@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ShoppingBag, ArrowRight } from 'lucide-react';
 import { motion, Variants } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
+import { getImageUrl } from '@/utils/imageHelper';
 
 interface BundleCard {
   id: number;
@@ -133,7 +134,7 @@ export default function ComboOffers() {
                 {/* Bundle Image Container */}
                 <div className="relative w-full aspect-[1.05] bg-[#FAF8F5] overflow-hidden">
                   <img
-                    src={bundle.img}
+                    src={getImageUrl(bundle.img)}
                     alt={bundle.title}
                     className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                   />
