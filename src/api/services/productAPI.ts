@@ -254,5 +254,12 @@ export const productAPI = {
   // 41. Latest Products
   getLatestProducts: async (): Promise<IProduct[]> => {
     return apiFetch<IProduct[]>('latest-products');
+  },
+
+  // 42. Product Filter API (Product/product/filter?query=...)
+  filterProducts: async (query?: string): Promise<any[]> => {
+    const q = query ? `?query=${encodeURIComponent(query)}` : '';
+    const res = await apiFetch<any>(`Product/product/filter${q}`);
+    return ensureArray<any>(res);
   }
 };

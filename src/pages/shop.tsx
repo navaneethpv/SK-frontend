@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { SlidersHorizontal, ArrowUpDown, Search, X } from 'lucide-react';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 import ProductCard from '@/components/product/ProductCard';
@@ -86,7 +87,22 @@ export default function ShopPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [activeCategorySlug, setActiveCategorySlug] = useState<string>(getInitialCategorySlug);
 
-  // 1. Sync category from URL query when Next router updates query parameters
+  // Search & Cost Filtering States
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [minPriceInput, setMinPriceInput] = useState<string>('');
+  const [maxPriceInput, setMaxPriceInput] = useState<string>('');
+  const [pricePreset, setPricePreset] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<'default' | 'price-asc' | 'price-desc'>('default');
+  const [apiFilteredProductIds, setApiFilteredProductIds] = useState<Set<number> | null>(null);
+
+  // Sync search from router query
+  useEffect(() => {
+    if (search && typeof search === 'string' && search.trim()) {
+      setSearchQuery(search.trim());
+    }
+  }, [search]);
+
+  // Sync category from URL query when Next router updates query parameters
   useEffect(() => {
     const targetCategory = category || filter;
     if (targetCategory && typeof targetCategory === 'string') {
@@ -97,7 +113,36 @@ export default function ShopPage() {
     }
   }, [category, filter]);
 
-  // 2. Fetch Categories AND Products in a single atomic flow to eliminate flickering
+  // Fetch API Product Filter when searchQuery changes (Product/product/filter?query=...)
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setApiFilteredProductIds(null);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await productAPI.filterProducts(searchQuery.trim());
+        if (Array.isArray(res) && res.length > 0) {
+          const ids = new Set<number>();
+          res.forEach((item: any) => {
+            if (typeof item.product === 'number') ids.add(item.product);
+            if (typeof item.id === 'number') ids.add(item.id);
+          });
+          setApiFilteredProductIds(ids);
+        } else {
+          setApiFilteredProductIds(null);
+        }
+      } catch (e) {
+        console.warn('Error fetching Product/product/filter results:', e);
+        setApiFilteredProductIds(null);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Fetch Categories AND Products
   useEffect(() => {
     let isMounted = true;
 
@@ -131,7 +176,6 @@ export default function ShopPage() {
         if (activeCategorySlug === 'all') {
           prods = await productAPI.getProducts();
         } else {
-          // Priority 1: Exact category products by ID
           if (selectedCat && selectedCat.numId) {
             prods = await productAPI.getCategoryProducts(selectedCat.numId);
             if (!Array.isArray(prods) || prods.length === 0) {
@@ -139,12 +183,10 @@ export default function ShopPage() {
             }
           }
 
-          // Priority 2: Query by category slug
           if (!Array.isArray(prods) || prods.length === 0) {
             prods = await productAPI.getProducts({ category: activeCategorySlug });
           }
 
-          // Priority 3: Fallback client-side filter
           if (!Array.isArray(prods) || prods.length === 0) {
             const allProds = await productAPI.getProducts();
             if (Array.isArray(allProds) && allProds.length > 0) {
@@ -200,14 +242,51 @@ export default function ShopPage() {
     }
   };
 
-  const filteredProducts = products.filter((product) => {
-    // Search Query Filter
-    if (search && typeof search === 'string' && search.trim()) {
-      const q = search.toLowerCase().trim();
-      if (!product.title.toLowerCase().includes(q)) return false;
+  // Compute final filtered & sorted products by Cost/Price & Search
+  const filteredProducts = useMemo(() => {
+    let list = [...products];
+
+    // 1. Search Query & API Filter
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      list = list.filter((p) => {
+        if (apiFilteredProductIds && apiFilteredProductIds.has(p.id)) return true;
+        return p.title.toLowerCase().includes(q) || p.category.includes(q);
+      });
     }
-    return true;
-  });
+
+    // 2. Cost / Price Filtering
+    let minP = minPriceInput ? parseFloat(minPriceInput) : null;
+    let maxP = maxPriceInput ? parseFloat(maxPriceInput) : null;
+
+    if (pricePreset === 'under-500') {
+      maxP = 500;
+    } else if (pricePreset === '500-1000') {
+      minP = 500;
+      maxP = 1000;
+    } else if (pricePreset === '1000-2500') {
+      minP = 1000;
+      maxP = 2500;
+    } else if (pricePreset === 'above-2500') {
+      minP = 2500;
+    }
+
+    if (minP !== null && !isNaN(minP)) {
+      list = list.filter((p) => p.price >= minP!);
+    }
+    if (maxP !== null && !isNaN(maxP)) {
+      list = list.filter((p) => p.price <= maxP!);
+    }
+
+    // 3. Price Sorting
+    if (sortBy === 'price-asc') {
+      list.sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'price-desc') {
+      list.sort((a, b) => b.price - a.price);
+    }
+
+    return list;
+  }, [products, searchQuery, apiFilteredProductIds, pricePreset, minPriceInput, maxPriceInput, sortBy]);
 
   return (
     <>
@@ -236,21 +315,129 @@ export default function ShopPage() {
               <p className="text-[0.95rem] text-[#666666]">Discover premium lifestyle, fragrance, and organic grooming essentials.</p>
             </div>
 
-            {/* Dynamic Filter Tabs */}
-            <div className="flex items-center justify-center gap-2.5 mb-12 flex-wrap">
-              {categories.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => handleCategorySelect(tab)}
-                  className={`px-5 py-2.5 rounded-full text-[0.75rem] font-bold tracking-wider cursor-pointer transition-all duration-200 border ${
-                    activeCategorySlug === tab.slug || activeCategorySlug === tab.id
-                      ? 'bg-[#111111] text-white border-[#111111] shadow-sm'
-                      : 'bg-white text-[#666666] border-[#EAEAEA] hover:border-[#111111] hover:text-[#111111]'
-                  }`}
-                >
-                  {tab.name}
-                </button>
-              ))}
+            {/* Filter Control Box */}
+            <div className="bg-white rounded-2xl border border-[#EAEAEA] p-5 mb-10 shadow-sm">
+              {/* Category Pills Header */}
+              <div className="mb-5">
+                <span className="text-[0.72rem] font-bold text-[#666666] uppercase tracking-wider block mb-2.5">
+                  Categories
+                </span>
+                <div className="flex items-center gap-2 overflow-x-auto pb-1 flex-wrap">
+                  {categories.map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => handleCategorySelect(tab)}
+                      className={`px-4 py-2 rounded-full text-[0.75rem] font-bold tracking-wider cursor-pointer transition-all duration-200 border shrink-0 ${
+                        activeCategorySlug === tab.slug || activeCategorySlug === tab.id
+                          ? 'bg-[#111111] text-white border-[#111111] shadow-sm'
+                          : 'bg-white text-[#666666] border-[#EAEAEA] hover:border-[#111111] hover:text-[#111111]'
+                      }`}
+                    >
+                      {tab.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Cost Filter & Sorting Controls */}
+              <div className="pt-4 border-t border-[#EAEAEA] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                {/* Cost Range Presets */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[0.75rem] font-bold text-[#111111] flex items-center gap-1 mr-1">
+                    <SlidersHorizontal size={14} className="text-[#C39F68]" />
+                    Filter by Cost:
+                  </span>
+                  {[
+                    { id: 'all', label: 'All Prices' },
+                    { id: 'under-500', label: 'Under ₹500' },
+                    { id: '500-1000', label: '₹500 - ₹1,000' },
+                    { id: '1000-2500', label: '₹1,000 - ₹2,500' },
+                    { id: 'above-2500', label: 'Above ₹2,500' }
+                  ].map((preset) => (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      onClick={() => {
+                        setPricePreset(preset.id);
+                        if (preset.id !== 'custom') {
+                          setMinPriceInput('');
+                          setMaxPriceInput('');
+                        }
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-[0.72rem] font-semibold transition-all border ${
+                        pricePreset === preset.id
+                          ? 'bg-[#C39F68] text-white border-[#C39F68]'
+                          : 'bg-[#FAF8F5] text-[#4B5563] border-transparent hover:border-[#C39F68]'
+                      }`}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+
+                  {/* Custom Min / Max Price Inputs */}
+                  <div className="flex items-center gap-1.5 ml-1">
+                    <input
+                      type="number"
+                      placeholder="Min ₹"
+                      value={minPriceInput}
+                      onChange={(e) => {
+                        setMinPriceInput(e.target.value);
+                        setPricePreset('custom');
+                      }}
+                      className="w-20 px-2.5 py-1 text-[0.75rem] rounded-lg border border-gray-200 focus:outline-none focus:border-[#C39F68]"
+                    />
+                    <span className="text-gray-400 text-xs">-</span>
+                    <input
+                      type="number"
+                      placeholder="Max ₹"
+                      value={maxPriceInput}
+                      onChange={(e) => {
+                        setMaxPriceInput(e.target.value);
+                        setPricePreset('custom');
+                      }}
+                      className="w-20 px-2.5 py-1 text-[0.75rem] rounded-lg border border-gray-200 focus:outline-none focus:border-[#C39F68]"
+                    />
+                  </div>
+                </div>
+
+                {/* Search & Sort Controls */}
+                <div className="flex items-center gap-3 shrink-0">
+                  {/* Search Input using Product/product/filter */}
+                  <div className="relative">
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="Search name / batch..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-8 pr-7 py-1.5 text-[0.75rem] rounded-lg border border-gray-200 w-44 focus:outline-none focus:border-[#C39F68]"
+                    />
+                    {searchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        <X size={12} />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Cost Sorting Dropdown */}
+                  <div className="relative">
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as any)}
+                      className="appearance-none bg-[#FAF8F5] border border-gray-200 text-[#111111] text-[0.75rem] font-bold py-1.5 pl-3 pr-8 rounded-lg cursor-pointer focus:outline-none focus:border-[#C39F68]"
+                    >
+                      <option value="default">Sort: Default</option>
+                      <option value="price-asc">Cost: Low to High</option>
+                      <option value="price-desc">Cost: High to Low</option>
+                    </select>
+                    <ArrowUpDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Product Grid */}
@@ -278,7 +465,22 @@ export default function ShopPage() {
               </div>
             ) : (
               <div className="text-center py-16 bg-[#FAF8F5] rounded-2xl border border-gray-200">
-                <p className="text-gray-500 font-medium text-sm">No products found for this category filter.</p>
+                <p className="text-gray-500 font-medium text-sm">No products found matching your cost or filter criteria.</p>
+                {(pricePreset !== 'all' || minPriceInput || maxPriceInput || searchQuery) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPricePreset('all');
+                      setMinPriceInput('');
+                      setMaxPriceInput('');
+                      setSearchQuery('');
+                      setSortBy('default');
+                    }}
+                    className="mt-3 inline-block px-4 py-2 text-xs font-bold text-white bg-[#111111] rounded-full hover:bg-[#C39F68] transition-colors"
+                  >
+                    Reset Filters
+                  </button>
+                )}
               </div>
             )}
           </div>
