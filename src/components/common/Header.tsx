@@ -182,21 +182,21 @@ export default function Header() {
           </div>
 
           <Link 
+            href="/categories" 
+            className={`text-[0.88rem] font-semibold no-underline transition-colors ${
+              isActive('/categories') ? 'text-[#C39F68] font-bold border-b-2 border-[#C39F68] pb-0.5' : 'text-white hover:text-[#C39F68]'
+            }`}
+          >
+            Categories
+          </Link>
+
+          <Link 
             href="/best-sellers" 
             className={`text-[0.88rem] font-semibold no-underline transition-colors ${
               isActive('/best-sellers') ? 'text-[#C39F68] font-bold border-b-2 border-[#C39F68] pb-0.5' : 'text-white hover:text-[#C39F68]'
             }`}
           >
             Best Sellers
-          </Link>
-
-          <Link 
-            href="/products" 
-            className={`text-[0.88rem] font-semibold no-underline transition-colors ${
-              isActive('/products') ? 'text-[#C39F68] font-bold border-b-2 border-[#C39F68] pb-0.5' : 'text-white hover:text-[#C39F68]'
-            }`}
-          >
-            All Products
           </Link>
 
           <Link 
@@ -265,8 +265,8 @@ export default function Header() {
               </Link>
             ))}
           </div>
+          <Link href="/categories" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">Categories</Link>
           <Link href="/best-sellers" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">Best Sellers</Link>
-          <Link href="/products" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">All Products</Link>
           <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">About Us</Link>
         </div>
       )}

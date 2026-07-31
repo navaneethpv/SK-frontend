@@ -100,7 +100,7 @@ export default function Footer() {
                 <li><Link href="/best-sellers" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/best-sellers') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>Best Sellers</Link></li>
               </ul>
               <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
-                <li><Link href="/products" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/products') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>All Products</Link></li>
+                <li><Link href="/shop" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/shop') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>All Products</Link></li>
                 <li><Link href="/about" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/about') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>About Us</Link></li>
                 <li><Link href="/cart" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/cart') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>My Cart</Link></li>
                 <li><Link href="/checkout" className={`text-[0.88rem] no-underline transition-colors hover:text-white hover:translate-x-1 inline-block ${isActive('/checkout') ? 'text-[#C5A059] font-bold' : 'text-[#9CA3AF]'}`}>Checkout</Link></li>

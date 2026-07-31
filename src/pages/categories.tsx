@@ -34,7 +34,7 @@ export default function CategoriesPage() {
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           const mapped = data.map((cat: any, idx: number) => {
-            const fallback = `/images/category_tile_${(idx % 6) + 1}.png`;
+            const fallback = `/images/category_tile_${(idx % 6) + 1}.png`; // Fallback
             return {
               id: cat.id || idx + 1,
               name: cat.name || `Category ${idx + 1}`,
