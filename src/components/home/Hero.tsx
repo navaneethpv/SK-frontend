@@ -19,8 +19,30 @@ export default function Hero() {
   const [slides, setSlides] = useState<SlideItem[]>([]);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const heroRef = useRef<HTMLDivElement | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEndX(null);
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX || slides.length <= 1) return;
+    const distance = touchStartX - touchEndX;
+    if (distance > 40) {
+      handleNext();
+    } else if (distance < -40) {
+      handlePrev();
+    }
+  };
 
   // Fetch API slides on mount
   useEffect(() => {
@@ -104,10 +126,13 @@ export default function Hero() {
   return (
     <section
       ref={heroRef}
-      className="w-screen relative bg-[#111111] overflow-hidden pt-[58px] lg:pt-[68px]"
+      className="w-screen relative bg-[#111111] overflow-hidden pt-[58px] lg:pt-[68px] touch-pan-y"
       style={{ marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       <div className="w-full h-[400px] sm:h-[480px] md:h-[580px] lg:h-[660px] xl:h-[740px] relative flex items-center overflow-hidden">
         {/* Background Image Slide */}

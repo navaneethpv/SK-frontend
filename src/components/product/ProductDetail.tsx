@@ -40,6 +40,28 @@ export default function ProductDetail() {
 
   const { addToCart } = useCart();
 
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
+
+  const handleGalleryTouchStart = (e: React.TouchEvent) => {
+    setTouchEndX(null);
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleGalleryTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  const handleGalleryTouchEnd = () => {
+    if (!touchStartX || !touchEndX || !productData || productData.gallery.length <= 1) return;
+    const distance = touchStartX - touchEndX;
+    if (distance > 35) {
+      setSelectedImgIndex((prev) => (prev + 1) % productData.gallery.length);
+    } else if (distance < -35) {
+      setSelectedImgIndex((prev) => (prev === 0 ? productData.gallery.length - 1 : prev - 1));
+    }
+  };
+
   const [openAccordions, setOpenAccordions] = useState<Record<string, boolean>>({
     description: true,
     specifications: false,
@@ -198,8 +220,13 @@ export default function ProductDetail() {
             {/* Top Detail Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 mb-20">
               {/* Left Column: Product Image Gallery */}
-              <div className="flex flex-col gap-6 relative md:sticky top-0 md:top-[110px] self-start">
-                <div className="relative w-full aspect-square md:aspect-[0.92] max-h-[300px] md:max-h-none border border-[#E5E7EB] rounded-xl flex items-center justify-center p-4 md:p-10 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden group">
+              <div className="flex flex-col gap-4 relative md:sticky top-0 md:top-[110px] self-start">
+                <div
+                  className="relative w-full aspect-square md:aspect-[0.92] max-h-[340px] md:max-h-none border border-[#E5E7EB] rounded-xl flex items-center justify-center p-4 md:p-10 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden group touch-pan-y"
+                  onTouchStart={handleGalleryTouchStart}
+                  onTouchMove={handleGalleryTouchMove}
+                  onTouchEnd={handleGalleryTouchEnd}
+                >
                   {productData.discountBadge && (
                     <span className="absolute top-4 left-4 bg-[#15803D] text-white text-[0.68rem] font-extrabold px-2.5 py-1 rounded tracking-wider z-10 uppercase">
                       {productData.discountBadge}
@@ -215,8 +242,24 @@ export default function ProductDetail() {
                   />
                 </div>
 
+                {/* Mobile Gallery Slide Dots Indicator */}
                 {productData.gallery.length > 1 && (
-                  <div className="flex gap-4">
+                  <div className="flex items-center justify-center gap-2 sm:hidden my-1">
+                    {productData.gallery.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setSelectedImgIndex(idx)}
+                        className={`h-2 rounded-full transition-all duration-300 ${
+                          selectedImgIndex === idx ? 'w-6 bg-[#C5A059]' : 'w-2 bg-gray-300'
+                        }`}
+                        aria-label={`Show image ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {productData.gallery.length > 1 && (
+                  <div className="hidden sm:flex gap-4">
                     {productData.gallery.map((img, idx) => (
                       <button
                         key={idx}

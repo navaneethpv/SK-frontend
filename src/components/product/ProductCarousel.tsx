@@ -55,6 +55,8 @@ export default function ProductCarousel({
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(4);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -97,6 +99,25 @@ export default function ProductCarousel({
     setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEndX(null);
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return;
+    const distance = touchStartX - touchEndX;
+    if (distance > 35) {
+      handleNext();
+    } else if (distance < -35) {
+      handlePrev();
+    }
+  };
+
   return (
     <div className="w-full relative my-8 animate-fade-in-up">
       {(title || subtag || viewAllLink) && (
@@ -113,7 +134,12 @@ export default function ProductCarousel({
         </div>
       )}
 
-      <div className="relative w-full">
+      <div
+        className="relative w-full touch-pan-y"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {currentIndex > 0 && (
           <button
             onClick={handlePrev}
