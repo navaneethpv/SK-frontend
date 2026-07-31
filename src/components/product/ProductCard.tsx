@@ -76,70 +76,56 @@ export default function ProductCard({
   };
 
   return (
-    <div className="group bg-white border border-[#EAE5DC] rounded-2xl overflow-hidden relative flex flex-row sm:flex-col justify-between transition-all duration-300 ease-out hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 hover:border-[#C39F68]">
-      <Link href={`/product/${cardSlug}`} className="flex flex-row sm:flex-col flex-1 no-underline min-w-0">
-        {/* Left Column (Mobile) / Top Image Frame (Desktop) */}
-        <div className="relative w-[120px] sm:w-full aspect-square sm:aspect-[0.92] bg-[#FAF8F5] flex items-center justify-center p-3 sm:p-5 overflow-hidden shrink-0">
+    <div className="group bg-white border border-[#EAE5DC] rounded-2xl overflow-hidden relative flex flex-col justify-between transition-all duration-300 ease-out hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 hover:border-[#C39F68] h-full">
+      <Link href={`/product/${cardSlug}`} className="flex flex-col h-full no-underline">
+        {/* Product Image Frame */}
+        <div className="relative w-full aspect-[0.92] bg-[#FAF8F5] flex items-center justify-center p-3 sm:p-5 overflow-hidden">
           {(computedBadge || (badgeText && badgeType !== 'none')) && (
-            <span className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-[#C39F68] text-white text-[0.6rem] sm:text-[0.65rem] font-extrabold px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-md tracking-wider uppercase shadow-sm z-10">
+            <span className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-[#C39F68] text-white text-[0.6rem] sm:text-[0.65rem] font-extrabold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md tracking-wider uppercase shadow-sm z-10">
               {computedBadge || badgeText}
             </span>
           )}
           <img
             src={getImageUrl(cardImg)}
             alt={cardTitle}
-            className="max-w-[85%] max-h-[85%] sm:max-w-[82%] sm:max-h-[82%] object-contain filter drop-shadow-md transition-transform duration-500 ease-out group-hover:scale-105"
+            className="max-w-[82%] max-h-[82%] object-contain filter drop-shadow-md transition-transform duration-500 ease-out group-hover:scale-105"
             onError={(e) => {
               (e.target as HTMLImageElement).src = getImageUrl('/hero cards/4.png');
             }}
           />
         </div>
 
-        {/* Right Column Content (Mobile) / Bottom Meta Info (Desktop) */}
-        <div className="p-3 sm:p-4 pt-3 sm:pt-4 pb-2 sm:pb-2 flex flex-col justify-between gap-1 flex-1 min-w-0">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1.5 text-[0.7rem] sm:text-[0.75rem] text-[#6B7280]">
-              <Star size={12} className="text-[#C39F68] fill-[#C39F68] shrink-0" />
-              <span className="font-extrabold text-[#121316]">{rating}</span>
-              <span className="text-[#D1D5DB]">•</span>
-              <CheckCircle2 size={11} className="text-[#0284C7] shrink-0" />
-              <span className="text-[#6B7280] truncate">({reviewsCount})</span>
-            </div>
-
-            <h3 className="text-[0.85rem] sm:text-[0.92rem] font-bold text-[#121316] leading-snug line-clamp-2 transition-colors group-hover:text-[#C39F68] sm:min-h-[2.5rem]">
-              {cardTitle}
-            </h3>
-
-            <div className="flex items-baseline gap-1.5 mt-0.5">
-              <span className="text-[1rem] sm:text-[1.1rem] font-extrabold text-[#121316]">₹{displayPrice}</span>
-              {displayOriginalPrice && (
-                <span className="text-[0.75rem] sm:text-[0.82rem] text-[#9CA3AF] line-through font-normal">₹{displayOriginalPrice}</span>
-              )}
-            </div>
+        {/* Product Meta Info */}
+        <div className="p-3 sm:p-4 pt-3 sm:pt-4 pb-2 flex flex-col gap-1 sm:gap-1.5 flex-1">
+          <div className="flex items-center gap-1 sm:gap-1.5 text-[0.7rem] sm:text-[0.75rem] text-[#6B7280]">
+            <Star size={12} className="text-[#C39F68] fill-[#C39F68] shrink-0" />
+            <span className="font-extrabold text-[#121316]">{rating}</span>
+            <span className="text-[#D1D5DB]">•</span>
+            <CheckCircle2 size={11} className="text-[#0284C7] shrink-0" />
+            <span className="text-[#6B7280]">({reviewsCount})</span>
           </div>
 
-          {/* Action CTA Button inside right column for Mobile */}
-          <div className="block sm:hidden mt-2">
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              className="w-full h-8 bg-[#121316] text-white border-none rounded-lg text-[0.7rem] font-extrabold tracking-wider flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-200 hover:bg-[#C39F68] active:scale-98"
-            >
-              <ShoppingBag size={13} />
-              <span>ADD TO CART</span>
-            </button>
+          <h3 className="text-[0.85rem] sm:text-[0.92rem] font-bold text-[#121316] leading-snug line-clamp-2 transition-colors group-hover:text-[#C39F68] min-h-[2.2rem] sm:min-h-[2.5rem]">
+            {cardTitle}
+          </h3>
+
+          <div className="flex items-baseline gap-1.5 sm:gap-2 mt-0.5 sm:mt-1">
+            <span className="text-[1rem] sm:text-[1.1rem] font-extrabold text-[#121316]">₹{displayPrice}</span>
+            {displayOriginalPrice && (
+              <span className="text-[0.75rem] sm:text-[0.82rem] text-[#9CA3AF] line-through font-normal">₹{displayOriginalPrice}</span>
+            )}
           </div>
         </div>
       </Link>
 
-      {/* Desktop Action CTA Button */}
-      <div className="hidden sm:block p-4 pt-1">
+      {/* Action CTA Button */}
+      <div className="p-3 sm:p-4 pt-1">
         <button
           type="button"
           onClick={handleAddToCart}
-          className="w-full h-11 bg-[#121316] text-white border-none rounded-xl text-[0.8rem] font-extrabold tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 hover:bg-[#C39F68] hover:shadow-md active:scale-98"
+          className="w-full h-9 sm:h-11 bg-[#121316] text-white border-none rounded-xl text-[0.72rem] sm:text-[0.8rem] font-extrabold tracking-wider flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer transition-all duration-200 hover:bg-[#C39F68] hover:shadow-md active:scale-98"
         >
-          <ShoppingBag size={15} />
+          <ShoppingBag size={14} className="shrink-0" />
           <span>ADD TO CART</span>
         </button>
       </div>

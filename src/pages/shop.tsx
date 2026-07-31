@@ -481,6 +481,86 @@ export default function ShopPage() {
                   : 'CURATED CATALOGUE'}
               </h1>
               <p className="text-[0.85rem] sm:text-[0.95rem] text-[#666666]">Discover premium lifestyle, fragrance, and organic grooming essentials.</p>
+
+              {/* Active Filter Pill Badges below heading */}
+              {(activeCategorySlug !== 'all' || pricePreset !== 'all' || minPriceInput || maxPriceInput || searchQuery.trim()) && (
+                <div className="flex items-center justify-center gap-3 mt-5 flex-wrap">
+                  {/* Category Filter Pill */}
+                  {activeCategorySlug !== 'all' && (
+                    <span className="inline-flex items-center gap-3 px-4 py-2 bg-[#FAF8F5] border border-[#EAE5DC] rounded-full shadow-sm text-[#111111] transition-all">
+                      <span className="flex flex-col text-left leading-tight">
+                        <span className="text-[0.68rem] text-[#4B5563] font-medium">Category:</span>
+                        <span className="font-extrabold text-[0.82rem] uppercase tracking-wide text-[#111111]">
+                          {activeCategorySlug.replace(/-/g, ' ')}
+                        </span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleCategorySelect({ id: 'all', name: 'ALL PRODUCTS', slug: 'all' })}
+                        className="text-gray-400 hover:text-[#111111] transition-colors p-0.5 cursor-pointer"
+                        aria-label="Remove category filter"
+                      >
+                        <X size={14} />
+                      </button>
+                    </span>
+                  )}
+
+                  {/* Cost Filter Pill */}
+                  {(pricePreset !== 'all' || minPriceInput || maxPriceInput) && (
+                    <span className="inline-flex items-center gap-3 px-4 py-2 bg-[#FAF8F5] border border-[#EAE5DC] rounded-full shadow-sm text-[#111111] transition-all">
+                      <span className="flex flex-col text-left leading-tight">
+                        <span className="text-[0.68rem] text-[#4B5563] font-medium">Cost:</span>
+                        <span className="font-extrabold text-[0.82rem] text-[#111111]">
+                          {pricePreset === 'under-500' && 'Under ₹500'}
+                          {pricePreset === '500-1000' && '₹500 - ₹1,000'}
+                          {pricePreset === '1000-2500' && '₹1,000 - ₹2,500'}
+                          {pricePreset === 'above-2500' && 'Above ₹2,500'}
+                          {pricePreset === 'custom' && `₹${minPriceInput || 0} - ₹${maxPriceInput || '∞'}`}
+                        </span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPricePreset('all');
+                          setMinPriceInput('');
+                          setMaxPriceInput('');
+                        }}
+                        className="text-gray-400 hover:text-[#111111] transition-colors p-0.5 cursor-pointer"
+                        aria-label="Remove cost filter"
+                      >
+                        <X size={14} />
+                      </button>
+                    </span>
+                  )}
+
+                  {/* Search Query Pill */}
+                  {searchQuery.trim() && (
+                    <span className="inline-flex items-center gap-3 px-4 py-2 bg-[#FAF8F5] border border-[#EAE5DC] rounded-full shadow-sm text-[#111111] transition-all">
+                      <span className="flex flex-col text-left leading-tight">
+                        <span className="text-[0.68rem] text-[#4B5563] font-medium">Search:</span>
+                        <span className="font-extrabold text-[0.82rem] text-[#111111]">"{searchQuery}"</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery('')}
+                        className="text-gray-400 hover:text-[#111111] transition-colors p-0.5 cursor-pointer"
+                        aria-label="Remove search filter"
+                      >
+                        <X size={14} />
+                      </button>
+                    </span>
+                  )}
+
+                  {/* Reset / Clear All Button */}
+                  <button
+                    type="button"
+                    onClick={resetAllFilters}
+                    className="text-[0.75rem] font-bold text-[#C39F68] hover:text-[#111111] hover:underline cursor-pointer ml-1"
+                  >
+                    Clear All
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Main Responsive Grid Layout (Left Sidebar + Right Product Grid) */}
@@ -522,20 +602,6 @@ export default function ShopPage() {
                       Showing <strong className="text-[#111111]">{filteredProducts.length}</strong> products
                     </span>
                   </div>
-
-                  {/* Active Category Badge */}
-                  {activeCategorySlug !== 'all' && (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#FAF8F5] border border-[#EAEAEA] rounded-full text-[0.72rem] font-bold text-[#111111]">
-                      <span>Category: {activeCategorySlug.toUpperCase()}</span>
-                      <button
-                        type="button"
-                        onClick={() => handleCategorySelect({ id: 'all', name: 'ALL PRODUCTS', slug: 'all' })}
-                        className="text-gray-400 hover:text-gray-600 cursor-pointer"
-                      >
-                        <X size={12} />
-                      </button>
-                    </span>
-                  )}
                 </div>
 
                 {/* Product Grid */}
@@ -545,7 +611,7 @@ export default function ShopPage() {
                     <p className="text-sm font-medium">Loading shop collection...</p>
                   </div>
                 ) : filteredProducts.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
                     {filteredProducts.map((product) => (
                       <ProductCard
                         key={product.id}
