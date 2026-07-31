@@ -10,16 +10,10 @@ interface SlideItem {
   link: string;
   title?: string;
   subtitle?: string;
+  sub_title?: string;
+  desc?: string;
   visibleTime?: number;
 }
-
-// Mock DEFAULT_SLIDES commented out to rely on real API data
-/*
-const DEFAULT_SLIDES: SlideItem[] = [
-  { id: 1, img: '/banners/banner1.png', link: '/shop', title: 'SK Organic Hair Oil & Botanical Care' },
-  { id: 2, img: '/banners/banner2.png', link: '/shop', title: 'SK Noir Luxury Eau De Parfum' }
-];
-*/
 
 export default function Hero() {
   const [slides, setSlides] = useState<SlideItem[]>([]);
@@ -33,31 +27,31 @@ export default function Hero() {
     productAPI.getSlides()
       .then((data: ISlide[]) => {
         if (Array.isArray(data) && data.length > 0) {
-          // Sort slides by priority if present
           const sorted = [...data].sort((a, b) => (a.priority || 0) - (b.priority || 0));
-          
+
           const mapped: SlideItem[] = sorted.map((item, idx) => {
             const rawImg = item.file || item.image || item.img || item.popup;
             const targetLink = item.link1 || item.link2 || item.link || item.url || '/shop';
-            const slideTitle = item.title || item.sub_title || item.desc || `SK Banner ${idx + 1}`;
-            
+
             return {
               id: item.id || idx + 1,
-              img: getImageUrl(rawImg, '/banners/banner1.png'),
+              img: getImageUrl(rawImg, ''),
               link: targetLink,
-              title: slideTitle,
-              subtitle: item.sub_title || item.subtitle || item.desc,
-              visibleTime: item.visible_time
+              title: item.title,
+              subtitle: item.sub_title || item.subtitle,
+              desc: item.desc,
+              visibleTime: item.visible_time || 5
             };
           });
 
-          if (mapped.length > 0) {
-            setSlides(mapped);
-          }
+          setSlides(mapped.filter((s) => Boolean(s.img)));
+        } else {
+          setSlides([]);
         }
       })
       .catch((err) => {
         console.warn('Hero slides API notice:', err);
+        setSlides([]);
       });
   }, []);
 
@@ -115,50 +109,88 @@ export default function Hero() {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="w-full h-[300px] sm:h-[380px] md:h-[460px] lg:h-[580px] xl:h-[750px] [@media(min-width:960px)_and_(max-height:750px)]:h-[70vh] [@media(max-height:680px)]:h-[70vh] relative flex items-center justify-center overflow-hidden">
+      <div className="w-full h-[400px] sm:h-[480px] md:h-[580px] lg:h-[660px] xl:h-[740px] relative flex items-center overflow-hidden">
         {/* Background Image Slide */}
         <a href={slide.link} className="absolute inset-0 w-full h-full block">
-          <img
-            src={slide.img}
-            alt={slide.title || 'SK Banner'}
-            className="w-full h-full object-cover object-center transition-all duration-700 ease-out scale-100"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = getImageUrl('/banners/banner1.png');
-            }}
-          />
-          {/* Subtle overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
+          {slide.img && (
+            <img
+              src={slide.img}
+              alt={slide.title || 'SK Banner'}
+              className="w-full h-full object-cover object-center transition-transform duration-1000 ease-out scale-100"
+            />
+          )}
+          {/* Left-heavy gradient vignette for high text contrast */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/30" />
         </a>
+
+        {/* Hero Text Content Overlay (Left Aligned Luxury Editorial Style) */}
+        <div className="w-full max-w-[1440px] mx-auto px-6 sm:px-12 lg:px-20 xl:px-28 relative z-10 flex items-center justify-start pointer-events-none">
+          <div className="max-w-[680px] text-left flex flex-col items-start gap-3.5 sm:gap-5">
+            {/* Subtitle / Gold Accent Bar */}
+            {(slide.subtitle || slide.sub_title) && (
+              <div className="flex items-center gap-3 animate-fade-in">
+                <span className="w-8 h-[2px] bg-[#C39F68]" />
+                <span className="text-[0.7rem] sm:text-[0.78rem] md:text-[0.85rem] font-extrabold tracking-[0.25em] text-[#C39F68] uppercase">
+                  {slide.subtitle || slide.sub_title}
+                </span>
+              </div>
+            )}
+
+            {/* Main Editorial Title */}
+            {slide.title && (
+              <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.12] drop-shadow-md">
+                {slide.title}
+              </h1>
+            )}
+
+            {/* Description Paragraph */}
+            {slide.desc && (
+              <p className="text-xs sm:text-sm md:text-base text-gray-300 font-normal leading-relaxed max-w-lg line-clamp-3">
+                {slide.desc}
+              </p>
+            )}
+
+            {/* Premium CTA Button */}
+            <a
+              href={slide.link || '/shop'}
+              className="pointer-events-auto mt-2 sm:mt-4 inline-flex items-center gap-3 bg-[#C39F68] text-[#111111] hover:bg-white hover:text-[#111111] px-7 sm:px-9 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-extrabold tracking-widest uppercase transition-all duration-300 shadow-[0_10px_30px_rgba(195,159,104,0.35)] hover:-translate-y-0.5 no-underline cursor-pointer group"
+            >
+              <span>EXPLORE COLLECTION</span>
+              <ChevronRight size={16} className="transition-transform group-hover:translate-x-1" />
+            </a>
+          </div>
+        </div>
 
         {/* Carousel Navigation Arrows */}
         {slides.length > 1 && (
           <>
             <button
               onClick={handlePrev}
-              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/30 backdrop-blur-md border border-white/20 text-white flex items-center justify-center cursor-pointer z-20 transition-all duration-300 hover:bg-black/70 hover:scale-110"
+              className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white flex items-center justify-center cursor-pointer z-20 transition-all duration-300 hover:bg-[#C39F68] hover:border-[#C39F68] hover:scale-110"
               aria-label="Previous Slide"
             >
-              <ChevronLeft size={24} />
+              <ChevronLeft size={22} />
             </button>
             <button
               onClick={handleNext}
-              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/30 backdrop-blur-md border border-white/20 text-white flex items-center justify-center cursor-pointer z-20 transition-all duration-300 hover:bg-black/70 hover:scale-110"
+              className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white flex items-center justify-center cursor-pointer z-20 transition-all duration-300 hover:bg-[#C39F68] hover:border-[#C39F68] hover:scale-110"
               aria-label="Next Slide"
             >
-              <ChevronRight size={24} />
+              <ChevronRight size={22} />
             </button>
           </>
         )}
 
-        {/* Carousel Indicator Dots */}
+        {/* Left Aligned Carousel Indicator Dots */}
         {slides.length > 1 && (
-          <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+          <div className="absolute bottom-8 left-6 sm:left-12 lg:left-20 xl:left-28 flex items-center gap-2.5 z-20">
             {slides.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentSlide(idx)}
-                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                  currentSlide === idx ? 'w-8 bg-[#C39F68]' : 'w-2 bg-white/50 hover:bg-white/80'
+                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                  currentSlide === idx ? 'w-9 bg-[#C39F68]' : 'w-3 bg-white/40 hover:bg-white/80'
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />
@@ -166,15 +198,15 @@ export default function Hero() {
           </div>
         )}
 
-        {/* Scroll Down Arrow Button */}
+        {/* Scroll Down Button */}
         <button
           type="button"
           onClick={scrollToNextSection}
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md border border-white/30 text-white flex items-center justify-center cursor-pointer z-30 transition-all duration-300 hover:bg-[#C39F68] hover:border-[#C39F68] hover:scale-110 animate-bounce shadow-lg"
+          className="absolute bottom-6 right-6 sm:right-12 hidden md:flex w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/30 text-white items-center justify-center cursor-pointer z-30 transition-all duration-300 hover:bg-[#C39F68] hover:border-[#C39F68] hover:scale-110 animate-bounce shadow-lg"
           aria-label="Scroll to next section"
           title="Scroll Down"
         >
-          <ChevronDown size={22} className="text-white" />
+          <ChevronDown size={20} className="text-white" />
         </button>
       </div>
     </section>
