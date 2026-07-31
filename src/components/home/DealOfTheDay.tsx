@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { productAPI } from '@/api/services/productAPI';
 import { getImageUrl } from '@/utils/imageHelper';
 import { getProductSlug, formatProductTitle } from '@/utils/slugHelper';
-import ProductCard from '@/components/product/ProductCard';
+import ProductCarousel, { ItemCard } from '@/components/product/ProductCarousel';
 import { ProductGridSkeleton } from '@/components/common/Skeletons';
 
 interface CardItem {
@@ -42,6 +42,21 @@ const mapProduct = (item: any, idx: number): CardItem => {
   };
 };
 
+const mapCardToItemCard = (item: CardItem): ItemCard => ({
+  id: item.id,
+  title: item.title,
+  slug: item.slug,
+  rating: item.rating,
+  reviewsCount: item.reviewsCount,
+  discountBadge: item.discountBadge,
+  price: item.price,
+  originalPrice: item.originalPrice,
+  badgeText: item.discountBadge ? 'Special Offer' : undefined,
+  badgeType: 'gold',
+  img: item.img,
+  actionText: 'Add To Cart'
+});
+
 export default function DealOfTheDay() {
   const [items, setItems] = useState<CardItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -66,7 +81,7 @@ export default function DealOfTheDay() {
 
   if (loading) {
     return (
-      <section className="w-full py-16 bg-[#FAF8F5] border-t border-b border-[#EEEEEE]">
+      <section className="w-full py-12 bg-[#FAF8F5] border-t border-b border-[#EEEEEE]">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
           <div className="flex items-center justify-between mb-8">
             <div className="w-48 h-8 rounded animate-shimmer" />
@@ -79,36 +94,17 @@ export default function DealOfTheDay() {
 
   if (items.length === 0) return null;
 
-  return (
-    <section className="w-full py-12 lg:py-20 bg-[#FAF8F5] border-t border-b border-[#EEEEEE] animate-fade-in-up">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
-        <div className="flex items-end justify-between mb-8">
-          <div className="flex flex-col gap-1">
-            <span className="text-[0.72rem] font-bold tracking-[0.15em] text-[#C39F68] uppercase">EXCLUSIVE OFFERS</span>
-            <h2 className="text-[1.5rem] lg:text-[2rem] font-bold tracking-tight text-[#121316]">DEAL OF THE DAY</h2>
-          </div>
-          <Link href="/shop" className="flex items-center gap-2 text-[0.85rem] font-bold text-[#121316] no-underline hover:text-[#C39F68] transition-colors">
-            <span>Explore All Deals</span>
-            <ArrowRight size={16} />
-          </Link>
-        </div>
+  const carouselItems: ItemCard[] = items.map(mapCardToItemCard);
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {items.slice(0, 4).map((item) => (
-            <ProductCard
-              key={item.id}
-              id={item.id}
-              name={item.title}
-              img={item.img}
-              price={item.numericPrice}
-              originalPrice={item.numericOrigPrice}
-              rating={item.rating}
-              reviewsCount={item.reviewsCount}
-              badgeText={item.discountBadge}
-              badgeType={item.discountBadge ? 'gold' : 'none'}
-            />
-          ))}
-        </div>
+  return (
+    <section className="w-full py-8 lg:py-14 bg-[#FAF8F5] border-t border-b border-[#EEEEEE] animate-fade-in-up">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
+        <ProductCarousel
+          items={carouselItems}
+          title="DEAL OF THE DAY"
+          subtag="EXCLUSIVE OFFERS"
+          viewAllLink="/shop"
+        />
       </div>
     </section>
   );
@@ -131,7 +127,7 @@ export function PopularProductsHome() {
 
   if (loading) {
     return (
-      <section className="w-full py-16 bg-white border-b border-[#EEEEEE]">
+      <section className="w-full py-12 bg-white border-b border-[#EEEEEE]">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
           <div className="w-48 h-8 rounded animate-shimmer mb-8" />
           <ProductGridSkeleton count={4} />
@@ -142,36 +138,17 @@ export function PopularProductsHome() {
 
   if (items.length === 0) return null;
 
-  return (
-    <section className="w-full py-16 bg-white border-b border-[#EEEEEE] animate-fade-in-up">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
-        <div className="flex items-end justify-between mb-8">
-          <div className="flex flex-col gap-1">
-            <span className="text-[0.72rem] font-bold tracking-[0.15em] text-[#C39F68] uppercase">TRENDING SELECTIONS</span>
-            <h2 className="text-[1.5rem] lg:text-[2rem] font-bold tracking-tight text-[#121316]">POPULAR PRODUCTS</h2>
-          </div>
-          <Link href="/shop" className="flex items-center gap-2 text-[0.85rem] font-bold text-[#121316] no-underline hover:text-[#C39F68] transition-colors">
-            <span>Explore All</span>
-            <ArrowRight size={16} />
-          </Link>
-        </div>
+  const carouselItems: ItemCard[] = items.map(mapCardToItemCard);
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {items.slice(0, 4).map((item) => (
-            <ProductCard
-              key={item.id}
-              id={item.id}
-              name={item.title}
-              img={item.img}
-              price={item.numericPrice}
-              originalPrice={item.numericOrigPrice}
-              rating={item.rating}
-              reviewsCount={item.reviewsCount}
-              badgeText={item.discountBadge}
-              badgeType={item.discountBadge ? 'gold' : 'none'}
-            />
-          ))}
-        </div>
+  return (
+    <section className="w-full py-8 lg:py-14 bg-white border-b border-[#EEEEEE] animate-fade-in-up">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
+        <ProductCarousel
+          items={carouselItems}
+          title="POPULAR PRODUCTS"
+          subtag="TRENDING SELECTIONS"
+          viewAllLink="/shop"
+        />
       </div>
     </section>
   );
@@ -195,36 +172,17 @@ export function Evergreen() {
   if (loading) return null;
   if (items.length === 0) return null;
 
-  return (
-    <section className="w-full py-16 bg-[#FAF8F5] border-t border-[#EEEEEE] animate-fade-in-up">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
-        <div className="flex items-end justify-between mb-8">
-          <div className="flex flex-col gap-1">
-            <span className="text-[0.72rem] font-bold tracking-[0.15em] text-[#C39F68] uppercase">TIMELESS FAVORITES</span>
-            <h2 className="text-[1.5rem] lg:text-[2rem] font-bold tracking-tight text-[#121316]">EVERGREEN COLLECTION</h2>
-          </div>
-          <Link href="/shop" className="flex items-center gap-2 text-[0.85rem] font-bold text-[#121316] no-underline hover:text-[#C39F68] transition-colors">
-            <span>View All</span>
-            <ArrowRight size={16} />
-          </Link>
-        </div>
+  const carouselItems: ItemCard[] = items.map(mapCardToItemCard);
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {items.slice(0, 4).map((item) => (
-            <ProductCard
-              key={item.id}
-              id={item.id}
-              name={item.title}
-              img={item.img}
-              price={item.numericPrice}
-              originalPrice={item.numericOrigPrice}
-              rating={item.rating}
-              reviewsCount={item.reviewsCount}
-              badgeText={item.discountBadge}
-              badgeType={item.discountBadge ? 'gold' : 'none'}
-            />
-          ))}
-        </div>
+  return (
+    <section className="w-full py-8 lg:py-14 bg-[#FAF8F5] border-t border-[#EEEEEE] animate-fade-in-up">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
+        <ProductCarousel
+          items={carouselItems}
+          title="EVERGREEN COLLECTION"
+          subtag="TIMELESS FAVORITES"
+          viewAllLink="/shop"
+        />
       </div>
     </section>
   );

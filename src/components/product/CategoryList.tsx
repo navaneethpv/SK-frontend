@@ -104,7 +104,9 @@ export default function CategoryList() {
         ) : (
           <div
             ref={scrollContainerRef}
-            className="flex gap-4 lg:gap-6 overflow-x-auto scroll-smooth pb-4 pt-1 no-scrollbar"
+            className={`flex gap-4 lg:gap-6 overflow-x-auto scroll-smooth pb-4 pt-1 no-scrollbar ${
+              categories.length < 4 ? 'justify-center' : ''
+            }`}
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {categories.map((cat) => (

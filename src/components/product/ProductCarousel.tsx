@@ -152,8 +152,10 @@ export default function ProductCarousel({
 
         <div className="overflow-hidden w-full py-2">
           <div
-            className="flex gap-4 lg:gap-6 transition-transform duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-transform"
-            style={{ transform: `translateX(-${currentIndex * (100 / itemsPerPage)}%)` }}
+            className={`flex gap-4 lg:gap-6 transition-transform duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-transform ${
+              items.length < itemsPerPage ? 'justify-center' : ''
+            }`}
+            style={{ transform: items.length < itemsPerPage ? 'none' : `translateX(-${currentIndex * (100 / itemsPerPage)}%)` }}
           >
             {items.map((item) => (
               <div
