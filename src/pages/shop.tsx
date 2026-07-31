@@ -98,6 +98,18 @@ export default function ShopPage() {
   // Mobile Filter Drawer Toggle
   const [mobileFilterOpen, setMobileFilterOpen] = useState<boolean>(false);
 
+  // Lock background scroll when mobile filter drawer is open
+  useEffect(() => {
+    if (mobileFilterOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileFilterOpen]);
+
   // Sync search from router query
   useEffect(() => {
     if (search && typeof search === 'string' && search.trim()) {

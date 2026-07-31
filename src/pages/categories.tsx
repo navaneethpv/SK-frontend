@@ -80,7 +80,7 @@ export default function CategoriesPage() {
               <p>Loading categories...</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7">
               {categories.map((cat, idx) => (
                 <Link key={cat.id} href={`/shop?category=${cat.slug}`} className="group relative rounded-xl overflow-hidden bg-white shadow-[0_4px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.14)] hover:-translate-y-1.5 transition-all duration-300">
                   <div className="relative w-full aspect-[1.1] overflow-hidden">

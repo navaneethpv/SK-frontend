@@ -20,7 +20,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [shopDropdownOpen, setShopDropdownOpen] = useState(false);
+  const [categoriesDropdownOpen, setCategoriesDropdownOpen] = useState(false);
   const [navCategories, setNavCategories] = useState<NavCategory[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -42,13 +42,24 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
     productAPI.getCategories()
       .then((data: any[]) => {
         if (Array.isArray(data) && data.length > 0) {
           const mapped: NavCategory[] = data.map((cat: any, idx: number) => ({
             id: cat.id || idx + 1,
             name: cat.name || `Category ${idx + 1}`,
-            slug: cat.slug || cat.name?.toLowerCase().replace(/\s+/g, '-') || 'all',
+            slug: cat.slug || cat.name?.toLowerCase().trim().replace(/\s+/g, '-') || 'all',
             icon: cat.icon || cat.image || undefined,
           }));
           setNavCategories(mapped);
@@ -60,14 +71,14 @@ export default function Header() {
       .finally(() => setLoadingCategories(false));
   }, []);
 
-  const handleMouseEnterShop = () => {
+  const handleMouseEnterCategories = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setShopDropdownOpen(true);
+    setCategoriesDropdownOpen(true);
   };
 
-  const handleMouseLeaveShop = () => {
+  const handleMouseLeaveCategories = () => {
     timeoutRef.current = setTimeout(() => {
-      setShopDropdownOpen(false);
+      setCategoriesDropdownOpen(false);
     }, 200);
   };
 
@@ -118,33 +129,43 @@ export default function Header() {
             Home
           </Link>
 
-          {/* Shop Dropdown with 3-Column API Categories */}
+          {/* Clean Direct Shop Link */}
+          <Link
+            href="/shop"
+            className={`text-[0.88rem] font-semibold no-underline transition-colors ${
+              isActive('/shop') ? 'text-[#C39F68] font-bold border-b-2 border-[#C39F68] pb-0.5' : 'text-white hover:text-[#C39F68]'
+            }`}
+          >
+            Shop
+          </Link>
+
+          {/* Categories Dropdown with 3-Column API Categories */}
           <div
             className="relative py-2"
-            onMouseEnter={handleMouseEnterShop}
-            onMouseLeave={handleMouseLeaveShop}
+            onMouseEnter={handleMouseEnterCategories}
+            onMouseLeave={handleMouseLeaveCategories}
           >
             <Link
-              href="/shop"
+              href="/categories"
               className={`text-[0.88rem] font-semibold no-underline cursor-pointer flex items-center gap-1.5 transition-colors ${
-                shopDropdownOpen || isActive('/shop') ? 'text-[#C39F68] font-bold border-b-2 border-[#C39F68] pb-0.5' : 'text-white hover:text-[#C39F68]'
+                categoriesDropdownOpen || isActive('/categories') ? 'text-[#C39F68] font-bold border-b-2 border-[#C39F68] pb-0.5' : 'text-white hover:text-[#C39F68]'
               }`}
             >
-              <span>Shop</span>
-              <ChevronDown size={13} className={`transition-transform duration-200 ${shopDropdownOpen ? 'rotate-180 text-[#C39F68]' : ''}`} />
+              <span>Categories</span>
+              <ChevronDown size={13} className={`transition-transform duration-200 ${categoriesDropdownOpen ? 'rotate-180 text-[#C39F68]' : ''}`} />
             </Link>
 
-            {shopDropdownOpen && (
+            {categoriesDropdownOpen && (
               <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50 animate-fade-in">
                 <div className="w-[500px] sm:w-[560px] bg-white border border-[#121316] rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.18)] p-5">
                   <div className="flex items-center justify-between pb-3 mb-3.5 border-b border-[#EAE5DC]">
-                    <span className="text-[0.8rem] font-extrabold text-[#121316] uppercase tracking-wider">SHOP CATEGORIES</span>
+                    <span className="text-[0.8rem] font-extrabold text-[#121316] uppercase tracking-wider">PRODUCT CATEGORIES</span>
                     <Link
-                      href="/shop"
-                      onClick={() => setShopDropdownOpen(false)}
+                      href="/categories"
+                      onClick={() => setCategoriesDropdownOpen(false)}
                       className="flex items-center gap-1 text-[0.75rem] font-bold text-[#C39F68] hover:underline"
                     >
-                      <span>View Full Shop Catalogue</span>
+                      <span>Explore All Categories</span>
                       <ArrowRight size={14} />
                     </Link>
                   </div>
@@ -161,7 +182,7 @@ export default function Header() {
                         <Link
                           key={cat.id}
                           href={`/shop?category=${cat.slug}`}
-                          onClick={() => setShopDropdownOpen(false)}
+                          onClick={() => setCategoriesDropdownOpen(false)}
                           className="flex items-center gap-2 p-2.5 rounded-xl hover:bg-[#FAF8F5] transition-all duration-200 group border border-transparent hover:border-[#EAE5DC]"
                         >
                           <div className="w-2 h-2 rounded-full bg-[#C39F68] shrink-0 group-hover:scale-125 transition-transform" />
@@ -180,15 +201,6 @@ export default function Header() {
               </div>
             )}
           </div>
-
-          <Link 
-            href="/categories" 
-            className={`text-[0.88rem] font-semibold no-underline transition-colors ${
-              isActive('/categories') ? 'text-[#C39F68] font-bold border-b-2 border-[#C39F68] pb-0.5' : 'text-white hover:text-[#C39F68]'
-            }`}
-          >
-            Categories
-          </Link>
 
           <Link 
             href="/best-sellers" 
@@ -252,6 +264,7 @@ export default function Header() {
         <div className="lg:hidden bg-[#18191C] border-b border-[#2B2D33] px-6 py-5 flex flex-col gap-4 animate-fade-in">
           <Link href="/" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">Home</Link>
           <Link href="/shop" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">Shop Catalogue</Link>
+          <Link href="/categories" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">Categories</Link>
           <div className="flex flex-col gap-2 pl-2 border-l-2 border-[#C39F68]">
             <span className="text-[0.75rem] font-bold text-[#C39F68] uppercase tracking-wider">Shop Categories</span>
             {navCategories.map((cat) => (
@@ -259,13 +272,12 @@ export default function Header() {
                 key={cat.id}
                 href={`/shop?category=${cat.slug}`}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-[0.9rem] font-semibold text-gray-300 no-underline hover:text-white"
+                className="text-[0.95rem] font-semibold text-gray-300 no-underline hover:text-white"
               >
                 {cat.name}
               </Link>
             ))}
           </div>
-          <Link href="/categories" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">Categories</Link>
           <Link href="/best-sellers" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">Best Sellers</Link>
           <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="text-[0.95rem] font-bold text-white no-underline">About Us</Link>
         </div>

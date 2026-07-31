@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { X, Trash2, ShoppingBag, ArrowRight, ShieldCheck } from 'lucide-react';
@@ -7,6 +7,17 @@ import { useCart } from '@/context/CartContext';
 export default function CartDrawer() {
   const router = useRouter();
   const { cart, cartCount, subtotal, isCartDrawerOpen, setIsCartDrawerOpen, updateQuantity, removeFromCart } = useCart();
+
+  useEffect(() => {
+    if (isCartDrawerOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isCartDrawerOpen]);
 
   if (!isCartDrawerOpen) return null;
 
