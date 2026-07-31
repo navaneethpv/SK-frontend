@@ -276,39 +276,47 @@ export default function Header() {
         <div className="flex items-center gap-3 sm:gap-4">
           {searchOpen ? (
             <div ref={searchContainerRef} className="relative">
-              <form onSubmit={handleSearch} className="flex items-center bg-[#222327] border border-[#3A3C44] rounded-full px-3 py-1 animate-fade-in">
+              <form onSubmit={handleSearch} className="flex items-center bg-[#1A1B1F] border border-[#2E3038] focus-within:border-[#C39F68] rounded-full px-3.5 py-1.5 shadow-inner transition-all duration-300">
+                <Search size={16} className="text-[#A1A1AA] mr-2 shrink-0" />
                 <input
                   type="text"
                   placeholder="Search products, categories..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-transparent border-none text-white text-[0.8rem] outline-none w-48 sm:w-64 px-1"
+                  className="bg-transparent border-none text-white text-[0.82rem] outline-none w-48 sm:w-64"
                   autoFocus
                 />
-                <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(''); setProductSuggestions([]); }} className="bg-transparent border-none cursor-pointer p-1 text-white" aria-label="Close search">
-                  <X size={18} color="#ffffff" />
+                <button
+                  type="button"
+                  onClick={() => { setSearchOpen(false); setSearchQuery(''); setProductSuggestions([]); }}
+                  className="bg-transparent border-none cursor-pointer p-1 text-[#A1A1AA] hover:text-white transition-colors"
+                  aria-label="Close search"
+                >
+                  <X size={16} />
                 </button>
               </form>
 
               {/* Autocomplete Search Suggestions Dropdown */}
               {searchQuery.trim().length > 0 && (
-                <div className="absolute top-full right-0 mt-2 w-[300px] sm:w-[380px] bg-white border border-[#121316] rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] overflow-hidden z-[1050] animate-fade-in p-3">
+                <div className="absolute top-full right-0 mt-3 w-[330px] sm:w-[410px] bg-white border border-[#EAE5DC] rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.22)] overflow-hidden z-[1050] animate-fade-in p-4">
                   
                   {/* Category Matches Section */}
                   {matchedCategories.length > 0 && (
-                    <div className="mb-3 pb-2 border-b border-[#F3F4F6]">
-                      <span className="text-[0.68rem] font-extrabold text-[#C39F68] uppercase tracking-wider block mb-1.5 px-2 flex items-center gap-1">
-                        <Tag size={12} /> Matching Categories
-                      </span>
-                      <div className="flex gap-1.5 flex-wrap px-1">
+                    <div className="mb-3.5 pb-3 border-b border-[#F3F4F6]">
+                      <div className="flex items-center gap-1.5 mb-2 px-1 text-[0.68rem] font-extrabold text-[#C39F68] uppercase tracking-[0.14em]">
+                        <Tag size={13} className="text-[#C39F68]" />
+                        <span>MATCHING CATEGORIES</span>
+                      </div>
+                      <div className="flex gap-2 flex-wrap px-1">
                         {matchedCategories.map((cat) => (
                           <Link
                             key={cat.id}
                             href={`/shop?category=${cat.slug}`}
                             onClick={() => { setSearchOpen(false); setSearchQuery(''); setProductSuggestions([]); }}
-                            className="px-3 py-1 bg-[#FAF8F5] border border-[#EAE5DC] rounded-full text-[0.72rem] font-bold text-[#121316] hover:bg-[#121316] hover:text-white transition-colors"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FAF8F5] border border-[#EAE5DC] rounded-full text-[0.75rem] font-bold text-[#121316] hover:bg-[#121316] hover:text-white hover:border-[#121316] transition-all duration-200 shadow-2xs"
                           >
-                            {cat.name}
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#C39F68]" />
+                            <span>{cat.name}</span>
                           </Link>
                         ))}
                       </div>
@@ -317,16 +325,23 @@ export default function Header() {
 
                   {/* Product Matches Section */}
                   <div>
-                    <span className="text-[0.68rem] font-extrabold text-[#9CA3AF] uppercase tracking-wider block mb-2 px-2 flex items-center gap-1">
-                      <Package size={12} /> Matching Products
-                    </span>
+                    <div className="flex items-center justify-between mb-2.5 px-1 text-[0.68rem] font-extrabold text-[#8E8E93] uppercase tracking-[0.14em]">
+                      <div className="flex items-center gap-1.5">
+                        <Package size={13} className="text-[#C39F68]" />
+                        <span>MATCHING PRODUCTS</span>
+                      </div>
+                      {productSuggestions.length > 0 && (
+                        <span className="text-[0.68rem] text-[#A1A1AA] font-semibold">{productSuggestions.length} found</span>
+                      )}
+                    </div>
 
                     {searching ? (
-                      <div className="py-4 text-center text-xs text-gray-400">
-                        Searching products...
+                      <div className="py-6 text-center text-xs text-[#8E8E93] font-medium flex items-center justify-center gap-2">
+                        <div className="w-4 h-4 border-2 border-[#C39F68] border-t-transparent rounded-full animate-spin" />
+                        <span>Searching catalogue...</span>
                       </div>
                     ) : productSuggestions.length > 0 ? (
-                      <div className="flex flex-col gap-1">
+                      <div className="flex flex-col gap-1.5">
                         {productSuggestions.map((prod) => {
                           const rawImg = prod.icon || (prod.img && prod.img[0]?.image);
                           const numPrice = typeof prod.selling_price === 'number' && prod.selling_price > 0 ? prod.selling_price : parseFloat(prod.price) || 499;
@@ -338,25 +353,25 @@ export default function Header() {
                               key={prod.id}
                               href={`/product/${slug}`}
                               onClick={() => { setSearchOpen(false); setSearchQuery(''); setProductSuggestions([]); }}
-                              className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#FAF8F5] transition-colors group"
+                              className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#FAF8F5] transition-all duration-200 group border border-transparent hover:border-[#EAE5DC]"
                             >
-                              <div className="w-10 h-10 bg-[#FAF7F2] border border-[#EAE5DC] rounded-lg p-1 shrink-0 flex items-center justify-center">
-                                <img src={getImageUrl(rawImg, '/hero cards/4.png')} alt={title} className="max-w-full max-h-full object-contain" />
+                              <div className="w-12 h-12 bg-[#FAF7F2] border border-[#EAE5DC] rounded-xl p-1 shrink-0 flex items-center justify-center group-hover:border-[#C39F68] transition-colors">
+                                <img src={getImageUrl(rawImg, '/hero cards/4.png')} alt={title} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform" />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <h4 className="text-[0.8rem] font-bold text-[#121316] group-hover:text-[#C39F68] transition-colors truncate">
+                                <h4 className="text-[0.83rem] font-bold text-[#121316] group-hover:text-[#C39F68] transition-colors line-clamp-1">
                                   {title}
                                 </h4>
-                                <span className="text-[0.75rem] font-extrabold text-[#121316]">₹{numPrice}</span>
+                                <span className="text-[0.78rem] font-extrabold text-[#C39F68] block mt-0.5">₹{numPrice}</span>
                               </div>
-                              <ArrowRight size={14} className="text-gray-400 group-hover:text-[#C39F68] transition-colors shrink-0" />
+                              <ArrowRight size={15} className="text-[#A1A1AA] group-hover:text-[#C39F68] group-hover:translate-x-1 transition-all shrink-0 mr-1" />
                             </Link>
                           );
                         })}
                       </div>
                     ) : (
-                      <div className="py-3 text-center text-xs text-gray-400">
-                        No product matches found.
+                      <div className="py-5 text-center text-xs text-[#8E8E93] font-medium bg-[#FAF8F5] rounded-xl border border-[#EAE5DC]">
+                        No products found for &quot;{searchQuery}&quot;
                       </div>
                     )}
                   </div>
@@ -365,9 +380,10 @@ export default function Header() {
                   <button
                     type="button"
                     onClick={handleSearch}
-                    className="w-full mt-2 pt-2.5 border-t border-[#F3F4F6] text-center text-[0.75rem] font-bold text-[#C39F68] hover:underline cursor-pointer block"
+                    className="w-full mt-3 pt-3 border-t border-[#F3F4F6] text-center text-[0.78rem] font-extrabold text-[#121316] hover:text-[#C39F68] transition-colors flex items-center justify-center gap-1.5 cursor-pointer group"
                   >
-                    View All Results for &quot;{searchQuery}&quot; →
+                    <span>View All Results for &quot;{searchQuery}&quot;</span>
+                    <ArrowRight size={14} className="text-[#C39F68] group-hover:translate-x-1 transition-transform" />
                   </button>
 
                 </div>
