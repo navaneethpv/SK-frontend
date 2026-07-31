@@ -101,22 +101,22 @@ export default function BestSellersPage() {
       <Header />
 
       <main className="flex-1">
-        <div className="bg-[#121316] text-white py-16 px-6 text-center">
+        <div className="bg-[#121316] text-white py-12 sm:py-16 px-4 sm:px-6 text-center">
           <div className="max-w-[800px] mx-auto">
-            <span className="inline-block text-[0.75rem] font-bold tracking-[0.15em] text-[#C39F68] mb-3">MOST LOVED & TOP RATED</span>
-            <h1 className="text-[2.5rem] font-extrabold mb-4 tracking-tight">SK Bestsellers</h1>
-            <p className="text-[1rem] text-[#9CA3AF] leading-relaxed">
+            <span className="inline-block text-[0.72rem] sm:text-[0.75rem] font-bold tracking-[0.15em] text-[#C39F68] mb-3">MOST LOVED & TOP RATED</span>
+            <h1 className="text-2xl sm:text-4xl font-extrabold mb-4 tracking-tight">SK Bestsellers</h1>
+            <p className="text-[0.88rem] sm:text-[1rem] text-[#9CA3AF] leading-relaxed">
               Discover customer favorites—handpicked luxury hair care, long-lasting fragrances, and premium leather essentials.
             </p>
           </div>
         </div>
 
-        <div className="max-w-[1440px] mx-auto px-6 py-12 lg:py-20">
-          <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#E5E7EB]">
-            <span className="text-[0.9rem] font-semibold text-[#4B5563]">Showing {products.length} Best Sellers</span>
-            <div className="flex items-center gap-2.5 text-[0.88rem] text-[#374151]">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-8 pb-4 border-b border-[#E5E7EB]">
+            <span className="text-[0.85rem] sm:text-[0.9rem] font-semibold text-[#4B5563]">Showing {products.length} Best Sellers</span>
+            <div className="flex items-center gap-2.5 text-[0.82rem] sm:text-[0.88rem] text-[#374151]">
               <label htmlFor="sort-select">Sort by:</label>
-              <select id="sort-select" className="px-3 py-1.5 border border-[#D1D5DB] rounded-md bg-white text-[0.88rem] outline-none cursor-pointer" defaultValue="popular">
+              <select id="sort-select" className="px-3 py-1.5 border border-[#D1D5DB] rounded-md bg-white text-[0.82rem] sm:text-[0.88rem] outline-none cursor-pointer" defaultValue="popular">
                 <option value="popular">Most Popular</option>
                 <option value="rating">Highest Rated</option>
                 <option value="price-low">Price: Low to High</option>

@@ -92,19 +92,19 @@ export default function ProductsPage() {
       <Header />
 
       <main className="flex-1">
-        <div className="bg-[#111111] text-white pt-28 pb-16 px-6 text-center">
+        <div className="bg-[#111111] text-white pt-24 sm:pt-28 pb-12 sm:pb-16 px-4 sm:px-6 text-center">
           <div className="max-w-[800px] mx-auto">
-            <span className="inline-block text-[0.72rem] font-bold tracking-[0.14em] text-[#C5A059] mb-3">SK CATALOGUE</span>
-            <h1 className="text-[2.2rem] font-extrabold mb-3 tracking-wide">ALL PRODUCTS</h1>
-            <p className="text-[0.95rem] text-[#A3A3A3] leading-relaxed">
+            <span className="inline-block text-[0.72rem] sm:text-[0.75rem] font-bold tracking-[0.14em] text-[#C5A059] mb-3">SK CATALOGUE</span>
+            <h1 className="text-2xl sm:text-4xl font-extrabold mb-3 tracking-wide">ALL PRODUCTS</h1>
+            <p className="text-[0.88rem] sm:text-[0.95rem] text-[#A3A3A3] leading-relaxed">
               Explore our full collection of organic grooming formulations and lifestyle essentials.
             </p>
           </div>
         </div>
 
-        <div className="max-w-[1440px] mx-auto px-6 py-12 lg:py-20">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
           <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#EAEAEA]">
-            <span className="text-[0.85rem] font-bold tracking-wider text-[#666666]">Showing {products.length} Products</span>
+            <span className="text-[0.82rem] sm:text-[0.85rem] font-bold tracking-wider text-[#666666]">Showing {products.length} Products</span>
           </div>
 
           {loading ? (

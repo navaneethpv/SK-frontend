@@ -159,50 +159,50 @@ export default function CheckoutOrderPage() {
         <Header />
 
         <main className="pt-28 pb-20">
-          <div className="max-w-[800px] mx-auto px-6">
+          <div className="max-w-[800px] mx-auto px-4 sm:px-6">
             {/* Breadcrumbs */}
-            <div className="text-[0.85rem] text-[#64748B] mb-5">
+            <div className="text-[0.82rem] sm:text-[0.85rem] text-[#64748B] mb-5">
               <Link href="/" className="hover:text-[#0F172A] transition-colors">Home</Link> &gt; <Link href="/cart" className="hover:text-[#0F172A] transition-colors">Cart</Link> &gt; <span className="text-[#0F172A] font-semibold">Checkout</span>
             </div>
 
             <div className="text-center mb-8">
-              <h1 className="text-[2.25rem] font-extrabold text-[#0F172A] mb-2">1-Click Express Checkout</h1>
-              <p className="text-[0.95rem] text-[#64748B]">Review your items and place your order directly via WhatsApp</p>
+              <h1 className="text-[1.8rem] sm:text-[2.25rem] font-extrabold text-[#0F172A] mb-2">1-Click Express Checkout</h1>
+              <p className="text-[0.85rem] sm:text-[0.95rem] text-[#64748B]">Review your items and place your order directly via WhatsApp</p>
             </div>
 
             {/* Order Confirmation Banner */}
             {orderPlaced ? (
-              <div className="bg-white rounded-2xl p-12 text-center shadow-[0_10px_25px_-5px_rgba(0,0,0,0.05)] border border-[#E2E8F0] animate-fade-in">
-                <div className="inline-flex items-center justify-center w-[90px] h-[90px] bg-[#ECFDF5] rounded-full mb-6">
-                  <CheckCircle size={48} className="text-[#10B981]" />
+              <div className="bg-white rounded-2xl p-6 sm:p-12 text-center shadow-[0_10px_25px_-5px_rgba(0,0,0,0.05)] border border-[#E2E8F0] animate-fade-in">
+                <div className="inline-flex items-center justify-center w-[75px] h-[75px] sm:w-[90px] sm:h-[90px] bg-[#ECFDF5] rounded-full mb-6">
+                  <CheckCircle size={40} className="text-[#10B981]" />
                 </div>
-                <h2 className="text-[1.75rem] font-bold text-[#0F172A] mb-4">Order Sent to WhatsApp!</h2>
-                <p className="text-[1rem] text-[#64748B] leading-relaxed mb-8">
+                <h2 className="text-[1.4rem] sm:text-[1.75rem] font-bold text-[#0F172A] mb-4">Order Sent to WhatsApp!</h2>
+                <p className="text-[0.9rem] sm:text-[1rem] text-[#64748B] leading-relaxed mb-8">
                   Your order <strong>#{generatedOrderNumber}</strong> has been generated. WhatsApp chat has opened automatically to confirm your delivery details.
                 </p>
                 <div className="flex gap-4 justify-center flex-wrap">
                   <button
                     onClick={() => window.open(`https://wa.me/${DEFAULT_STORE_WHATSAPP}`, '_blank')}
-                    className="inline-flex items-center gap-2 bg-[#25D366] text-white px-7 py-3.5 rounded-xl font-bold border-none cursor-pointer hover:bg-[#1DA851] hover:-translate-y-0.5 transition-all"
+                    className="inline-flex items-center gap-2 bg-[#25D366] text-white px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl font-bold border-none cursor-pointer hover:bg-[#1DA851] hover:-translate-y-0.5 transition-all text-xs sm:text-sm"
                   >
                     <Send size={18} /> Open WhatsApp Chat
                   </button>
-                  <Link href="/" className="inline-flex items-center gap-2 bg-[#0F172A] text-white px-7 py-3.5 rounded-xl font-semibold no-underline hover:bg-[#1E293B] transition-colors">
+                  <Link href="/" className="inline-flex items-center gap-2 bg-[#0F172A] text-white px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl font-semibold no-underline hover:bg-[#1E293B] transition-colors text-xs sm:text-sm">
                     Return to Store
                   </Link>
                 </div>
               </div>
             ) : cart.length === 0 ? (
-              <div className="bg-white rounded-2xl p-12 text-center shadow-[0_10px_25px_-5px_rgba(0,0,0,0.05)] border border-[#E2E8F0]">
+              <div className="bg-white rounded-2xl p-6 sm:p-12 text-center shadow-[0_10px_25px_-5px_rgba(0,0,0,0.05)] border border-[#E2E8F0]">
                 <ShoppingBag size={64} className="text-gray-300 mx-auto mb-4" />
-                <h2 className="text-[1.75rem] font-bold text-[#0F172A] mb-4">Your Cart is Empty</h2>
-                <p className="text-[1rem] text-[#64748B] leading-relaxed mb-8">Please add items to your shopping cart before proceeding to checkout.</p>
-                <Link href="/" className="inline-flex items-center gap-2 bg-[#0F172A] text-white px-7 py-3.5 rounded-xl font-semibold no-underline hover:bg-[#C39F68] transition-colors">
+                <h2 className="text-[1.4rem] sm:text-[1.75rem] font-bold text-[#0F172A] mb-4">Your Cart is Empty</h2>
+                <p className="text-[0.9rem] sm:text-[1rem] text-[#64748B] leading-relaxed mb-8">Please add items to your shopping cart before proceeding to checkout.</p>
+                <Link href="/" className="inline-flex items-center gap-2 bg-[#0F172A] text-white px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl font-semibold no-underline hover:bg-[#C39F68] transition-colors text-xs sm:text-sm">
                   <ArrowLeft size={18} /> Explore Products
                 </Link>
               </div>
             ) : (
-              <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-[0_4px_25px_rgba(0,0,0,0.05)] border border-[#E2E8F0] flex flex-col gap-6">
+              <div className="bg-white rounded-2xl p-4 sm:p-8 lg:p-10 shadow-[0_4px_25px_rgba(0,0,0,0.05)] border border-[#E2E8F0] flex flex-col gap-6">
                 <div className="flex items-center justify-between pb-4 border-b border-[#F1F5F9]">
                   <h2 className="text-[1.2rem] font-bold text-[#0F172A] flex items-center gap-2.5">
                     <ShoppingBag size={20} className="text-[#C39F68]" />
