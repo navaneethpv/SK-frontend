@@ -221,9 +221,8 @@ export default function ProductDetail() {
                       <button
                         key={idx}
                         onClick={() => setSelectedImgIndex(idx)}
-                        className={`w-14 h-14 md:w-[76px] md:h-[76px] border rounded-lg p-1 bg-white cursor-pointer transition-all duration-200 ${
-                          selectedImgIndex === idx ? 'border-[#C5A059] shadow-[0_0_0_2px_rgba(197,160,89,0.3)]' : 'border-[#E5E7EB]'
-                        }`}
+                        className={`w-14 h-14 md:w-[76px] md:h-[76px] border rounded-lg p-1 bg-white cursor-pointer transition-all duration-200 ${selectedImgIndex === idx ? 'border-[#C5A059] shadow-[0_0_0_2px_rgba(197,160,89,0.3)]' : 'border-[#E5E7EB]'
+                          }`}
                       >
                         <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-contain" />
                       </button>
@@ -338,7 +337,7 @@ export default function ProductDetail() {
                     )}
                   </div>
 
-                  <div className="border-b border-[#E5E7EB]">
+                  {/* <div className="border-b border-[#E5E7EB]">
                     <button onClick={() => toggleAccordion('specifications')} className="w-full flex items-center justify-between py-3.5 lg:py-4 bg-none border-none text-[0.8rem] lg:text-[0.88rem] font-extrabold tracking-[0.05em] text-[#121316] cursor-pointer">
                       <span>SPECIFICATIONS & DETAILS</span>
                       {openAccordions.specifications ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -353,9 +352,9 @@ export default function ProductDetail() {
                         </ul>
                       </div>
                     )}
-                  </div>
+                  </div> */}
 
-                  <div className="border-b border-[#E5E7EB]">
+                  {/* <div className="border-b border-[#E5E7EB]">
                     <button onClick={() => toggleAccordion('shipping')} className="w-full flex items-center justify-between py-3.5 lg:py-4 bg-none border-none text-[0.8rem] lg:text-[0.88rem] font-extrabold tracking-[0.05em] text-[#121316] cursor-pointer">
                       <span>SHIPPING & RETURNS</span>
                       {openAccordions.shipping ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -365,7 +364,7 @@ export default function ProductDetail() {
                         <p>Orders are dispatched within 24 hours via express air courier. Delivered within 3-5 business days across India. 7-day hassle-free replacement promise for damaged or incorrect deliveries.</p>
                       </div>
                     )}
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
