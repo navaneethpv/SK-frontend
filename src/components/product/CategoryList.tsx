@@ -42,6 +42,9 @@ export default function CategoryList() {
       });
   }, []);
 
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
+
   const handleScroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
       const scrollAmount = 300;
@@ -49,6 +52,25 @@ export default function CategoryList() {
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
       });
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEndX(null);
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return;
+    const distance = touchStartX - touchEndX;
+    if (distance > 40) {
+      handleScroll('right');
+    } else if (distance < -40) {
+      handleScroll('left');
     }
   };
 
@@ -104,7 +126,10 @@ export default function CategoryList() {
         ) : (
           <div
             ref={scrollContainerRef}
-            className={`flex gap-4 lg:gap-6 overflow-x-auto scroll-smooth pb-4 pt-1 no-scrollbar ${
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            className={`flex gap-4 lg:gap-6 overflow-x-auto scroll-smooth pb-4 pt-1 no-scrollbar touch-pan-x ${
               categories.length < 4 ? 'justify-center' : ''
             }`}
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
