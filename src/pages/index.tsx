@@ -5,7 +5,7 @@ import { ChevronRight } from 'lucide-react';
 import Header from '@/components/common/Header';
 import Hero from '@/components/home/Hero';
 import CategoryList from '@/components/product/CategoryList';
-import ComboOffers from '@/components/home/ComboOffers';
+import TrendingProducts from '@/components/home/TrendingProducts';
 import Footer from '@/components/common/Footer';
 import DealOfTheDay from '@/components/home/DealOfTheDay';
 import TrustBar from '@/components/common/TrustBar';
@@ -193,8 +193,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 2. Build Your Bundle Section */}
-        <ComboOffers />
+        {/* 2. Trending Products Section — API: trending-products */}
+        <TrendingProducts />
 
         {/* 3. Deal of the Day — API: Home/deal-of-the-day-home */}
         <DealOfTheDay />
