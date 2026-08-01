@@ -68,9 +68,9 @@ function mapProductToCard(prod: IProduct, fallbackImg: string = '/hero cards/4.p
 }
 
 export default function Home() {
-  const [activeMainTab, setActiveMainTab] = useState<'bestsellers' | 'newarrivals'>('bestsellers');
+  const [activeMainTab, setActiveMainTab] = useState<'bestsellers' | 'popular'>('bestsellers');
   const [bestsellerItems, setBestsellerItems] = useState<ItemCard[]>([]);
-  const [newArrivalItems, setNewArrivalItems] = useState<ItemCard[]>([]);
+  const [popularProducts, setPopularProducts] = useState<ItemCard[]>([]);
 
   useEffect(() => {
     // Fetch Best Sellers Home from API on page load
@@ -97,10 +97,10 @@ export default function Home() {
       });
 
     // Fetch New Arrivals from API
-    productAPI.getNewArrivals()
+    productAPI.getPopularProductsHome()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setNewArrivalItems(data.map((p, idx) => mapProductToCard(p, `/hero cards/${(idx % 6) + 1}.png`)));
+          setPopularProducts(data.map((p, idx) => mapProductToCard(p, `/hero cards/${(idx % 6) + 1}.png`)));
         }
       })
       .catch((err) => console.warn('New arrivals API warning:', err));
@@ -129,18 +129,18 @@ export default function Home() {
       });
   };
 
-  const handleNewArrivalsTabClick = () => {
-    setActiveMainTab('newarrivals');
-    productAPI.getNewArrivals()
+  const handlePopularProductsTabClick = () => {
+    setActiveMainTab('popular');
+    productAPI.getPopularProductsHome()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setNewArrivalItems(data.map((p, idx) => mapProductToCard(p, `/hero cards/${(idx % 6) + 1}.png`)));
+          setPopularProducts(data.map((p, idx) => mapProductToCard(p, `/hero cards/${(idx % 6) + 1}.png`)));
         }
       })
-      .catch((err) => console.warn('New arrivals API warning:', err));
+      .catch((err) => console.warn('Popular products API warning:', err));
   };
 
-  const displayedMainItems = activeMainTab === 'bestsellers' ? bestsellerItems : newArrivalItems;
+  const displayedMainItems = activeMainTab === 'bestsellers' ? bestsellerItems : popularProducts;
 
   return (
     <>
@@ -172,16 +172,16 @@ export default function Home() {
                 <span className="text-[#D4D4D8] font-light text-[1.05rem] sm:text-[1.2rem] md:text-[1.45rem]">|</span>
                 <button
                   type="button"
-                  onClick={handleNewArrivalsTabClick}
+                  onClick={handlePopularProductsTabClick}
                   className={`bg-none border-none text-[1.05rem] sm:text-[1.2rem] md:text-[1.45rem] font-bold cursor-pointer pb-0.5 border-b-2 transition-colors ${
-                    activeMainTab === 'newarrivals' ? 'text-[#121316] border-[#121316]' : 'text-[#4B5563] border-transparent hover:text-[#121316]'
+                    activeMainTab === 'popular' ? 'text-[#121316] border-[#121316]' : 'text-[#4B5563] border-transparent hover:text-[#121316]'
                   }`}
                 >
-                  New Arrivals
+                  Popular Products
                 </button>
               </div>
               <Link
-                href={activeMainTab === 'bestsellers' ? '/shop?filter=bestseller' : '/shop?filter=newarrivals'}
+                href={activeMainTab === 'bestsellers' ? '/shop?filter=bestseller' : '/shop?filter=popular'}
                 className="text-[0.72rem] sm:text-[0.78rem] md:text-[0.88rem] font-medium text-[#4B5563] inline-flex items-center gap-1 hover:text-[#121316] transition-colors"
               >
                 <span>View all</span>

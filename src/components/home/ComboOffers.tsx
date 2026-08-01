@@ -76,10 +76,9 @@ export default function ComboOffers() {
 
   useEffect(() => {
     // Restored static bundle items; API call commented out as requested
-    setBundles(DEFAULT_BUNDLE_ITEMS);
+    // setBundles(DEFAULT_BUNDLE_ITEMS);
 
-    /*
-    productAPI.getCategories()
+    productAPI.getTrendingProducts()
       .then((data: any[]) => {
         if (Array.isArray(data) && data.length > 0) {
           const mapped: BundleCard[] = data.map((item: any) => ({
@@ -98,7 +97,6 @@ export default function ComboOffers() {
       .catch((err) => {
         console.warn('ComboOffers API notice:', err);
       });
-    */
   }, []);
 
   const handleAddBundle = (bundle: BundleCard) => {
