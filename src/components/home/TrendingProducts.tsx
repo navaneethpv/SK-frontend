@@ -126,10 +126,10 @@ export default function TrendingProducts() {
           </div>
 
           <Link
-            href="/shop?filter=trending"
+            href="/shop"
             className="inline-flex items-center gap-2 text-[0.85rem] font-bold text-[#121316] hover:text-[#C39F68] transition-colors no-underline self-start md:self-auto"
           >
-            <span>Explore All Trending</span>
+            <span>Explore All</span>
             <ArrowRight size={16} />
           </Link>
         </motion.div>
